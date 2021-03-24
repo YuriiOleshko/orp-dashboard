@@ -36,8 +36,8 @@ const CreateAcc = () => {
     const contract = getContract(account, contractMethods);
     const test = await contract.insert_data({value: JSON.stringify(data)});
     update('loading', false);
-
     if (test) {
+      update('app', {profile: data});
       history.push('/start-project');
     }
   };
