@@ -11,9 +11,8 @@ const Header = ({ headerLinks, classStyle }) => {
   const customClass = `header ${classStyle}`;
 
   const { state } = useContext(appStore);
-  const { app } = state;
+  const { app, wallet } = state;
   const { profile } = app;
-
   const getUserName = () => `${profile?.firstName} ${profile?.lastName}`;
 
   return (
@@ -30,6 +29,9 @@ const Header = ({ headerLinks, classStyle }) => {
             { profile ? getUserName() : intl.formatMessage(setting) }
           </span>
           <i className="icon-setting" />
+          <span onClick={() => wallet.signOut()} className="clear">
+            Log Out
+          </span>
         </div>
       </div>
 
