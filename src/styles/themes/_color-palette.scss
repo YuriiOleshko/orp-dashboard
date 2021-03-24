@@ -1,0 +1,32 @@
+$themes: (
+        light: (
+                color-background: $page_background,
+                color-background-form: $white,
+                body-color-font: $color-font,
+                login-color-bg:$login_background,
+                color-btn-font:$white,
+                color-error-font:$red,
+                border-btn-transparent:$transparent,
+                btn-color-font:$green,
+                color-link: $blue,
+                color-bg-input:$color-bg-input,
+                body-color-link: $darkBlue,
+                color-bg-btn: $lightBlue,
+                color-bg-btn-active: $activeLightBlue,
+                color-anchor-font:$lightBlue,
+                color-font-copy:$color-font-copy,
+                color-icon-gray:$color-icon-gray,
+                color-activeIcon-gray:$color-activeIcon-gray,
+                color-bg-menu:$color-bg-menu,
+                color-bg-dash:$color-bg-dash,
+                color-filter-font:$white,
+                color-bg-filter:$color-icon-gray,
+                ligthGray:$point-color-gray
+        ),
+        dark: (
+                corner-box-border: $white,
+                color-background: $page_background_dark,
+                body-color-font: $blue,
+                color-link: $blue,
+        )
+);

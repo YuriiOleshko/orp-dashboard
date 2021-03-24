@@ -1,0 +1,15 @@
+{
+  "login.button": "Войти",
+  "login.copy": "копирайт",
+  "login.title": "Launching On The Outset of the UN Decade of Ecosystem Restoration.",
+
+  "acc.title": "Настройка аккаунта",
+  "acc.input-name": "Имя",
+  "acc.input-last": "Фамилия",
+  "acc.input-company": "Компания",
+  "acc.input-email": "Имеил",
+  "acc.input-pas": "Пароль",
+  "acc.input-repas": "Повторите пароль",
+  "acc.btn-label": "Потвердить"
+
+}

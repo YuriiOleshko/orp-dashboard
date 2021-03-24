@@ -1,0 +1,31 @@
+@import "./utilites/variables";
+@import "./themes/color-palette";
+
+// Mixins
+@import "./mixins/theme-aware";
+
+
+// Fonts
+@import "./fonts/fonts";
+
+// Utilities
+@import "./utilites/base";
+@import "./utilites/typography";
+@import "./utilites/icone";
+
+// layout
+@import "layout/header";
+@import "layout/layout";
+@import "layout/footer";
+@import "layout/menu";
+
+// Components
+@import "components/theme-switcher";
+
+
+
+// Pages
+@import 'pages/login';
+@import 'pages/launch';
+@import 'pages/dashboard';
+

@@ -1,0 +1,124 @@
+.dashboard{
+  @include theme-aware('background-color', 'color-bg-dash');
+  min-height: 100vh;
+  width: 100%;
+
+  &__wrapper{
+    padding: 40px 60px ;
+  }
+  &__panel{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__title{
+    font-weight: bold;
+    line-height: 1.2;
+  }
+  &__filters{
+    display: flex;
+    align-items: center;
+  }
+
+  &__filter{
+    font-weight: 600;
+    font-size: 14px;
+    @include theme-aware('color', 'color-bg-filter');
+    padding: 8px 18px;
+    @include theme-aware('background-color', 'border-btn-transparent');
+    border-radius: 90px;
+    transition: 0.3s;
+    cursor: pointer;
+    &:not(last-child){
+      margin-right: 14px;
+    }
+    &.active{
+      @include theme-aware('color', 'color-filter-font');
+      @include theme-aware('background-color', 'color-bg-filter');
+    }
+    &:hover{
+      @include theme-aware('color', 'color-filter-font');
+      @include theme-aware('background-color', 'color-bg-filter');
+    }
+
+  }
+
+  &__list{
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    width: 100%;
+  }
+
+  &__item{
+    border-radius: 8px;
+    width: 100%;
+    @include theme-aware('background-color', 'color-background-form');
+    &:not(last-child){
+      margin-bottom: 8px;
+    }
+  }
+
+  &__item-wrapper{
+    display: flex;
+    justify-content: space-between;
+    padding: 22px 20px 22px 22px;
+  }
+
+  &__calling{
+    flex-basis: 52%;
+    display: flex;
+    align-items: center;
+    & .icon-galka:before{
+      @include theme-aware('color', 'color-anchor-font');
+    }
+    & i {
+      font-size: 20px;
+      margin-right: 13px;
+    }
+  }
+
+  &__info{
+    flex-basis: 43%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__location,&__users,&__log{
+    flex-basis: 22%;
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 20px;
+      &:before {
+        @include theme-aware('color', 'color-icon-gray');
+      }
+    }
+    span{
+      font-size: 16px;
+      line-height: 1.2;
+      margin-left: 11px;
+    }
+
+  }
+  &__log{
+    flex-basis: 45%;
+  }
+  &__setting{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+  &__point{
+    @include theme-aware('background', 'ligthGray');
+    height: 4px;
+    width: 4px;
+    border-radius: 90px;
+    &:not(last-child){
+      margin-bottom: 4px;
+    }
+
+  }
+}

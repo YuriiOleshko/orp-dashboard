@@ -1,0 +1,46 @@
+{
+  "login.button": "Login with Near Wallet",
+  "login.copy": "© Open Reforestation Protocol Foundation,",
+  "login.title": "Launching On The Outset of the UN Decade of Ecosystem Restoration.",
+
+  "acc.title": "Setup Your Account",
+  "acc.input-name": "First Name",
+  "acc.input-last": "Last Name",
+  "acc.input-company": "Company",
+  "acc.input-email": "Email",
+  "acc.input-pas": "Password",
+  "acc.input-repas": "Repeat Password",
+  "acc.btn-label": "Setup Dashboard",
+  "acc.btn-label-later": "Setup Later",
+
+
+  "header.setting" :"Setup Your Account",
+  "header.menu.item1": "Home",
+  "header.menu.item2": "Project",
+  "header.menu.item3": "Wallet",
+  "header.menu.item4": "Setting",
+
+
+  "launch.title" : "Launch Your First Project",
+  "launch.desc" : "ORP provides the digital infrastructure for collecting, uploading, confirming, and visualizing reforestation data. ORP is an open-source and permissionless protocol for reforestation projects to transparently measure, report, and verify (MRV) the entire life cycle of their trees.",
+  "launch.label-btn": "Launch a Project",
+
+  "wizard.title" : "Launch a New Project",
+  "wizard.step1" : "General Information",
+  "wizard.step2" : "Project Location",
+  "wizard.step3" : "Reforestation Data",
+  "wizard.step4" : "Project Initiation",
+
+
+  "menu.item1": "Existing Projects",
+  "menu.item2": "Сollateral Status",
+  "menu.item3": "Validation Status",
+  "menu.item4": "Ecosystem",
+  "menu.item5": "Technology Integration",
+  "menu.btn-label": "Launch a New Project",
+
+  "existing.title": "Existing Projects",
+  "existing.filter.item1": "All projects",
+  "existing.filter.item2": "Option1",
+  "existing.filter.item3": "Option2"
+}

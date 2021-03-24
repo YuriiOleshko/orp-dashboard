@@ -1,0 +1,138 @@
+.login{
+  min-height: 100vh;
+
+  &__wrapper{
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 100vh;
+  }
+
+  @keyframes rotateLoad {
+    from{
+      transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0deg);
+    }
+    50%{
+      transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(180deg);
+
+    }
+    to{
+      transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0deg);
+
+    }
+  }
+  &__loading{
+    display: flex;
+    flex-basis: 50%;
+    justify-content: center;
+    align-items: center;
+    i {
+      margin-right: 20px;
+      animation: ease 1s rotateLoad infinite ;
+    }
+  }
+
+  &__wrapper-btn{
+    width: 280px;
+    margin:10px auto;
+  }
+
+  &__intro{
+    padding:10px  48px 10px 76px;
+    flex-basis: 50%;
+    @include theme-aware('background-color', 'color-background');
+    margin: auto;
+    display: flex;
+    overflow: hidden;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__logo{
+    svg{
+      max-width: 432px;
+      height: 145px;
+    }
+  }
+
+  &__trees{
+    margin-top: 107px;
+
+    & svg{
+      max-width: 595px;
+      height: 403px;
+    }
+
+  }
+
+  &__entry{
+    flex-basis: 50%;
+    padding:20px  48px 20px 76px;
+    @include theme-aware('background-color', 'login-color-bg');
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    display: flex;
+  }
+  &__form{
+    max-width: 460px;
+    width: 100%;
+    @include theme-aware('background-color', 'color-background-form');
+    padding: 30px 40px  59px ;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    & form{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      text-align: start;
+      & input {
+        min-height: 60px;
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        border: none;
+        border-radius: 2px;
+        @include theme-aware('background-color', 'color-bg-input');
+      &:not(last-child){
+        margin-bottom: 20px;
+      }
+      }
+
+      & label{
+        margin-bottom: 8px;
+
+      }
+
+    }
+  }
+  &__form-title{
+    text-align: start;
+    margin-bottom: 32px;
+  }
+
+  &__wrapper-btn_acc{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    display: flex;
+    & button{
+      max-width: 260px;
+    }
+  }
+
+  &__anchor{
+    margin-left: 20px;
+    @include theme-aware('color', 'color-anchor-font');
+  }
+
+  &__copy{
+    margin-top: 20px;
+    @include theme-aware('color', 'color-font-copy');
+
+  }
+}
