@@ -1,6 +1,6 @@
 const contractName = process.env.REACT_APP_CONTRACT_NAME || 'dev-1615976860844-4430258';
 
-module.exports = function getConfig() {
+export default function getConfig() {
   let config = {
     networkId: 'default',
     nodeUrl: 'https://rpc.testnet.near.org',
@@ -27,4 +27,4 @@ module.exports = function getConfig() {
   }
 
   return config;
-};
+}
