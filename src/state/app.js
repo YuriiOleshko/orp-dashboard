@@ -7,6 +7,7 @@ const initialState = {
     mounted: false,
     theme: localStorage.getItem('theme') ? localStorage.getItem('theme') : 'light',
     profile: null,
+    profileProject: {},
   },
   near: {
     initialized: false,

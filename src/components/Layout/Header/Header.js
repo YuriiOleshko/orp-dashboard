@@ -3,7 +3,7 @@ import { ReactSVG } from 'react-svg';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import logo from '../../../assets/image/ORPLogo.svg';
-import { setting } from '../LangLayot';
+import { setting, LogOut } from '../LangLayot';
 import { appStore } from '../../../state/app';
 
 const Header = ({ headerLinks, classStyle }) => {
@@ -13,6 +13,7 @@ const Header = ({ headerLinks, classStyle }) => {
   const { state } = useContext(appStore);
   const { app, wallet } = state;
   const { profile } = app;
+  // eslint-disable-next-line
   const getUserName = () => `${profile?.firstName} ${profile?.lastName}`;
 
   return (
@@ -22,15 +23,16 @@ const Header = ({ headerLinks, classStyle }) => {
           <ReactSVG src={logo} />
         </div>
         <div className="header__nav">
-          {headerLinks.map((item) => <Link key={item.label} className="header__item" to={item.href}>{intl.formatMessage(item.label)}</Link>)}
+          {/* eslint-disable-next-line react/no-array-index-key */}
+          {headerLinks.map((item, index) => <Link key={item.label + index} className="header__item" to={item.href}>{intl.formatMessage(item.label)}</Link>)}
         </div>
         <div className="header__setting">
           <span>
             { profile ? getUserName() : intl.formatMessage(setting) }
           </span>
           <i className="icon-setting" />
-          <span onClick={() => wallet.signOut()} className="clear">
-            Log Out
+          <span onClick={() => wallet.signOut()} className="log-out">
+            {intl.formatMessage(LogOut)}
           </span>
         </div>
       </div>

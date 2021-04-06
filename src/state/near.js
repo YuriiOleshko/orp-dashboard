@@ -23,11 +23,10 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	};
 	const signOut = wallet.signOut;
 	wallet.signOut = () => {
-		console.log(wallet,'wallet')
 		signOut.call(wallet);
 		update('wallet.signedIn', false);
 		update('', { account: null });
-		localStorage.clear()
+		new nearAPI.keyStores.BrowserLocalStorageKeyStore().clear()
 	};
 
 	wallet.signedIn = wallet.isSignedIn();

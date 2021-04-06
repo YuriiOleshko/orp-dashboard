@@ -44,13 +44,15 @@
     display: flex;
     cursor: pointer;
     align-items: center;
-    & .clear{
-      margin-left: 10px;
-    }
     & span{
       font-size: 14px;
       line-height: 1.4;
       margin-right: 10px ;
+    }
+    & .log-out{
+      margin-left: 10px;
+      cursor: pointer;
+      margin-right: 0px ;
     }
   }
 

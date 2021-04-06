@@ -23,7 +23,8 @@ const ExistingProject = () => {
         </div>
       </div>
       <div className="dashboard__list">
-        {projects.map((item, index) => <ProjectCard item={item} step={index} />)}
+        {/* eslint-disable-next-line react/no-array-index-key */}
+        {projects.map((item, index) => <ProjectCard item={item} step={index} key={`${index}Project`} />)}
       </div>
     </>
   );

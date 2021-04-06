@@ -1,5 +1,7 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import {
+  NavLink, Link, useHistory,
+} from 'react-router-dom';
 import { FormattedDate, useIntl } from 'react-intl';
 import CustomBtn from '../../CustomBtn';
 import {
@@ -9,13 +11,13 @@ import { copyRight } from '../../../page/Login/LangLogin';
 
 const Menu = () => {
   const intl = useIntl();
-
+  const history = useHistory();
   return (
     <div className="menu">
       <div className="menu__wrapper">
         <div className="menu__nav">
           <div className="menu__wrapper-btn">
-            <CustomBtn label={intl.formatMessage(btnLabel)} customClass="btn__launch" iconClass="icon-tree" handleClick={() => {}} />
+            <CustomBtn label={intl.formatMessage(btnLabel)} customClass="btn__launch" iconClass="icon-tree" handleClick={() => { history.push('/create-project'); }} />
           </div>
           <div className="menu__list">
             <NavLink activeClassName="active" className="menu__item" exact to="/">

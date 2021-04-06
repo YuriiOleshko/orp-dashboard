@@ -7,6 +7,7 @@ export const initIPFS = async () => {
     protocol: 'https',
   });
   console.log('ipfs connect', ipfs);
+  return ipfs;
 };
 
 export default initIPFS;

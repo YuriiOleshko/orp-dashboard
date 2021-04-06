@@ -49,7 +49,7 @@ const routes = [
       },
       {
         path: '/create-project',
-        key: 'START_PROJECT',
+        key: 'CREATE_PROJECT',
         exact: true,
         component: () => <LaunchProject />,
       },

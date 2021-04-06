@@ -21,7 +21,11 @@ $themes: (
                 color-bg-dash:$color-bg-dash,
                 color-filter-font:$white,
                 color-bg-filter:$color-icon-gray,
-                ligthGray:$point-color-gray
+                ligthGray:$point-color-gray,
+                cancel-bg-btn:$color-icon-gray,
+                color-chart:$lightGreen,
+                color-point-chart:$lightBlue
+
         ),
         dark: (
                 corner-box-border: $white,

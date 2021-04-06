@@ -25,7 +25,7 @@ const LaunchCreate = () => {
               label={intl.formatMessage(btnLabel)}
               customClass="btn__launch"
               handleClick={() => {
-                history.push('/');
+                history.push('/create-project');
               }}
               iconClass="icon-tree"
             />

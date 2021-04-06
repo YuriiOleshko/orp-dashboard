@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomInput = ({ type, placeholder, name, value, label, error, register }) => {
+const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change }) => {
   const inputType = type || 'text';
   const changeError = (typeError) => {
     if (typeError === 'required') {
@@ -10,19 +10,21 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register })
     }
     return '';
   };
+  const customLabelClass = `${required ? 'required' : ''} input__label`;
+  const cssImage = `def ${iconClass}`;
+  const classInput = `${error ? 'error' : ''}`;
   return (
     <div className="input">
-      <label
-        className="input__label"
-      >
-        {label}
-      </label>
+      {label && <label className={customLabelClass}>{label}</label>}
+      {iconClass && <i className={cssImage} />}
       <input
         type={inputType}
         placeholder={placeholder}
         name={name}
         value={value}
         ref={register}
+        className={classInput}
+        onChange={change}
       />
       {error && <div className="input__error">{changeError(error.type)}</div>}
 

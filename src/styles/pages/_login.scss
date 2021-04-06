@@ -44,7 +44,6 @@
     margin: auto;
     display: flex;
     overflow: hidden;
-
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -90,6 +89,9 @@
       flex-direction: column;
       width: 100%;
       text-align: start;
+      & .input:not(last-child){
+        margin-bottom: 20px;
+      }
       & input {
         min-height: 60px;
         width: 100%;
@@ -98,9 +100,7 @@
         border: none;
         border-radius: 2px;
         @include theme-aware('background-color', 'color-bg-input');
-      &:not(last-child){
-        margin-bottom: 20px;
-      }
+
       }
 
       & label{

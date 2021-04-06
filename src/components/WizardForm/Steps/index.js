@@ -1,1 +1,1 @@
-export { default } from './StepRoutes';
+export { default } from './StepWizard';
