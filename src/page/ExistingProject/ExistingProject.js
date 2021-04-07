@@ -5,7 +5,8 @@ import {
 } from './LangExistingProject';
 import ProjectCard from '../../components/ProjectCard';
 
-const projects = [{ location: 'Italy', users: 156, logs: '11.12.21 / 1.04.22', iconType: 'icon-galka' }, { location: 'France', users: 151, logs: '11.12.21 / 1.04.22', iconType: 'icon-galka' }, { location: 'Italy', users: 151, logs: '11.12.21 / 1.04.22', iconType: 'icon-galka' }, { location: 'Italy', users: 21, logs: '11.12.21 / 1.04.22', iconType: 'icon-shield' }, { location: 'Italy', users: 1, logs: '11.12.21 / 1.04.22', iconType: 'icon-warning' }, { location: 'Italy', users: 21, logs: '11.12.21 / 1.04.22', iconType: 'icon-shield' }, { location: 'Italy', users: 1, logs: '11.12.21 / 1.04.22', iconType: 'icon-warning' }];
+// eslint-disable-next-line max-len
+const projects = [{ location: 'Italy', users: 156, logs: '11.12.21 / 1.04.22', iconType: 'icon-galka', address: 'iyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgGL' }, { location: 'France', users: 151, logs: '11.12.21 / 1.04.22', iconType: 'icon-galka', address: 'gyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgG0' }, { location: 'Italy', users: 151, logs: '11.12.21 / 1.04.22', iconType: 'icon-galka', address: 'iyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgQW' }, { location: 'Italy', users: 21, logs: '11.12.21 / 1.04.22', iconType: 'icon-shield', address: 'xyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4Ag2t' }, { location: 'Italy', users: 1, logs: '11.12.21 / 1.04.22', iconType: 'icon-warning', address: 'dyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgG2L' }, { location: 'Italy', users: 21, logs: '11.12.21 / 1.04.22', iconType: 'icon-shield', address: 'iyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgGs' }, { location: 'Italy', users: 1, logs: '11.12.21 / 1.04.22', iconType: 'icon-warning', address: 'xyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgG1' }];
 
 const ExistingProject = () => {
   const intl = useIntl();

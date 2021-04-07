@@ -5,7 +5,7 @@ const ThemeSwitcher = () => {
   const { state, update } = useContext(appStore);
   const checkedTheme = state.app.theme;
 
-  const setColor = (color: string) => {
+  const setColor = (color) => {
     update('app', { theme: color });
     document.documentElement.className = '';
     document.documentElement.classList.add(`theme-${color}`);

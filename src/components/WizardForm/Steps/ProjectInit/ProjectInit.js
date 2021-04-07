@@ -13,29 +13,29 @@ const ProjectInit = ({ step }) => {
   const dataChart = [
     {
       name: `${intl.formatMessage(ste4Phase)} 1 (3 ${intl.formatMessage(ste4Month)})`,
-      'data upload fee slope in (%)': 50,
-      'data upload fee,dai': 150,
+      'Data Upload Fee Slope, %': 50,
+      'Data Upload Fee, DAI': 150,
       cnt: 490,
     },
     {
       name: `${intl.formatMessage(ste4Phase)} 2 (3 ${intl.formatMessage(ste4Month)})`,
-      'data upload fee slope in (%)': 40,
-      'data upload fee,dai': 125,
+      'Data Upload Fee Slope, %': 40,
+      'Data Upload Fee, DAI': 125,
     },
     {
       name: `${intl.formatMessage(ste4Phase)} 3 (6 ${intl.formatMessage(ste4Month)})`,
-      'data upload fee slope in (%)': 30,
-      'data upload fee,dai': 100,
+      'Data Upload Fee Slope, %': 30,
+      'Data Upload Fee, DAI': 100,
     },
     {
       name: `${intl.formatMessage(ste4Phase)} 4 (12 ${intl.formatMessage(ste4Month)})`,
-      'data upload fee slope in (%)': 20,
-      'data upload fee,dai': 75,
+      'Data Upload Fee Slope, %': 20,
+      'Data Upload Fee, DAI': 75,
     },
     {
       name: `${intl.formatMessage(ste4Phase)} 4 (13 ${intl.formatMessage(ste4Month)})`,
-      'data upload fee slope in (%)': 10,
-      'data upload fee,dai': 50,
+      'Data Upload Fee Slope, %': 10,
+      'Data Upload Fee, DAI': 50,
     },
   ];
 
@@ -75,13 +75,14 @@ const ProjectInit = ({ step }) => {
       <div className="wizard__chart">
         <div className="wizard__panel-chart">
           <h3 className="wizard__cost-title">{intl.formatMessage(step4TitleTime)}</h3>
+
+        </div>
+        <div className="wizard__wrapper-chart">
+          <Chart data={dataChart} />
           <div className="wizard__point-words">
             <span className="green">{intl.formatMessage(step4PointDai)}</span>
             <span className="blue">{intl.formatMessage(step4PointSlope)}</span>
           </div>
-        </div>
-        <div className="wizard__wrapper-chart">
-          <Chart data={dataChart} />
         </div>
       </div>
       <div className="wizard__wrapper-btn-next">

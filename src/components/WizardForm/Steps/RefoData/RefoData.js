@@ -42,7 +42,8 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           type="text"
           label={intl.formatMessage(step3Input2)}
           placeholder={intl.formatMessage(step3Input2)}
-          register={register()}
+          required
+          register={register({ required: 'This is required' })}
           error={errors.amountTrees}
           value={state.amountTrees}
           name="amountTrees"
@@ -51,7 +52,9 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           type="text"
           label={intl.formatMessage(step3Input3)}
           placeholder={intl.formatMessage(step3Input3Place)}
-          register={register()}
+          required
+          error={errors.avg}
+          register={register({ required: 'This is required' })}
           value={state.avg}
           name="avg"
         />
@@ -59,7 +62,9 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           type="text"
           label={intl.formatMessage(step3Input4)}
           placeholder={intl.formatMessage(step3Input4Place)}
-          register={register()}
+          required
+          error={errors.species}
+          register={register({ required: 'This is required' })}
           value={state.species}
           name="species"
         />

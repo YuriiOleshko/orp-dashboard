@@ -1,3 +1,11 @@
+.icon-replace:before {
+  content: "\e911";
+  color: #2ec3e9;
+}
+.icon-trash:before {
+  content: "\e912";
+  color: #cecece;
+}
 .icon-plus-cir:before {
   content: "\e90f";
   color: #2ec3e9;
@@ -30,7 +38,7 @@
   content: "\e904";
   color: #2ec3e9;
 }
-.icon-marker:before {
+.icon-remarker:before {
   content: "\e905";
   color: #fff;
 }

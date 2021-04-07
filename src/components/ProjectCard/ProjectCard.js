@@ -12,7 +12,11 @@ const ProjectCard = (props) => {
             Project Name 00
             {step}
           </span>
+          <a href="https://explorer.testnet.near.org/transactions/iyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgGL" target="_blank" rel="noreferrer">
+            NFT
+          </a>
         </div>
+
         <div className="dashboard__info">
           <div className="dashboard__location">
             <i className="icon-marker" />

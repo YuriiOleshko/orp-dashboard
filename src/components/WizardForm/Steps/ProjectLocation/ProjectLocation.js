@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import {
+  // eslint-disable-next-line no-unused-vars
   step2Input1, step2Input1Place1, step2Input1Place2, step2Input2, step2CodePlus, step2BtnLabel, wizardBtnNext, wizardBtnBack,
 } from '../../LangWizardForm';
 import CustomInput from '../../../CustomInput';
 import CustomBtn from '../../../CustomBtn';
 import Map from '../../../Map';
 
+const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
   const { register, handleSubmit, errors, clearErrors } = useForm();
@@ -38,35 +40,35 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   if (step !== 1) {
     return null;
   }
+  const { polygonCoordinate } = coordinate;
   return (
     <div className="wizard__wrapper-form">
       <Map state={coordinate} setState={setCoordinate} setShow={setShowMap} show={showMap} intl={intl} clear={clearErrors} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="wizard__coord">
-          <label className="input__label required">{intl.formatMessage(step2Input1)}</label>
+        <div className="wizard__coord-big">
           <div className="wizard__wrapper-input">
-            <CustomInput
-              type="text"
-              error={errors.longitude}
-              placeholder={intl.formatMessage(step2Input1Place1)}
-              register={register({ required: 'This is required' })}
-              value={coordinate.coordinate.longitude}
-              name="longitude"
-              change={(ev) => { handleChange(ev, 'coordinate', 'longitude'); }}
-            />
-            <CustomInput
-              type="text"
-              error={errors.latitude}
-              placeholder={intl.formatMessage(step2Input1Place2)}
-              register={register({ required: 'This is required' })}
-              value={coordinate.coordinate.latitude}
-              name="latitude"
-              change={(ev) => { handleChange(ev, 'coordinate', 'latitude'); }}
-            />
+            <span className="input__label required">{intl.formatMessage(step2Input1)}</span>
+            <div className="wizard__btn-map">
+              <CustomBtn label={intl.formatMessage(step2BtnLabel)} handleClick={() => setShowMap(true)} iconClass="icon-remarker" customClass="btn__map" />
+            </div>
           </div>
-        </div>
-        <div className="wizard__btn-map">
-          <CustomBtn label={intl.formatMessage(step2BtnLabel)} handleClick={() => setShowMap(true)} iconClass="icon-marker" customClass="btn__map" />
+          <div className="wizard__wrapper-coor">
+            {polygonCoordinate.length > 0 && polygonCoordinate[0].map((point, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+              <div className="wizard__wrapper-input" key={point[0] + index}>
+                <span className="wizard__word">
+                  {alphabet[index]}
+                  .
+                </span>
+                <p className="wizard__point-coord">
+                  {parseFloat(point[0]).toFixed(9)}
+                </p>
+                <p className="wizard__point-coord">
+                  {parseFloat(point[1]).toFixed(9)}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="wizard__coord-region">
           <CustomInput

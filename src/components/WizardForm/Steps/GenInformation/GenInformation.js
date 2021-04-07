@@ -101,6 +101,9 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               selected={startDate}
               onChange={(date) => setStartDate(date)}
               selectsStart
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
               startDate={startDate}
               endDate={endDate}
               className="date-picker"
@@ -108,6 +111,9 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             <DatePicker
               selected={endDate}
               onChange={(date) => setEndDate(date)}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
               selectsEnd
               startDate={startDate}
               endDate={endDate}

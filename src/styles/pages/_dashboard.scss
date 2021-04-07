@@ -76,6 +76,15 @@
       font-size: 20px;
       margin-right: 13px;
     }
+    span{
+      margin-right: 20px;
+    }
+    a{
+      @include theme-aware('color', 'color-bg-btn');
+      font-family: $common-font;
+      text-decoration: underline;
+      font-size: 16px;
+    }
   }
 
   &__info{
@@ -121,4 +130,6 @@
     }
 
   }
+
+
 }
