@@ -300,6 +300,8 @@
     flex-basis: 47%;
     display: flex;
     flex-direction: column;
+    font-family: $common-font;
+
 
     label {
       margin-bottom: 8px;
@@ -310,6 +312,8 @@
       padding: 18px 20px;
       border-radius: 6px;
       border: none;
+      @include theme-aware('color', 'body-color-font');
+
       outline: none;
       height: 140px;
 
