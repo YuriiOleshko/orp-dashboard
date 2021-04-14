@@ -21,10 +21,11 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
         type={inputType}
         placeholder={placeholder}
         name={name}
-        value={value}
+        defaultValue={value}
         ref={register}
         className={classInput}
         onChange={change}
+        onWheel={(ev) => ev.target.blur()}
       />
       {error && <div className="input__error">{changeError(error.type)}</div>}
 

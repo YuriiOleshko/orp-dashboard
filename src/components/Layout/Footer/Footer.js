@@ -9,6 +9,7 @@ const Footer = () => {
     <footer className="footer">
       <p className="footer__copy">
         {intl.formatMessage(copyRight)}
+        {' '}
         <FormattedDate
           value={Date.now()}
           year="numeric"

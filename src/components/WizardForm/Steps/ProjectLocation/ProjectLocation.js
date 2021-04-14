@@ -12,16 +12,25 @@ import Map from '../../../Map';
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
+  console.log(state.coordinate, state.coordinate);
+
+  const defaultCoordinate = state.coordinate
+    ? {
+      region: state.region,
+      polygon: state.polygon,
+      codePlus: state.codePlus,
+      polygonCoordinate: state.polygonCoordinate,
+      square: state.square,
+      coordinate: state.coordinate,
+    } : { region: '',
+      polygon: [],
+      codePlus: null,
+      polygonCoordinate: [],
+      square: 0,
+      coordinate: { longitude: '', latitude: '' } };
   const { register, handleSubmit, errors, clearErrors } = useForm();
   const [showMap, setShowMap] = useState(false);
-  const [coordinate, setCoordinate] = useState({
-    region: '',
-    polygon: [],
-    codePlus: null,
-    polygonCoordinate: [],
-    square: 0,
-    coordinate: { longitude: '', latitude: '' },
-  });
+  const [coordinate, setCoordinate] = useState(defaultCoordinate);
   const intl = useIntl();
   // eslint-disable-next-line no-unused-vars
   const onSubmit = (data) => {
@@ -43,7 +52,8 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   const { polygonCoordinate } = coordinate;
   return (
     <div className="wizard__wrapper-form">
-      <Map state={coordinate} setState={setCoordinate} setShow={setShowMap} show={showMap} intl={intl} clear={clearErrors} />
+      {showMap && <Map state={coordinate} setState={setCoordinate} setShow={setShowMap} intl={intl} clear={clearErrors} />}
+      {' '}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="wizard__coord-big">
           <div className="wizard__wrapper-input">
@@ -54,7 +64,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
           </div>
           <div className="wizard__wrapper-coor">
             {polygonCoordinate.length > 0 && polygonCoordinate[0].map((point, index) => (
-            // eslint-disable-next-line react/no-array-index-key
+              // eslint-disable-next-line react/no-array-index-key
               <div className="wizard__wrapper-input" key={point[0] + index}>
                 <span className="wizard__word">
                   {alphabet[index]}
@@ -79,7 +89,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
             value={coordinate.region}
             required
             error={errors.region}
-            name=".region"
+            name="region"
             change={(ev) => { handleChange(ev, 'region'); }}
           />
         </div>

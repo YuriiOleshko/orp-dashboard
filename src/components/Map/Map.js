@@ -5,21 +5,17 @@ import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import area from '@turf/area';
 import centerOfMass from '@turf/center-of-mass';
+import html2canvas from 'html2canvas';
+import Canvas2Image from 'canvas2image-2';
 import API from '../../api/api-map';
 import olc from '../../utils/openlocal';
 import CustomBtn from '../CustomBtn';
 import { wizardBtnBack } from '../WizardForm/LangWizardForm';
+import { initIPFS } from '../../state/ipfs';
 
-// const styles = {
-//   width: '100vw',
-//   height: 'calc(100vh - 140px)',
-//   position: 'absolute',
-//   left: 0,
-// };
-
-// eslint-disable-next-line no-unused-vars
-const Map = ({ state, setState, setShow, show, intl, clear }) => {
+const Map = ({ state, setState, setShow, intl, clear }) => {
   const [map, setMap] = useState(null);
+
   const [datePolygon, setDataPolygon] = useState({ region: '',
     polygon: [],
     codePlus: null,
@@ -32,8 +28,44 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
     zoom: 2,
   });
   const mapContainer = useRef(null);
+  const screen = useRef(null);
+  // eslint-disable-next-line no-unused-vars
+  const printImg = () => {
+    html2canvas(screen.current, {
+      useCORS: true,
+      removeContainer: false,
+    }).then(async (canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      console.log(Buffer.from(imgData), 'sdsd'); // Maybe blank, maybe full image, maybe half of image
+      console.log(Canvas2Image.convertToPNG(canvas), 'imgData'); // Maybe blank, maybe full image, maybe half of image
+      // pdf.addImage(imgData, 'PNG', 10, 10);
+      // pdf.save('download.pdf');
+      // const reader = new window.FileReader();
+      // reader.readAsArrayBuffer(canvas);
+      // reader.onloadend = () => {
+      //   // eslint-disable-next-line no-use-before-define
+      //   console.log(reader, 'reader');
+      // };
+      // setImg(Canvas2Image.convertToPNG(canvas));
+      canvas.toBlob((blob) => {
+        console.log(URL.createObjectURL(blob));
+      }, 'canvas.toBlob');
+      const addOptions = {
+        pin: true,
+        wrapWithDirectory: true,
+        timeout: 10000,
+      };
+      const newArray = [];
+      newArray.push({ path: 'map.png', content: imgData });
 
+      const ipfs = await initIPFS();
+      for await (const result of ipfs.addAll(newArray, addOptions)) {
+        console.log(result, 'result');
+      }
+    });
+  };
   useEffect(() => {
+    console.log(state, 'asdsfState');
     mapboxgl.accessToken = process.env.REACT_APP_MAP_KEY;
     // eslint-disable-next-line no-shadow
     const initializeMap = ({ setMap, mapContainer }) => {
@@ -43,6 +75,7 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
         style: 'mapbox://styles/mapbox/satellite-v9', // hosted style id
         center: [-91.874, 42.76], // starting position
         zoom: 10,
+        preserveDrawingBuffer: true,
       });
 
       function rotate() {
@@ -70,6 +103,7 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
           trash: true,
         },
       });
+
       map.addControl(draw);
       // eslint-disable-next-line no-use-before-define
       map.on('draw.create', updateArea);
@@ -77,14 +111,21 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
       map.on('draw.delete', updateArea);
       // eslint-disable-next-line no-use-before-define
       map.on('draw.update', updateArea);
-
-      async function updateArea(e) {
+      console.log(state.polygon, 'state.polygon[0]!!!!!!');
+      if (state.polygon.length > 0) {
+        draw.add(state.polygon[0]);
+        // eslint-disable-next-line no-use-before-define
+        updateArea(state.polygon[0], true);
+      }
+      async function updateArea(e, update = false) {
+        console.log(e, 'e');
+        const features = update ? e : e.features[0];
         const data = draw.getAll();
-        const center = centerOfMass(e.features[0]).geometry.coordinates;
+        const center = centerOfMass(features).geometry.coordinates;
         const place = await API.getInfoForMap(center[1], center[0]);
 
         if (data.features.length > 1) {
-          draw.delete(e.features[0].id);
+          draw.delete(features.id);
           return false;
         }
         if (data.features.length > 0) {
@@ -93,7 +134,7 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
           setDataPolygon({
             region: place.features[0].place_name,
             polygon: data.features,
-            polygonCoordinate: e.features[0].geometry.coordinates,
+            polygonCoordinate: features.geometry.coordinates,
             codePlus: olc.encode(center[1], center[0]),
             square: roundedArea,
             coordinate: { longitude: center[0], latitude: center[1] },
@@ -103,7 +144,7 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
             polygon: data.features,
             codePlus: olc.encode(center[1], center[0]),
             square: roundedArea,
-            polygonCoordinate: e.features[0].geometry.coordinates,
+            polygonCoordinate: features.geometry.coordinates,
             coordinate: { longitude: center[0], latitude: center[1] },
           });
         } else {
@@ -133,14 +174,17 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
   }, [map]);
 
   const uploadStateCoordinate = () => {
+    // printImg();
     clear(['latitude', 'region', 'longitude']);
+    console.log(datePolygon, 'datePolygon');
+    datePolygon.polygonCoordinate[0].map((el) => console.log(olc.encode(el[1], el[0])), 'coorenita');
     setState(datePolygon);
     setShow(false);
   };
 
-  const customClass = show ? 'active' : '';
+  // const customClass = show ? 'active' : '';
   return (
-    <div className={`map ${customClass}`}>
+    <div className="map" ref={screen}>
       <div className="map__box">
         <div className="map__box-info">
           <div>
@@ -162,19 +206,20 @@ const Map = ({ state, setState, setShow, show, intl, clear }) => {
         <div className="map__calculation-box">
           <p>Draw a polygon using the draw tools.</p>
           {datePolygon.square > 0 && (
-          <div className="map__inside-block">
-            <span>Square Meters</span>
-            <span>{datePolygon.square}</span>
-            <span>Region</span>
-            <span>{datePolygon.region}</span>
-            <span>Code Plus</span>
-            <span>{datePolygon.codePlus}</span>
-            <div className="map__btn-wrapper">
-              <CustomBtn label="Upload Data" handleClick={() => uploadStateCoordinate()} />
+            <div className="map__inside-block">
+              <span>Square Meters</span>
+              <span>{datePolygon.square}</span>
+              <span>Region</span>
+              <span>{datePolygon.region}</span>
+              <span>Code Plus</span>
+              <span>{datePolygon.codePlus}</span>
+              <div className="map__btn-wrapper">
+                <CustomBtn label="Upload Data" handleClick={() => uploadStateCoordinate()} />
+              </div>
             </div>
-          </div>
           )}
         </div>
+
       </div>
     </div>
   );

@@ -85,6 +85,21 @@
         & label {
           margin-bottom: 8px;
         }
+        & input {
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+          }
+          &[type="number"] {
+            -moz-appearance: textfield;
+            overflow: hidden;
+          }
+          &[type="number"]:hover,
+          &[type="number"]:focus {
+            overflow: hidden;
+            -moz-appearance: number-input;
+          }
+        }
 
         & input, select {
           @include theme-aware('background', 'color-bg-input');
@@ -111,7 +126,8 @@
     & .date-picker {
       padding: 18px 20px;
       border-radius: 6px;
-      flex-basis: 45%;
+      flex-basis: 40%;
+      max-width: 170px;
       border: none;
       outline: none;
       @include theme-aware('background', 'color-bg-input');
@@ -133,6 +149,8 @@
 
 
     span {
+      font-size: 16px;
+      font-weight: 700;
       @include theme-aware('color', 'color-anchor-font');
     }
 
@@ -142,8 +160,6 @@
 
     &:hover {
       transform: scale(1.1);
-
-
     }
 
   }
@@ -160,24 +176,28 @@
   }
 
   &__close {
-    width: 15px;
-    height: 4px;
+    width: 16px;
+    height: 16px;
     position: absolute;
-    @include theme-aware('background', 'color-error-font');
     cursor: pointer;
     top: 50%;
     right: 0;
-    transition: .3s;
-    transform: translateY(calc(-50% - 10px));
+    font-size: 16px;
+    transition: 0.3s;
+    transform: translateY(calc(-50% - 8px));
+
 
     &:hover {
-      transform: translateY(calc(-50% - 10px)) scale(1.2);
+      transform: translateY(calc(-50% - 8px)) scale(1.2);
+    }
+    &.icon-close:before{
+      @include theme-aware('color', 'color-error-font');
     }
   }
 
-  &__budget {
+  &__funders-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-basis: 100%;
     align-items: center;
   }
@@ -185,7 +205,11 @@
   &__funder {
     & label {
       margin-bottom: 8px;
-
+    }
+    &.sup{
+      & .input{
+        margin-bottom: 15px;
+      }
     }
 
     display: flex;
@@ -211,6 +235,7 @@
       }
 
       &.multi {
+        margin-top: 16px;
         margin-left: 0px;
       }
 
@@ -300,29 +325,60 @@
     flex-basis: 47%;
     display: flex;
     flex-direction: column;
-    font-family: $common-font;
+    position: relative;
+    margin-top: 10px;
 
 
     label {
       margin-bottom: 8px;
     }
 
+
+
     & textarea {
       @include theme-aware('background', 'color-bg-input');
       padding: 18px 20px;
       border-radius: 6px;
       border: none;
-      @include theme-aware('color', 'body-color-font');
-
       outline: none;
       height: 140px;
-
+      resize: none;
+      resize: none;
+      @include theme-aware('color', 'body-color-font');
+      font-family: $common-font;
     }
   }
-
+  &__tooltip{
+    width: 200px;
+  }
+  &__tooltip-point{
+    position: absolute;
+    top:0;
+    right: 0;
+    cursor: pointer;
+    @include theme-aware('background', 'color-bg-input');
+    border-radius: 100%;
+    padding: 2px 6px;
+    font-size: 12px;
+  }
   &__wrapper-btn-next {
     flex-basis: 100%;
     margin-top: 40px;
+  }
+  &__btn-init{
+    flex-basis: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    & .btn__cancel{
+      max-width: 185px;
+    }
+    & .btn__next{
+      max-width: 390px;
+    }
+    & .btn{
+      padding: 11px 0 12px;
+    }
   }
 
   &__wrap-close {
@@ -336,6 +392,9 @@
     display: flex;
     margin-bottom: 40px;
     flex-direction: column;
+    & .wizard__wrapper-input {
+      margin-top: 10px;
+    }
 
     .wizard__wrapper-input {
       display: flex;
@@ -351,12 +410,15 @@
   &__word {
     text-transform: uppercase;
     flex-basis: 5%;
+    font-weight: 700;
+    font-size: 14px;
   }
 
   &__wrapper-coor {
-
+    margin-top: 15px;
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
     justify-content: space-between;
 
     .wizard__wrapper-input {
@@ -364,26 +426,30 @@
       align-items: center;
       flex-basis: 47%;
       justify-content: space-between;
+      margin-top: 10px;
     }
 
   }
 
   &__point-coord {
-    margin-top: 8px;
+    margin-top: 10px;
     @include theme-aware('background-color', 'color-bg-menu');
     padding: 10px 20px;
     border-radius: 6px;
     border: none;
     max-height: 44px;
     height: 100%;
-    flex-basis: 45%;
+    flex-basis: 43%;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
 
   }
 
   &__coord {
     flex-basis: 47%;
 
-    & .wizard__wrapper-input {
+    &.wizard__wrapper-input {
       margin-top: 20px;
     }
 
@@ -437,6 +503,8 @@
     border: none;
     max-height: 60px;
     height: 100%;
+    font-size: 16px;
+    font-weight: 400;
   }
 
   &__wrapper-panel {
@@ -501,6 +569,7 @@
 
   &__cost-item {
     margin-bottom: 20px;
+    position: relative;
     @include theme-aware('background-color', 'color-bg-menu');
     padding: 18px 20px;
     border-radius: 6px;
@@ -508,7 +577,10 @@
     max-height: 60px;
     height: 100%;
     flex-basis: 47%;
+    &:last-child{
+      flex-basis: 100%;
 
+    }
     .bold {
       font-weight: 700;
       margin-left: 3px;
@@ -581,7 +653,11 @@
     }
 
   }
-
+    &__benefits{
+      &.preview__benefits{
+        flex-basis: 100%;
+      }
+    }
   &__popup {
     position: fixed;
     animation: ease apperance 1s forwards;
@@ -720,4 +796,23 @@
     display: flex;
     justify-content: center;
   }
+
+  &__total-block{
+    margin-top: 20px;
+  }
+
+  &__step1-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    & .input{
+      flex-basis: 32%!important;
+      & select{
+        padding: 17px 20px ;
+      }
+    }
+  }
+
+
 }

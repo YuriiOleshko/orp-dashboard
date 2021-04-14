@@ -14,12 +14,14 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1 }) => {
   const onDrop = useCallback(async (acceptedFiles) => {
     // Do something with the files
     console.log(myFiles.length, 'amountFiles.length ');
+    console.log(acceptedFiles, 'amountFiles.acceptedFiles ');
     if (myFiles.length >= 10) return false;
     const newArray = [];
     acceptedFiles.forEach((el, index, arr) => {
       const reader = new window.FileReader();
       const readerUrl = new window.FileReader();
       reader.readAsArrayBuffer(el);
+
       readerUrl.readAsDataURL(el);
 
       reader.onloadend = () => {
@@ -34,6 +36,9 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1 }) => {
     });
     const convertToBuffer = async (reader, index, arr, path) => {
       const buffer = await Buffer.from(reader.result);
+      console.log(buffer, 'buffer');
+      console.log(path, 'buffer');
+      console.log(reader.result, 'reader.result');
       newArray.push({ path, content: buffer });
       const addOptions = {
         pin: true,
@@ -42,6 +47,7 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1 }) => {
       };
       const ipfs = await initIPFS();
       if (index === (arr.length - 1)) {
+        console.log(multi, 'multi');
         const count = 0;
         for await (const result of ipfs.addAll(newArray, addOptions)) {
           if (count === 0) {

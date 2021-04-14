@@ -63,37 +63,38 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   return (
     <div className="wizard__wrapper-form">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomSelect
-          label={intl.formatMessage(step1Input0)}
-          register={register({ required: 'This is required' })}
-          value={state.type}
-          required
-          error={errors.type}
-          name="type"
-          optionArray={options}
-        />
-        <CustomInput
-          type="text"
-          label={intl.formatMessage(step1Input1)}
-          placeholder={intl.formatMessage(step1Input1Place)}
-          register={register({ required: 'This is required', maxLength: 100 })}
-          required
-          change={() => {}}
-          error={errors.name}
-          value={state.name}
-          name="name"
-        />
-        <CustomInput
-          type="text"
-          label={intl.formatMessage(step1Input2)}
-          placeholder={intl.formatMessage(step1Input2Place)}
-          register={register({ required: 'This is required', maxLength: 100 })}
-          required
-          change={() => {}}
-          error={errors.budjet}
-          value={state.budjet}
-          name="budjet"
-        />
+        <div className="wizard__step1-wrapper">
+          <CustomInput
+            type="text"
+            label={intl.formatMessage(step1Input2)}
+            placeholder={intl.formatMessage(step1Input2Place)}
+            register={register({ required: 'This is required', maxLength: 100 })}
+            required
+            error={errors.developer}
+            value={state.developer}
+            name="developer"
+          />
+          <CustomSelect
+            label={intl.formatMessage(step1Input0)}
+            register={register({ required: 'This is required' })}
+            value={state.type}
+            required
+            error={errors.type}
+            name="type"
+            optionArray={options}
+          />
+          <CustomInput
+            type="text"
+            label={intl.formatMessage(step1Input1)}
+            placeholder={intl.formatMessage(step1Input1Place)}
+            register={register({ required: 'This is required', maxLength: 100 })}
+            required
+            change={() => {}}
+            error={errors.name}
+            value={state.name}
+            name="name"
+          />
+        </div>
         <div className="wizard__duration">
           <label className="input__label required">{intl.formatMessage(step1Input3)}</label>
           <div className="wizard__wrapper-input">
@@ -122,18 +123,17 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             />
           </div>
         </div>
-        <div className="wizard__budget">
-          <CustomInput
-            type="text"
-            label={intl.formatMessage(step1Input4)}
-            placeholder={intl.formatMessage(step1Input4Place)}
-            register={register({ required: 'This is required', maxLength: 100 })}
-            required
-            change={() => {}}
-            error={errors.developer}
-            value={state.developer}
-            name="developer"
-          />
+        <CustomInput
+          type="text"
+          label={intl.formatMessage(step1Input4)}
+          placeholder={intl.formatMessage(step1Input4Place)}
+          register={register({ required: 'This is required', maxLength: 100 })}
+          required
+          error={errors.budjet}
+          value={state.budjet}
+          name="budjet"
+        />
+        <div className="wizard__funders-wrapper">
           <div className="wizard__creator" onClick={() => createInput(countStep + 1)}>
             <i className="icon-plus-cir" />
             <span>{intl.formatMessage(step1Creator)}</span>

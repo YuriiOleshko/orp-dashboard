@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
+import ReactTooltip from 'react-tooltip';
 import {
-  step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, ste4Create,
+  step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, ste4Create, step4Tooltip1,
+  step4Tooltip2, step4Tooltip3, step4Tooltip4, wizardBtnBack, step4Preview,
 } from '../../LangWizardForm';
 import Chart from '../AnotherComponents/Chart';
 import CustomBtn from '../../../CustomBtn';
 import PopupSuccess from '../AnotherComponents/PopupSuccess';
 
-const ProjectInit = ({ step }) => {
+const ProjectInit = ({ step, prevPage, toPreview }) => {
   const intl = useIntl();
 
   const dataChart = [
@@ -55,20 +57,34 @@ const ProjectInit = ({ step }) => {
         <h3 className="wizard__cost-title">{intl.formatMessage(step4TitleCoast)}</h3>
         <div className="wizard__cost-list">
           <p className="wizard__cost-item">
+            <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-1">
+              ?
+            </div>
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-1" effect="float">
+              {intl.formatMessage(step4Tooltip1)}
+            </ReactTooltip>
             <span>{intl.formatMessage(step4Coast1)}</span>
             <span className="bold">50 DAI</span>
           </p>
           <p className="wizard__cost-item">
+            <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-2">
+              ?
+            </div>
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-2" effect="float">
+              {intl.formatMessage(step4Tooltip2)}
+            </ReactTooltip>
             <span>{intl.formatMessage(step4Coast2)}</span>
-            <span className="bold">50 DAI</span>
+            <span className="bold">150  DAI</span>
           </p>
           <p className="wizard__cost-item">
+            <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-3">
+              ?
+            </div>
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-3" effect="float">
+              {intl.formatMessage(step4Tooltip3)}
+            </ReactTooltip>
             <span>{intl.formatMessage(step4Coast3)}</span>
-            <span className="bold">150 DAI</span>
-          </p>
-          <p className="wizard__cost-item">
-            <span>{intl.formatMessage(step4Coast4)}</span>
-            <span className="bold">1500 DAI</span>
+            <span className="bold">100 DAI</span>
           </p>
         </div>
       </div>
@@ -85,7 +101,21 @@ const ProjectInit = ({ step }) => {
           </div>
         </div>
       </div>
-      <div className="wizard__wrapper-btn-next">
+      <div className="wizard__total-block">
+        <p className="wizard__cost-item">
+          <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-4">
+            ?
+          </div>
+          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-4" effect="float">
+            {intl.formatMessage(step4Tooltip4)}
+          </ReactTooltip>
+          <span>{intl.formatMessage(step4Coast4)}</span>
+          <span className="bold">550 DAI</span>
+        </p>
+      </div>
+      <div className="wizard__btn-init">
+        <CustomBtn label={intl.formatMessage(wizardBtnBack)} handleClick={() => prevPage()} type="button" customClass="btn__cancel" />
+        <CustomBtn label={intl.formatMessage(step4Preview)} handleClick={() => toPreview(true)} type="button" customClass="btn__cancel" />
         <CustomBtn label={intl.formatMessage(ste4Create)} type="submit" handleClick={() => { togglePopup(); }} customClass="btn__next" />
       </div>
     </div>
