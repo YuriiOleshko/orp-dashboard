@@ -137,6 +137,9 @@
   &__wrapper-input {
     display: flex;
     justify-content: space-between;
+    & .preview__field{
+      margin-top: 0;
+    }
 
     .input {
       flex-basis: 47%;

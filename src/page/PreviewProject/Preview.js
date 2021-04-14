@@ -153,7 +153,7 @@ const Preview = ({ state, back }) => {
             </div>
             <div className="preview__wrapper-element">
               <span className="preview__label">{intl.formatMessage(step1Input7)}</span>
-              <p className="preview__field text">
+              <p className="preview__field textarea ">
                 {state.details || ''}
               </p>
             </div>
@@ -273,7 +273,7 @@ const Preview = ({ state, back }) => {
               {/* </div> */}
               <div className="preview__wrapper-element">
                 <span className="preview__label">{intl.formatMessage(step3Area)}</span>
-                <p className="preview__field  ">
+                <p className="preview__field textarea ">
                   {state.additional || ''}
                 </p>
               </div>
