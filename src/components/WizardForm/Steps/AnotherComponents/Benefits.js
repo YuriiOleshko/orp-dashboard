@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { ReactSVG } from 'react-svg';
 import icon1 from '../../../../assets/image/benefints/icon1.svg';
 import icon2 from '../../../../assets/image/benefints/icon2.svg';
@@ -18,20 +18,24 @@ import icon15 from '../../../../assets/image/benefints/icon15.svg';
 import icon16 from '../../../../assets/image/benefints/icon16.svg';
 import icon17 from '../../../../assets/image/benefints/icon17.svg';
 
-const arrImg = [{ src: icon1, active: false }, { src: icon2, active: false }, { src: icon3, active: false },
-  { src: icon4, active: false }, { src: icon5, active: false }, { src: icon6, active: false }, {
-    src: icon7,
-    active: false,
-  },
-  { src: icon8, active: false }, { src: icon9, active: false }, { src: icon10, active: false }, {
-    src: icon11,
-    active: false,
-  }, { src: icon12, active: false },
-  { src: icon13, active: false }, { src: icon14, active: false }, { src: icon15, active: false }, {
-    src: icon16,
-    active: false,
-  }, { src: icon17, active: false }];
-const Benefits = ({ save }) => {
+const Benefits = ({ save, state }) => {
+  const arrImg = [{ src: icon1, indexId: 1, active: false }, { src: icon2, indexId: 2, active: false }, { src: icon3, indexId: 3, active: false },
+    { src: icon4, indexId: 4, active: false }, { src: icon5, indexId: 5, active: false }, { src: icon6, indexId: 6, active: false }, {
+      src: icon7,
+      indexId: 7,
+      active: false,
+    },
+    { src: icon8, indexId: 8, active: false }, { src: icon9, indexId: 9, active: false }, { src: icon10, indexId: 10, active: false }, {
+      src: icon11,
+      indexId: 11,
+      active: false,
+    }, { src: icon12, indexId: 12, active: false },
+    { src: icon13, indexId: 13, active: false }, { src: icon14, indexId: 14, active: false }, { src: icon15, indexId: 15, active: false }, {
+      src: icon16,
+      indexId: 16,
+      active: false,
+    }, { src: icon17, indexId: 17, active: false }];
+
   const [images, setImages] = useState(arrImg);
   const toggleClick = (i, active) => {
     const newArray = images.map((el, index) => {
@@ -41,6 +45,19 @@ const Benefits = ({ save }) => {
     setImages(newArray);
     save({ benefits: newArray.filter((item) => item.active) });
   };
+
+  useEffect(() => {
+    if (state.benefits) {
+      const indexIdArr = state.benefits.map((el) => el.indexId);
+      const updArray = images.filter((el) => {
+        if (indexIdArr.includes(el.indexId)) {
+          el.active = true;
+        } return el;
+      });
+      setImages(updArray);
+    } else setImages(arrImg);
+  }, []);
+
   return (
     <div className="wizard__icon-select">
       {images.length > 0 && images.map((el, index) => (

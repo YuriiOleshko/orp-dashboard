@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import {
   // eslint-disable-next-line no-unused-vars
-  step2Input1, step2Input1Place1, step2Input1Place2, step2Input2, step2CodePlus, step2BtnLabel, wizardBtnNext, wizardBtnBack,
+  step2Input1, step2GeoLabel, step2Input1Place1, step2Input1Place2, step2Input2, step2CodePlus, step2BtnLabel, wizardBtnNext, wizardBtnBack,
 } from '../../LangWizardForm';
 import CustomInput from '../../../CustomInput';
 import CustomBtn from '../../../CustomBtn';
 import Map from '../../../Map';
+import GeoJsonUploader from '../AnotherComponents/GeoJsonUploader';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
@@ -31,6 +32,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   const { register, handleSubmit, errors, clearErrors } = useForm();
   const [showMap, setShowMap] = useState(false);
   const [coordinate, setCoordinate] = useState(defaultCoordinate);
+  const [jsonFile, setJsonFile] = useState(state.geoJson || '');
   const intl = useIntl();
   // eslint-disable-next-line no-unused-vars
   const onSubmit = (data) => {
@@ -49,10 +51,11 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   if (step !== 1) {
     return null;
   }
+
   const { polygonCoordinate } = coordinate;
   return (
     <div className="wizard__wrapper-form">
-      {showMap && <Map state={coordinate} setState={setCoordinate} setShow={setShowMap} intl={intl} clear={clearErrors} />}
+      {showMap && <Map state={coordinate} globalSetState={setState} globalState={state} setState={setCoordinate} setShow={setShowMap} intl={intl} clear={clearErrors} />}
       {' '}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="wizard__coord-big">
@@ -65,7 +68,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
           <div className="wizard__wrapper-coor">
             {polygonCoordinate.length > 0 && polygonCoordinate[0].map((point, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <div className="wizard__wrapper-input" key={point[0] + index}>
+              <div className="wizard__wrapper-input" key={index + point[0] + index}>
                 <span className="wizard__word">
                   {alphabet[index]}
                   .
@@ -98,6 +101,10 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
           <p className="wizard__code-plus">
             {coordinate.codePlus}
           </p>
+        </div>
+        <div className="wizard__coord">
+          <span className="input__label bold">{intl.formatMessage(step2GeoLabel)}</span>
+          <GeoJsonUploader coordinate={coordinate} setCoordinate={setCoordinate} jsonFile={jsonFile} setJsonFile={setJsonFile} setState={setState} state={state} />
         </div>
         <div className="wizard__wrapper-panel">
           <CustomBtn label={intl.formatMessage(wizardBtnBack)} handleClick={() => prevPage()} type="button" customClass="btn__cancel" />

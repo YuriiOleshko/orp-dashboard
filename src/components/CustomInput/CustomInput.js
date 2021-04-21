@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change }) => {
+const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change, onlyNumber }) => {
   const inputType = type || 'text';
   const changeError = (typeError) => {
     if (typeError === 'required') {
@@ -10,6 +10,15 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
     }
     return '';
   };
+  const onNumberOnlyChange = (event) => {
+    const keyCode = event.keyCode || event.which;
+    const keyValue = String.fromCharCode(keyCode);
+    const isValid = new RegExp('[0-9]').test(keyValue);
+    if (!isValid) {
+      event.preventDefault();
+    }
+  };
+
   const customLabelClass = `${required ? 'required' : ''} input__label`;
   const cssImage = `def ${iconClass}`;
   const classInput = `${error ? 'error' : ''}`;
@@ -24,6 +33,7 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
         defaultValue={value}
         ref={register}
         className={classInput}
+        onKeyPress={onlyNumber ? onNumberOnlyChange : () => {}}
         onChange={change}
         onWheel={(ev) => ev.target.blur()}
       />

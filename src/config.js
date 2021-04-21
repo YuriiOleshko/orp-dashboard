@@ -1,4 +1,5 @@
 const contractName = process.env.REACT_APP_CONTRACT_NAME || 'dev-1615976860844-4430258';
+const nftContractName = process.env.REACT_APP_CONTRACT_NAME || 'nft.dev-1615976860844-4430258';
 
 export default function getConfig() {
   let config = {
@@ -12,6 +13,14 @@ export default function getConfig() {
     contractMethods: {
       changeMethods: ['insert_data'],
       viewMethods: ['get_data'],
+    },
+    nftContractName,
+    nftContractMethods: {
+      changeMethods: [
+        'new', 'nft_mint', 'nft_transfer', 'add_guest', 'remove_guest', 'nft_approve_account_id',
+        'nft_mint_guest', 'nft_add_sale_guest', 'nft_remove_sale_guest', 'upgrade_guest',
+      ],
+      viewMethods: ['get_guest', 'get_token_ids', 'nft_token', 'get_sale', 'get_account'],
     },
   };
 

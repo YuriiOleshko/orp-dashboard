@@ -4,13 +4,12 @@ import { useIntl } from 'react-intl';
 import ReactTooltip from 'react-tooltip';
 import {
   // eslint-disable-next-line no-unused-vars
-  wizardBtnBack, wizardBtnNext, step3Input1, step3Input2, step3Input3, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step3Option1, step3Option2, step3Option3, step3TooltipText,
+  wizardBtnBack, wizardBtnNext, step3Input1, step3Input2, step3Input3, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step3Option1, step3Option2, step3Option3, step3TooltipTextArea, step3TooltipFiles,
 } from '../../LangWizardForm';
 import CustomBtn from '../../../CustomBtn';
 import CustomInput from '../../../CustomInput';
 import DropzoneInput from '../AnotherComponents/DropzoneInput';
 import Benefits from '../AnotherComponents/Benefits';
-import CustomSelect from '../../../CustomSelect';
 
 const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
@@ -22,7 +21,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   const [benefits, setBenefits] = useState({});
 
   const intl = useIntl();
-  const options = [{ label: intl.formatMessage(step3Option1), value: intl.formatMessage(step3Option1) }, { label: intl.formatMessage(step3Option2), value: intl.formatMessage(step3Option2) }, { label: intl.formatMessage(step3Option3), value: intl.formatMessage(step3Option3) }];
+  // const options = [{ label: intl.formatMessage(step3Option1), value: intl.formatMessage(step3Option1) }, { label: intl.formatMessage(step3Option2), value: intl.formatMessage(step3Option2) }, { label: intl.formatMessage(step3Option3), value: intl.formatMessage(step3Option3) }];
   // eslint-disable-next-line no-unused-vars
   const onSubmit = (data) => {
     console.log(data, 'data');
@@ -42,54 +41,58 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   return (
     <div className="wizard__wrapper-form">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="wizard__coord">
-          <span className="input__label">{intl.formatMessage(step3Input1)}</span>
-          <p className="wizard__code-plus">
-            {state.square}
-          </p>
+        <div className="wizard__step3-wrapper">
+          <div className="wizard__coord">
+            <span className="input__label">{intl.formatMessage(step3Input1)}</span>
+            <p className="wizard__code-plus">
+              {state.square}
+            </p>
+          </div>
+          <CustomInput
+            type="number"
+            label={intl.formatMessage(step3Input2)}
+            placeholder={intl.formatMessage(step3Input2)}
+            required
+            change={changeAvgTrees}
+            register={register({ required: 'This is required' })}
+            error={errors.amountTrees}
+            value={state.amountTrees}
+            name="amountTrees"
+          />
+          <div className="wizard__coord">
+            <span className="input__label">{intl.formatMessage(step3Input3)}</span>
+            <p className="wizard__code-plus">
+              {avgTrees.avgTrees}
+            </p>
+          </div>
         </div>
-        <CustomInput
-          type="number"
-          label={intl.formatMessage(step3Input2)}
-          placeholder={intl.formatMessage(step3Input2)}
-          required
-          change={changeAvgTrees}
-          register={register({ required: 'This is required' })}
-          error={errors.amountTrees}
-          value={state.amountTrees}
-          name="amountTrees"
-        />
-        <div className="wizard__coord">
-          <span className="input__label">{intl.formatMessage(step3Input3)}</span>
-          <p className="wizard__code-plus">
-            {avgTrees.avgTrees}
-          </p>
-        </div>
-        <CustomSelect
-          label={intl.formatMessage(step3Input4)}
-          register={register({ required: 'This is required' })}
-          value={state.typeTrees}
-          error={errors.typeTrees}
-          name="typeTrees"
-          optionArray={options}
-        />
         <div className="wizard__benefits">
           <span className="input__label">{intl.formatMessage(step3Ben)}</span>
-          <Benefits save={setBenefits} />
+          <Benefits save={setBenefits} state={state} />
 
         </div>
         <div className="wizard__icon-file">
-          <span className="input__label">{intl.formatMessage(step3Input5)}</span>
-          <DropzoneInput classCutom="" change={setFiles} multi amountFiles={10} />
+          <div className="wizard__wrapper-tooltip">
+            {' '}
+            <div className="wizard__tooltip-point" data-tip data-for="step3-tooltip-files">
+              ?
+            </div>
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step3-tooltip-files" effect="float">
+              {intl.formatMessage(step3TooltipFiles)}
+            </ReactTooltip>
+            <span className="input__label">{intl.formatMessage(step3Input5)}</span>
+          </div>
+
+          <DropzoneInput classCutom="" change={setFiles} multi amountFiles={10} state={state} />
         </div>
         <div className="wizard__textarea">
           <label className="input__label ">{intl.formatMessage(step3Area)}</label>
           <textarea name="GenInfo" placeholder={intl.formatMessage(step3AreaPlace)} onChange={(ev) => setAdditional({ additional: ev.target.value })} />
-          <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip">
+          <div className="wizard__tooltip-point" data-tip data-for="step3-tooltip-area">
             ?
           </div>
-          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip" effect="float">
-            {intl.formatMessage(step3TooltipText)}
+          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step3-tooltip-area" effect="float">
+            {intl.formatMessage(step3TooltipTextArea)}
           </ReactTooltip>
 
         </div>

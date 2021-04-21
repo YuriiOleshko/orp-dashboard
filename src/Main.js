@@ -4,12 +4,12 @@ import RenderRoutes from './components/RenderRoutes';
 import routes from './routes';
 
 const Main = () => {
-  const { state, dispatch } = useContext(appStore);
+  const { dispatch } = useContext(appStore);
 
   const onMount = () => {
     dispatch(onAppMount());
   };
-  console.log('Main state', state);
+
   useEffect(onMount, []);
 
   return (

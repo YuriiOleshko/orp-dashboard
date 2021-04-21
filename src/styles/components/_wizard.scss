@@ -7,6 +7,30 @@
     flex-direction: column;
   }
 
+  &__gen-wrapper {
+    position: relative;
+    max-width: 880px;
+    margin: auto;
+  }
+
+  &__loading {
+    position: absolute;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    i {
+      margin-right: 20px;
+      animation: ease 1s rotateLoad infinite;
+    }
+
+    @include theme-aware('background-color', 'color-background');
+
+  }
+
   &__intro {
     display: flex;
     justify-content: space-between;
@@ -85,15 +109,18 @@
         & label {
           margin-bottom: 8px;
         }
+
         & input {
           &::-webkit-outer-spin-button,
           &::-webkit-inner-spin-button {
             -webkit-appearance: none;
           }
+
           &[type="number"] {
             -moz-appearance: textfield;
             overflow: hidden;
           }
+
           &[type="number"]:hover,
           &[type="number"]:focus {
             overflow: hidden;
@@ -137,7 +164,8 @@
   &__wrapper-input {
     display: flex;
     justify-content: space-between;
-    & .preview__field{
+
+    & .preview__field {
       margin-top: 0;
     }
 
@@ -193,7 +221,8 @@
     &:hover {
       transform: translateY(calc(-50% - 8px)) scale(1.2);
     }
-    &.icon-close:before{
+
+    &.icon-close:before {
       @include theme-aware('color', 'color-error-font');
     }
   }
@@ -209,8 +238,9 @@
     & label {
       margin-bottom: 8px;
     }
-    &.sup{
-      & .input{
+
+    &.sup {
+      & .input {
         margin-bottom: 15px;
       }
     }
@@ -248,6 +278,15 @@
     }
   }
 
+  &__wrapper-tooltip {
+    position: relative;
+    display: inline;
+
+    & .wizard__tooltip-point {
+      right: -24px;
+    }
+  }
+
   &__icon-file {
     flex-basis: 47%;
 
@@ -259,6 +298,8 @@
         list-style-type: none;
         display: flex;
         align-items: center;
+        padding: 5px 0;
+
 
         i {
           margin-left: 5px;
@@ -329,13 +370,10 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    margin-top: 10px;
-
 
     label {
       margin-bottom: 8px;
     }
-
 
 
     & textarea {
@@ -351,12 +389,14 @@
       font-family: $common-font;
     }
   }
-  &__tooltip{
+
+  &__tooltip {
     width: 200px;
   }
-  &__tooltip-point{
+
+  &__tooltip-point {
     position: absolute;
-    top:0;
+    top: 0;
     right: 0;
     cursor: pointer;
     @include theme-aware('background', 'color-bg-input');
@@ -364,22 +404,27 @@
     padding: 2px 6px;
     font-size: 12px;
   }
+
   &__wrapper-btn-next {
     flex-basis: 100%;
     margin-top: 40px;
   }
-  &__btn-init{
+
+  &__btn-init {
     flex-basis: 100%;
     margin-top: 40px;
     display: flex;
     justify-content: space-between;
-    & .btn__cancel{
+
+    & .btn__cancel {
       max-width: 185px;
     }
-    & .btn__next{
+
+    & .btn__next {
       max-width: 390px;
     }
-    & .btn{
+
+    & .btn {
       padding: 11px 0 12px;
     }
   }
@@ -395,6 +440,7 @@
     display: flex;
     margin-bottom: 40px;
     flex-direction: column;
+
     & .wizard__wrapper-input {
       margin-top: 10px;
     }
@@ -505,6 +551,8 @@
     border-radius: 6px;
     border: none;
     max-height: 60px;
+    min-height: 60px;
+
     height: 100%;
     font-size: 16px;
     font-weight: 400;
@@ -527,6 +575,35 @@
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 20px;
+  }
+
+  &__geo-uploader {
+    margin-top: 14px;
+
+    & aside {
+      margin-top: 10px;
+      font-size: 12px;
+
+      & li {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+      }
+    }
+
+    .wizard__creator-wrapper {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      span {
+        font-size: 16px;
+        font-weight: 700;
+        margin-left: 7px;
+        @include theme-aware('color', 'color-anchor-font');
+      }
+    }
   }
 
   &__icon-item {
@@ -580,10 +657,12 @@
     max-height: 60px;
     height: 100%;
     flex-basis: 47%;
-    &:last-child{
+
+    &:last-child {
       flex-basis: 100%;
 
     }
+
     .bold {
       font-weight: 700;
       margin-left: 3px;
@@ -596,7 +675,7 @@
     align-items: center;
   }
 
-  &__drop-panel{
+  &__drop-panel {
   }
 
   &__point-words {
@@ -656,11 +735,13 @@
     }
 
   }
-    &__benefits{
-      &.preview__benefits{
-        flex-basis: 100%;
-      }
+
+  &__benefits {
+    &.preview__benefits {
+      flex-basis: 100%;
     }
+  }
+
   &__popup {
     position: fixed;
     animation: ease apperance 1s forwards;
@@ -772,7 +853,7 @@
   }
   @keyframes apperanceForward {
     from {
-    opacity: 1;
+      opacity: 1;
     }
     to {
       opacity: 0;
@@ -794,27 +875,80 @@
     }
   }
 
-  &__loader-sent{
+  &__loader-sent {
     margin-top: 18px;
     display: flex;
     justify-content: center;
   }
 
-  &__total-block{
+  &__total-block {
     margin-top: 20px;
   }
 
-  &__step1-wrapper{
+  &__step1-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    & .input{
-      flex-basis: 32%!important;
-      & select{
-        padding: 17px 20px ;
+
+    & .input {
+      flex-basis: 32% !important;
+
+      & select {
+        padding: 17px 20px;
       }
     }
+  }
+
+  &__step3-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+
+    & .wizard__coord {
+      min-height: 60px;
+      flex-basis: 32% !important;
+    }
+
+    & .input {
+
+      margin-bottom: 0 !important;
+      flex-basis: 32% !important;
+
+      & input {
+        min-height: 60px;
+      }
+
+    }
+  }
+
+  &__unit-list {
+    display: flex;
+    margin-bottom: 40px;
+    margin-top: 22px;
+  }
+
+  &__unit__item {
+    font-size: 16px;
+
+    &:not(:last-child) {
+      padding-right: 20px;
+    }
+
+    .bold {
+      font-weight: 700;
+      margin-left: 3px;
+    }
+
+    .blue {
+      @include theme-aware('color', 'color-point-chart');
+    }
+  }
+
+  &__intro-preview {
+    align-items: start;
   }
 
 

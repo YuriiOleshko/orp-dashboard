@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+/* eslint-disable */
+import React, { useContext, useEffect } from 'react';
 import { useIntl, FormattedDate } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import { appStore } from '../../state/app';
@@ -9,6 +10,7 @@ import {
   btnLabel,
   copyRight,
 } from './LangLogin';
+import { initIPFS } from '../../state/ipfs';
 
 const Login = () => {
   const intl = useIntl();

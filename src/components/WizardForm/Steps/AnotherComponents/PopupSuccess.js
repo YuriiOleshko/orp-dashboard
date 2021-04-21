@@ -9,19 +9,32 @@ import {
 
 const lodingDesc = ['Minting your project NFT', 'Saving your project data to blockchain'];
 
-const PopupSuccess = ({ close }) => {
+const PopupSuccess = ({ close, hash }) => {
   const intl = useIntl();
   const history = useHistory();
   const [count, setCount] = useState(0);
   const [upload, setUpload] = useState(false);
+
+  const explorerLink = `https://explorer.testnet.near.org/transactions/${hash}`;
+
   const goToDash = () => {
     close();
     history.push('/');
   };
+
   useEffect(() => {
-    setTimeout(() => setCount(count + 1), 4500);
-    setTimeout(() => setUpload(true), 10000);
+    document.body.classList.add('no-scroll');
+
+    const timer1 = setTimeout(() => setCount(count + 1), 4500);
+    const timer2 = setTimeout(() => setUpload(true), 10000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      document.body.classList.remove('no-scroll');
+    };
   }, []);
+
   return (
     <div className="wizard__popup">
       <div className="wizard__popup-bg" />
@@ -35,7 +48,7 @@ const PopupSuccess = ({ close }) => {
             <p className="first">{intl.formatMessage(wizardPopupDesc)}</p>
             <p className="second">
               Your Project NFT:
-              <a href="https://explorer.testnet.near.org/transactions/iyCR99eKoMnaRwczyn5v7TWEEwXKA3DBDYkiaA4AgGL" target="_blank" rel="noreferrer">Here</a>
+              <a href={explorerLink} target="_blank" rel="noreferrer">Here</a>
             </p>
           </div>
           <div className="wizard__popup-btn">

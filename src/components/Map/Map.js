@@ -6,7 +6,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import area from '@turf/area';
 import centerOfMass from '@turf/center-of-mass';
 import html2canvas from 'html2canvas';
-import Canvas2Image from 'canvas2image-2';
+// import Canvas2Image from 'canvas2image-2';
 import API from '../../api/api-map';
 import olc from '../../utils/openlocal';
 import CustomBtn from '../CustomBtn';
@@ -15,7 +15,8 @@ import { initIPFS } from '../../state/ipfs';
 
 const Map = ({ state, setState, setShow, intl, clear }) => {
   const [map, setMap] = useState(null);
-
+  const [loadingIPfs, setLoadingIPfs] = useState(false);
+  const [loadingMap, setLoadingMap] = useState(false);
   const [datePolygon, setDataPolygon] = useState({ region: '',
     polygon: [],
     codePlus: null,
@@ -23,45 +24,32 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
     square: 0,
     coordinate: { longitude: '', latitude: '' } });
   const [coord, setCoord] = useState({
-    lng: 5,
-    lat: 34,
-    zoom: 2,
+    lng: state.coordinate.longitude || 5,
+    lat: state.coordinate.latitude || 34,
+    zoom: 0,
   });
   const mapContainer = useRef(null);
   const screen = useRef(null);
+
   // eslint-disable-next-line no-unused-vars
   const printImg = () => {
-    html2canvas(screen.current, {
+    setLoadingMap(true);
+    html2canvas(mapContainer.current, {
       useCORS: true,
       removeContainer: false,
+      x: 0,
+      y: 0,
+      scrollY: -61,
     }).then(async (canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      console.log(Buffer.from(imgData), 'sdsd'); // Maybe blank, maybe full image, maybe half of image
-      console.log(Canvas2Image.convertToPNG(canvas), 'imgData'); // Maybe blank, maybe full image, maybe half of image
-      // pdf.addImage(imgData, 'PNG', 10, 10);
-      // pdf.save('download.pdf');
-      // const reader = new window.FileReader();
-      // reader.readAsArrayBuffer(canvas);
-      // reader.onloadend = () => {
-      //   // eslint-disable-next-line no-use-before-define
-      //   console.log(reader, 'reader');
-      // };
-      // setImg(Canvas2Image.convertToPNG(canvas));
-      canvas.toBlob((blob) => {
-        console.log(URL.createObjectURL(blob));
+      canvas.toBlob(async (blob) => {
+        const ipfs = await initIPFS();
+        const res = await ipfs.add(blob);
+        const updDatePolygon = { ...datePolygon, cidScreenShot: res.path };
+        setDataPolygon(updDatePolygon);
+        setLoadingIPfs(true);
+        setLoadingMap(false);
+        console.log('SAVE MAP TO IPFS -------------->', res);
       }, 'canvas.toBlob');
-      const addOptions = {
-        pin: true,
-        wrapWithDirectory: true,
-        timeout: 10000,
-      };
-      const newArray = [];
-      newArray.push({ path: 'map.png', content: imgData });
-
-      const ipfs = await initIPFS();
-      for await (const result of ipfs.addAll(newArray, addOptions)) {
-        console.log(result, 'result');
-      }
     });
   };
   useEffect(() => {
@@ -73,13 +61,13 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
       const map = new mapboxgl.Map({
         container: mapContainer.current, // container id
         style: 'mapbox://styles/mapbox/satellite-v9', // hosted style id
-        center: [-91.874, 42.76], // starting position
-        zoom: 10,
+        center: [coord.lng, coord.lat], // starting position
+        zoom: coord.zoom,
         preserveDrawingBuffer: true,
       });
 
       function rotate() {
-        map.easeTo({ bearing: 40, duration: 5000, pitch: 0, zoom: 14 });
+        map.easeTo({ bearing: 40, duration: 5000, pitch: 0, zoom: 5 });
       }
 
       map.on('load', () => {
@@ -114,6 +102,7 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
       console.log(state.polygon, 'state.polygon[0]!!!!!!');
       if (state.polygon.length > 0) {
         draw.add(state.polygon[0]);
+        setCoord({ lng: state.coordinate[0], lat: state.coordinate[1], zoom: 0 });
         // eslint-disable-next-line no-use-before-define
         updateArea(state.polygon[0], true);
       }
@@ -123,7 +112,9 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
         const data = draw.getAll();
         const center = centerOfMass(features).geometry.coordinates;
         const place = await API.getInfoForMap(center[1], center[0]);
-
+        let placeName;
+        if (place.features.length > 0)placeName = place.features[0].place_name;
+        else placeName = 'Not Found';
         if (data.features.length > 1) {
           draw.delete(features.id);
           return false;
@@ -132,7 +123,7 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
           const areaData = area(data);
           const roundedArea = Math.round(areaData * 100) / 100;
           setDataPolygon({
-            region: place.features[0].place_name,
+            region: placeName,
             polygon: data.features,
             polygonCoordinate: features.geometry.coordinates,
             codePlus: olc.encode(center[1], center[0]),
@@ -140,7 +131,7 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
             coordinate: { longitude: center[0], latitude: center[1] },
           });
           setState({
-            region: place.features[0].place_name,
+            region: placeName,
             polygon: data.features,
             codePlus: olc.encode(center[1], center[0]),
             square: roundedArea,
@@ -173,18 +164,28 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
     if (!map) initializeMap({ setMap, mapContainer });
   }, [map]);
 
-  const uploadStateCoordinate = () => {
-    // printImg();
-    clear(['latitude', 'region', 'longitude']);
-    console.log(datePolygon, 'datePolygon');
-    datePolygon.polygonCoordinate[0].map((el) => console.log(olc.encode(el[1], el[0])), 'coorenita');
-    setState(datePolygon);
-    setShow(false);
+  const uploadStateCoordinate = async () => {
+    printImg();
   };
 
+  useEffect(() => {
+    if (loadingIPfs) {
+      clear(['latitude', 'region', 'longitude']);
+      console.log(datePolygon, 'datePolygon');
+      datePolygon.polygonCoordinate[0].map((el) => console.log(olc.encode(el[1], el[0])), 'coorenita');
+      setState(datePolygon);
+      setShow(false);
+    }
+  }, [loadingIPfs]);
   // const customClass = show ? 'active' : '';
   return (
     <div className="map" ref={screen}>
+      {loadingMap && (
+      <p className="map__loading">
+        <i className="icon-shield" />
+        Sending data to IPFS...
+      </p>
+      )}
       <div className="map__box">
         <div className="map__box-info">
           <div>

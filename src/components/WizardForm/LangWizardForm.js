@@ -1,5 +1,5 @@
 const title = { id: 'wizard.title', defaultMessage: 'Launch a New Project' };
-const titlePreview = { id: 'wizard.title', defaultMessage: 'Your Project Preview' };
+const titlePreview = { id: 'wizard.title.preview', defaultMessage: 'Your Project Preview' };
 const backPreview = { id: 'wizard.back.preview', defaultMessage: 'Back to Edit' };
 const step1 = { id: 'wizard.step1', defaultMessage: 'General Information' };
 const step2 = { id: 'wizard.step2', defaultMessage: 'Project Location' };
@@ -15,19 +15,21 @@ const step1Input1Place = { id: 'wizard.step1.input1.place', defaultMessage: 'Nam
 const step1Input2 = { id: 'wizard.step1.input2', defaultMessage: 'Project Developer' };
 const step1Input2Place = { id: 'wizard.step1.input2.place', defaultMessage: 'Type here' };
 const step1Input3 = { id: 'wizard.step1.input3', defaultMessage: 'Duration Of Project' };
-const step1Input4 = { id: 'wizard.step1.input4', defaultMessage: 'Project Budget' };
+const step1Input4 = { id: 'wizard.step1.input4', defaultMessage: 'Project Budget ($USD)' };
 const step1Input4Place = { id: 'wizard.step1.input4.place', defaultMessage: 'Budget' };
 const step1Input5 = { id: 'wizard.step1.input5', defaultMessage: 'Funders' };
 const step1Input5Info = { id: 'wizard.step1.input5.label', defaultMessage: 'Funder Information' };
 const step1Input5Place = { id: 'wizard.step1.input5.place', defaultMessage: 'Information' };
 const step1Input6 = { id: 'wizard.step1.input6', defaultMessage: 'Project Icon' };
-const step1Input7 = { id: 'wizard.step1.input7', defaultMessage: 'General Information' };
+const step1Input7 = { id: 'wizard.step1.input7', defaultMessage: 'Project Description' };
 const step1Creator = { id: 'wizard.step1.creator', defaultMessage: 'Add Funder' };
 const step1CreatorLabel = { id: 'wizard.step1.creator-label', defaultMessage: 'Funder' };
 const wizardBtnNext = { id: 'wizard.step1.btn-label.next', defaultMessage: 'Next' };
 const wizardBtnBack = { id: 'wizard.step1.btn-label.back', defaultMessage: 'Back' };
 const wizardFiles = { id: 'wizard.files', defaultMessage: 'Files' };
 const step2Input1 = { id: 'wizard.step2.input1', defaultMessage: 'Map Coordinates' };
+const step2GeoLabel = { id: 'wizard.step2.geo', defaultMessage: 'GEOjson File Upload' };
+const step2GeoBtn = { id: 'wizard.step2.geo.btn', defaultMessage: 'Upload file' };
 const step2BtnLabel = { id: 'wizard.step2.btn-label', defaultMessage: 'Open Map' };
 const step2Input1Place1 = { id: 'wizard.step2.input1.place1', defaultMessage: 'Longitude' };
 const step2Input1Place2 = { id: 'wizard.step2.input1.place2', defaultMessage: 'Latitude' };
@@ -45,30 +47,32 @@ const step3Ben = { id: 'wizard.step3.ben', defaultMessage: 'Benefits' };
 const step3Input5 = { id: 'wizard.step3.input5', defaultMessage: 'Upload Files' };
 const step3Area = { id: 'wizard.step3.area', defaultMessage: 'Additional Project Information:' };
 const step3AreaPlace = { id: 'wizard.step3.area.place', defaultMessage: 'Additional Project Information:' };
-const step3TooltipText = { id: 'wizard.step3.tooltip1', defaultMessage: 'The more details you provide about your project, the better it is introduced to the community. Include tree species, suppliers, information about yourself and your team, etc.' };
+const step3TooltipTextArea = { id: 'wizard.step3.tooltip.textarea', defaultMessage: 'The more details you provide about your project, the better it is introduced to the community. Include tree species, suppliers, information about yourself and your team, etc.' };
 const step4TitleCoast = { id: 'wizard.step4.title-coast', defaultMessage: 'Project Costs' };
 const step4TitleTime = { id: 'wizard.step4.title-time', defaultMessage: 'Project Costs' };
 const step4Tooltip1 = { id: 'wizard.step4.tooltip1', defaultMessage: 'The cost of minting the NFT, a unique digital item in the blockchain that will represent the plot of land that will be reforested in your project.' };
 const step4Tooltip2 = { id: 'wizard.step4.tooltip2', defaultMessage: 'The amount of DAI to be locked o your wallet to start the project, which can later be used to cover the first stage report upload fee.' };
 const step4Tooltip3 = { id: 'wizard.step4.tooltip3', defaultMessage: 'The sum of Project Creation Cost and Project Deposit for covering the first stage report upload.' };
+const step3TooltipFiles = { id: 'wizard.step3.tooltip.files', defaultMessage: 'Add supporting documentation on your project. Legal documentation on your rights to use the plot of land (i.e. rent agreement, legal ownership, local community permission, etc) will greatly boost your project launch and incentivise collateral providers’ and validators’ support and commitment.' };
 const step4Tooltip4 = { id: 'wizard.step4.tooltip4', defaultMessage: 'The total amount to cover your Project Creation Costs and fee for report uploads during all stages of your project.' };
 const step4Coast1 = { id: 'wizard.step4.coast1', defaultMessage: 'Project Creation Cost:' };
 const step4Coast2 = { id: 'wizard.step4.coast2', defaultMessage: 'Project Deposit:' };
-const step4Coast3 = { id: 'wizard.step4.coast3', defaultMessage: 'Costs required to start the project:' };
+const step4Coast3 = { id: 'wizard.step4.coast3', defaultMessage: 'Costs Required To Start Project:' };
 const step4Coast4 = { id: 'wizard.step4.coast4', defaultMessage: 'Total Project Costs:' };
-const step4PointDai = { id: 'wizard.step4.point-dai', defaultMessage: ' Data upload fee, DAI ' };
+const step4PointDai = { id: 'wizard.step4.point-dai', defaultMessage: ' Data upload fee, USD ' };
 const step4PointSlope = { id: 'wizard.step4.point-slope', defaultMessage: 'Data upload fee slope, %' };
 const ste4Phase = { id: 'wizard.step4.phase', defaultMessage: 'Phase' };
 const step4Preview = { id: 'wizard.step4.preview', defaultMessage: 'Preview' };
 const ste4Month = { id: 'wizard.step4.month', defaultMessage: 'Months' };
+const previewFiles = { id: 'wizard.preview.files', defaultMessage: 'Uploaded Files' };
 const ste4Create = { id: 'wizard.step4.create', defaultMessage: 'Create Project' };
 const wizardPopupTitle = { id: 'wizard.popup.title', defaultMessage: 'Success!' };
 const wizardPopupDesc = { id: 'wizard.popup.desc', defaultMessage: 'Congratulations! Your project has been created successfully.' };
 const wizardPopupBtn = { id: 'wizard.popup.btn-label', defaultMessage: 'Continue' };
 export { title, titlePreview, btnLabel, step1, step2, step3, step4, step1Input0, DropzoneBtn, DropzoneReplace, DropzoneDelete,
-  wizardFiles, step1Input1, step1Input1Place, step1Input2, step1Input2Place, step1Input3, step3Option1, step3Option2, step3Option3,
+  wizardFiles, step1Input1, step1Input1Place, step1Input2, step1Input2Place, step1Input3, step3Option1, step3Option2, step3Option3, previewFiles,
   step1Input4, step1Input4Place, step1Input5, step1Input5Place, step1Input6, step4Tooltip1, step4Tooltip2, step4Tooltip3, step4Tooltip4,
   step1Input7, step1Creator, step1CreatorLabel, wizardBtnNext, wizardBtnBack, wizardPopupTitle, wizardPopupDesc, wizardPopupBtn, backPreview,
   step2Input1, step2Input1Place1, step2Input1Place2, step2Input2, step2CodePlus, step2BtnLabel, step4Preview, step1Input5Info,
-  step3Input1, step3Input2, step3Input3, step3Input3Place, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace,
-  step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, ste4Create, step3TooltipText };
+  step3Input1, step3Input2, step3Input3, step3Input3Place, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step2GeoBtn,
+  step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, step2GeoLabel, ste4Create, step3TooltipTextArea, step3TooltipFiles };

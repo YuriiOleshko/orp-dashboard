@@ -9,5 +9,3 @@ export const initIPFS = async () => {
   console.log('ipfs connect', ipfs);
   return ipfs;
 };
-
-export default initIPFS;

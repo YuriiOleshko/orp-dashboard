@@ -29,7 +29,7 @@
 
   &__btn-wrapper{
     max-width: 880px;
-    margin: 30px auto 20px ;
+    margin: 40px auto 20px ;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -37,11 +37,25 @@
       flex-basis: 47%;
     }
   }
+  &__list{
+    margin-top: 5px;
+    li {
+      font-size: 12px;
+      line-height: 14px;
+      padding: 5px 0;
+    }
+  }
 
   &__wrapper-element{
     flex-basis: 47%;
+
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     &.big{
       flex-basis: 100%;
+      overflow-x: visible;
     }
   }
 
@@ -53,17 +67,21 @@
 
   &__gen{
     max-width: 880px;
-    margin: auto;
+    margin: 40px auto auto;
+
   }
 
 
   &__field{
     margin-top: 8px;
     @include theme-aware('background-color', 'color-bg-menu');
-    padding: 18px 5px 18px 20px;
+    padding: 0px 5px 0px 20px;
     border-radius: 6px;
     border: none;
     max-height: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
 
     font-size: 16px;
     font-weight: 400;
@@ -74,7 +92,15 @@
     &.textarea{
       min-height: 140px;
     }
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    &::-webkit-scrollbar { width: 2px; height: 2px;}
+    &::-webkit-scrollbar-button {  display: none}
+    &::-webkit-scrollbar-thumb { height: 10px; background-color: $lightGreen; border-radius: 3px;}
+
   }
+
 
   &__wrapper-element{
     margin-bottom: 20px;
@@ -91,6 +117,8 @@
       flex-basis: 32%!important;
     }
   }
+
+
 
   &__funder{
     flex-basis: 100%;

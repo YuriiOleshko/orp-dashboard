@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useForm } from 'react-hook-form';
+// eslint-disable-next-line no-unused-vars
+import { Controller, useForm } from 'react-hook-form';
+// eslint-disable-next-line no-unused-vars
+import NumberFormat from 'react-number-format';
+
 import { useIntl } from 'react-intl';
 import {
   step1Input1, step1Input1Place, step1Input2, step1Input2Place,
@@ -132,7 +136,35 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           error={errors.budjet}
           value={state.budjet}
           name="budjet"
+          onlyNumber
+          currency="USD"
         />
+        {/*        <Controller */}
+        {/*          render={() => ( */}
+        {/*            <NumberFormat */}
+        {/*              customInput={( */}
+        {/*                <CustomInput */}
+        {/*                  type="text" */}
+        {/*                  label={intl.formatMessage(step1Input4)} */}
+        {/*                  placeholder={intl.formatMessage(step1Input4Place)} */}
+        {/*                  register={register({ required: 'This is required', maxLength: 100 })} */}
+        {/*                  required */}
+        {/*                  error={errors.budjet} */}
+        {/*                  value={state.budjet} */}
+        {/*                  name="budjet" */}
+        {/*                /> */}
+        {/* )} */}
+        {/*              onValueChange={(v) => { */}
+        {/*                // value without dollar signe */}
+        {/*                console.log(v.value); */}
+        {/*              }} */}
+        {/*              // value={value} */}
+        {/*            /> */}
+        {/*          )} */}
+        {/*          name="budjet" */}
+        {/*          control={control} */}
+        {/*          fixedDecimalScale */}
+        {/*        /> */}
         <div className="wizard__funders-wrapper">
           <div className="wizard__creator" onClick={() => createInput(countStep + 1)}>
             <i className="icon-plus-cir" />
@@ -154,7 +186,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
         ))}
         <div className="wizard__icon-file">
           <span className="input__label">{intl.formatMessage(step1Input6)}</span>
-          <DropzoneInput classCutom="" change={setFileIcon} />
+          <DropzoneInput classCutom="" change={setFileIcon} state={state} />
         </div>
         <div className="wizard__textarea">
           <label className="input__label ">{intl.formatMessage(step1Input7)}</label>

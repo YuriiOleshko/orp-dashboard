@@ -4,13 +4,13 @@ import * as nearAPI from 'near-api-js';
 import { getWallet, getContract } from '../utils/near-utils';
 
 export const {
-	networkId, nodeUrl, contractName, contractMethods
+	networkId, nodeUrl, contractName, contractMethods, GAS
 } = getConfig();
 
 export const {
 	utils: {
 		format: {
-			formatNearAmount
+			formatNearAmount, parseNearAmount
 		}
 	}
 } = nearAPI;

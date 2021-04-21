@@ -16,6 +16,10 @@ body {
 html {
   font-size: 18px;
 }
+
+li{
+  list-style-type: none;
+}
 h2 {
    font-size: 28px;
    line-height: 1.2;
@@ -200,6 +204,9 @@ p {
         top: 0;
         left: -10px;
       }
+    }
+    &.bold{
+      font-weight: 700;
     }
   }
   &__error{

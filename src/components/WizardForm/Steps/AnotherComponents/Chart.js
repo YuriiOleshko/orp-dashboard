@@ -22,7 +22,7 @@ const Chart = ({ data }) => (
     <YAxis />
     <Tooltip />
     {/* <Area type="monotone" dataKey="amt" fill="#8884d8" stroke="#8884d8" /> */}
-    <Bar dataKey="Data Upload Fee, DAI" barSize={60} fill="#3FDD7E" />
+    <Bar dataKey="Data Upload Fee, USD" barSize={60} fill="#3FDD7E" />
     <Line
       type="monotone"
       dataKey="Data Upload Fee Slope, %"
