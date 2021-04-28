@@ -75,7 +75,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   return (
     <div className="wizard__wrapper-form">
       {showMap && <Map state={coordinate} globalSetState={setState} globalState={state} setState={setCoordinate} setShow={setShowMap} intl={intl} clear={clearErrors} setShowPrev={setShowPrev} />}
-      {(showPrev && !state.polygon) && (
+      {(showPrev && !state.codePlus) && (
       <PrevScreenLocation
         coordinate={coordinate}
         setCoordinate={setCoordinate}
@@ -89,7 +89,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
         setShowPrev={setShowPrev}
       />
       )}
-      {(!showPrev || state.polygon) && (
+      {(!showPrev || state.codePlus) && (
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="wizard__coord-big">
           <div className="wizard__wrapper-input">
