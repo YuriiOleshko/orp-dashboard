@@ -39,7 +39,6 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 		await update('', { near, wallet, contractAccount, account });
 		const contract = getContract(account, contractMethods);
 		const userProfile = await contract.get_data({account_id: account.accountId});
-		console.log('userProfile', userProfile)
 		await update('app', {profile: JSON.parse(userProfile)});
 	}
 

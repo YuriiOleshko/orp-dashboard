@@ -1,5 +1,7 @@
 const title = { id: 'existing.title', defaultMessage: 'Existing Projects' };
-const filterItem1 = { id: 'existing.filter.item1', defaultMessage: 'All projects' };
-const filterItem2 = { id: 'existing.filter.item2', defaultMessage: 'Option1' };
-const filterItem3 = { id: 'existing.filter.item3', defaultMessage: 'Option2' };
-export { title, filterItem1, filterItem2, filterItem3 };
+const filterStatus = { id: 'existing.filter.status', defaultMessage: 'Status' };
+const filterName = { id: 'existing.filter.name', defaultMessage: 'Name' };
+const filterLocation = { id: 'existing.filter.location', defaultMessage: 'Location' };
+const filterArea = { id: 'existing.filter.area', defaultMessage: 'Area, sq.km' };
+const filterDuration = { id: 'existing.filter.duration', defaultMessage: 'Duration' };
+export { title, filterStatus, filterName, filterLocation, filterArea, filterDuration };

@@ -13,7 +13,7 @@ import CustomBtn from '../CustomBtn';
 import { wizardBtnBack } from '../WizardForm/LangWizardForm';
 import { initIPFS } from '../../state/ipfs';
 
-const Map = ({ state, setState, setShow, intl, clear }) => {
+const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
   const [map, setMap] = useState(null);
   const [loadingIPfs, setLoadingIPfs] = useState(false);
   const [loadingMap, setLoadingMap] = useState(false);
@@ -172,9 +172,9 @@ const Map = ({ state, setState, setShow, intl, clear }) => {
     if (loadingIPfs) {
       clear(['latitude', 'region', 'longitude']);
       console.log(datePolygon, 'datePolygon');
-      datePolygon.polygonCoordinate[0].map((el) => console.log(olc.encode(el[1], el[0])), 'coorenita');
       setState(datePolygon);
       setShow(false);
+      setShowPrev(false);
     }
   }, [loadingIPfs]);
   // const customClass = show ? 'active' : '';

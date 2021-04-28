@@ -1,0 +1,410 @@
+.project {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .btn__back {
+      background: $btn_back;
+      border-radius: 90px;
+      width: 154px;
+      padding: 5px 21px 5px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: $color-font;
+      box-shadow: none;
+
+      &:hover {
+        background-color: $btn_back;
+      }
+
+      & .icon-arrow {
+        margin-right: 5px;
+        font-size: 16px;
+        vertical-align: text-bottom;
+      }
+    }
+
+    .btn__edit-grey {
+      width: 120px;
+      background-color: transparent;
+      box-shadow: none;
+      font-size: 12px;
+      font-weight: 700;
+      color: $color-font;
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      & .icon-pencil {
+        margin-right: 12px;
+        font-size: 18px;
+        vertical-align: text-bottom;
+        &::before {
+          color: #cecece;
+        }
+      }
+    }
+
+    .header-name {
+      font-size: 28px;
+      font-weight: 700;
+    }
+  }
+
+  &__stage {
+    display: flex;
+    padding: 17px 10px 10px 20px;
+    background-color: $white;
+    border-radius: 8px;
+    margin-bottom: 31px;
+
+    .stage-titles {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      font-size: 16px;
+      font-weight: 700;
+      background-color: #FFFFFF;
+      margin-right: 10px;
+
+      .title-item {
+        display: block;
+        margin-bottom: 32px;
+
+        &:last-child {
+          margin-bottom: 8px;
+        }
+      }
+    }
+
+    .stage-image {
+      margin-bottom: 10px;
+      img {
+        display: block;
+        width: 100%;
+      }
+    }
+
+    .stage-list {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      flex: 1;
+
+      .stage-item {
+        min-width: 120px;
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .upload-item,
+        .collateral-item,
+        .term-item {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 40px;
+          border-radius: 2px;
+          background-color: $btn_back;
+          margin-bottom: 10px;
+        }
+
+        .upload-item {
+          .icon-galka {
+            display: none;
+          }
+
+          &-confirmed {
+            background-color: $confirmed;
+
+            .icon-galka {
+              display: initial;
+
+              &::before {
+                color: $white;
+                opacity: 0.5;
+              }
+            }
+          }
+        }
+
+        .collateral-item {
+          &-text {
+            color: $white;
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0.5;
+          }
+          &-active {
+            background-color: $confirmed;
+          }
+          &-lost {
+            background-color: $denied;
+            cursor: pointer;
+          }
+        }
+
+        .term-item {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 0;
+          &-start,
+          &-end {
+            color: $white;
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0.5;
+          }
+          &-past {
+            background-color: $color-activeIcon-gray;
+          }
+        }
+
+        .collateral-lost-tooltip {
+          padding: 16px 17px !important;
+          background-color: $white !important;
+          border-radius: 2px !important;
+          font-size: 12px !important;
+          font-weight: 700 !important;
+          color: $color-font !important;
+          width: 220px !important;
+        }
+      }
+    }
+  }
+
+  &__funders {
+    padding: 18px 0px 35px 20px;
+    background: $white;
+    border-radius: 8px;
+    font-size: 16px;
+
+    .funders-title {
+      font-weight: bold;
+    }
+
+    .funders-chart {
+      height: 182px;
+
+      .recharts-legend-wrapper {
+        margin-left: 200px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .legend-name {
+        font-weight: 700;
+      }
+
+      .legend-pointer {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        margin-right: 9px;
+      }
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 30px;
+    padding: 30px;
+    background: $white;
+    border-radius: 8px;
+    font-size: 16px;
+
+    .col {
+      flex-basis: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .info-item {
+      margin-bottom: 16px;
+
+      &:nth-child(n + 5) {
+        margin-bottom: 0;
+      }
+    }
+
+    .info-value {
+      font-weight: 700;
+    }
+  }
+
+  &__text {
+    display: flex;
+    margin-top: 30px;
+  }
+
+  &__description {
+    flex: 1;
+    background: $white;
+    padding: 20px;
+    margin-right: 30px;
+    border-radius: 8px;
+    font-size: 16px;
+
+    .description-title {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+  }
+
+  &__files {
+    padding: 20px 45px 27px 30px;
+    background-color: $white;
+    font-size: 16px;
+    border-radius: 8px;
+
+    .files-title {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .file-item {
+      margin-bottom: 4px;
+      font-size: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .file-visibility {
+      color: $color-icon-gray;
+      margin-left: 8px;
+    }
+
+    .file-public {
+      color: $lightBlue;
+    }
+  }
+
+  &__benefits {
+    background: $white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+
+    .benefits-title {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .benefits-list {
+      display: flex;
+    }
+  }
+
+  &__location {
+    margin-top: 34px;
+
+    .location-title {
+      display: block;
+      margin-left: 20px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .location-img {
+      height: 304px;
+
+      .scaler__wrapper {
+        height: 304px;
+      }
+    }
+  }
+
+  &__footer {
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    .btn__edit-primary {
+      display: block;
+      margin: auto;
+      width: 180px;
+      padding: 10px 24px 10px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: $white;
+      box-shadow: none;
+
+      &:hover {
+        box-shadow: 0px 4px 4px rgb(0, 0, 0, 25%);
+      }
+
+      & .icon-pencil {
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1400px) {
+  .project {
+    &__info {
+      .col {
+        flex-basis: 100%;
+      }
+      .col-1 {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .project {
+    &__text {
+      flex-direction: column;
+    }
+    &__files {
+      margin-top: 30px;
+    }
+    &__description {
+      margin-right: 0;
+    }
+  }
+}
+
+@media (max-width: 1050px) {
+  .project {
+    &__funders {
+      .funders-chart {
+        .legend-item {
+          display: inline-flex;
+          margin-bottom: 0;
+          margin-right: 16px;
+        }
+
+        .recharts-legend-wrapper {
+          margin-left: 0;
+          margin-top: 110px;
+        }
+      }
+    }
+
+    &__info {
+      justify-content: start;
+    }
+  }
+}

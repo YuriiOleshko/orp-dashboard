@@ -5,21 +5,23 @@ import {
 } from '../../LangWizardForm';
 import CustomInput from '../../../CustomInput';
 
-const FunderInfo = ({ inputsArray, change, registerName, registerInfo, count, intl, deleteInput }) => (
+const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerPart, count, intl, deleteInput }) => (
   <>
     {count > 0 ? (
       <div className="wizard__funder sup">
         <div className="wizard__wrapper-input">
-          <CustomInput
-            type="text"
-            placeholder={intl.formatMessage(step1Input1Place)}
-            register={registerName}
-            value={inputsArray[count][`FunderName${count}`]}
-            name={`funders.${count}.name`}
-            change={(ev) => change(ev, `FunderName${count}`, count)}
-
-          />
-          <div className="wizard__wrap-close">
+          <div className="wizard__funder-name">
+            <CustomInput
+              type="text"
+              placeholder={intl.formatMessage(step1Input1Place)}
+              register={registerName}
+              value={inputsArray[count][`FunderName${count}`]}
+              name={`funders.${count}.name`}
+              change={(ev) => change(ev, `FunderName${count}`, count)}
+            />
+            <i className="wizard__delete-field icon-trash" onClick={() => deleteInput(count)} />
+          </div>
+          <div className="wizard__funder-info">
             <CustomInput
               type="text"
               placeholder={intl.formatMessage(step1Input5Place)}
@@ -28,7 +30,14 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, count, in
               name={`funders.${count}.desc`}
               change={(ev) => change(ev, `FunderInfo${count}`, count)}
             />
-            <i className="wizard__close icon-close" onClick={() => deleteInput(count)} />
+            <CustomInput
+              type="number"
+              placeholder="%"
+              register={registerPart}
+              value={inputsArray[count][`FunderPart${count}`]}
+              name={`funders.${count}.part`}
+              change={(ev) => change(ev, `FunderPart${count}`, count, true)}
+            />
           </div>
         </div>
       </div>
@@ -44,7 +53,8 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, count, in
             name="funders.0.name"
             change={(ev) => change(ev, 'FunderName', count)}
           />
-          <div className="wizard__wrap-close">
+
+          <div className="wizard__funder-info">
             <CustomInput
               type="text"
               label={intl.formatMessage(step1Input5Info)}
@@ -53,6 +63,14 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, count, in
               value={inputsArray[0].FunderInfo}
               name="funders.0.desc"
               change={(ev) => change(ev, 'FunderInfo', count)}
+            />
+            <CustomInput
+              type="number"
+              placeholder="%"
+              register={registerPart}
+              value={inputsArray[count][`FunderPart${count}`]}
+              name="funders.0.part"
+              change={(ev) => change(ev, `FunderPart${count}`, count, true)}
             />
           </div>
         </div>

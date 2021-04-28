@@ -1,3 +1,11 @@
+.icon-eye:before {
+  content: "\e915";
+  color: #2ec3e9;
+}
+.icon-without-eye:before {
+  content: "\e916";
+  color: #cecece;
+}
 .icon-account:before {
   content: "\e900";
   color: #fff;
@@ -50,13 +58,13 @@
   content: "\e90c";
   color: #cecece;
 }
-.icon-shield-gal:before {
-  content: "\e90d";
-  color: #cecece;
-}
 .icon-shield:before {
-  content: "\e90e";
+  content: "\e90d";
   color: #ffae4f;
+}
+.icon-shield-gal:before {
+  content: "\e90e";
+  color: #cecece;
 }
 .icon-trash:before {
   content: "\e90f";
@@ -77,4 +85,16 @@
 .icon-warning:before {
   content: "\e913";
   color: #ff6c58;
+}
+.icon-pencil:before {
+  content: "\e914";
+  color: #ffffff;
+}
+.icon-play:before {
+  content: "\ea1c";
+  color: #cecece;
+}
+.icon-arrow:before {
+  content: "\ea40";
+  color: #4d4d4d;
 }

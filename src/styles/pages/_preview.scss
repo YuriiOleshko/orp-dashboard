@@ -43,11 +43,30 @@
       font-size: 12px;
       line-height: 14px;
       padding: 5px 0;
+      display: flex;
+    }
+  }
+
+  &__wrapper-info{
+    display: flex;
+    justify-content: space-between;
+    & .preview__field {
+      display: flex;
+
+
+      &:first-child{
+        flex-basis: 65%;
+      }
+      &:last-child{
+        flex-basis: 30%;
+        max-width: 116px;
+      }
     }
   }
 
   &__wrapper-element{
     flex-basis: 47%;
+
 
     overflow-x: hidden;
     &::-webkit-scrollbar {
@@ -88,7 +107,15 @@
     &.small{
       font-size: 14px;
     }
-
+    &.center{
+      justify-content: center;
+      & .bold{
+        margin-left: 4px;
+      }
+    }
+    & .bold{
+      font-weight: 700;
+    }
     &.textarea{
       min-height: 140px;
     }

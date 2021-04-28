@@ -4,7 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 // eslint-disable-next-line no-unused-vars
 import { Controller, useForm } from 'react-hook-form';
 // eslint-disable-next-line no-unused-vars
-import NumberFormat from 'react-number-format';
 
 import { useIntl } from 'react-intl';
 import {
@@ -27,17 +26,26 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [countStep, setCountStep] = useState(0);
   const [details, setDetails] = useState({});
   const [fileIcon, setFileIcon] = useState({});
-  const [inputsArray, setInputArray] = useState([{ FunderName: '', FunderInfo: '' }]);
-  const handleChange = (ev, type, count) => {
+  const [inputsArray, setInputArray] = useState([{ FunderName: '', FunderInfo: '', FunderPart: '' }]);
+  const handleChange = (ev, type, count, typeInput) => {
     const updArray = inputsArray.slice(0);
-    updArray[count][type] = ev.target.value;
+    console.log(typeInput, 'typeInput');
+
+    if (typeInput) {
+      console.log((+ev.target.value), 'sdfds');
+      if ((+ev.target.value) > 100) {
+        updArray[count][type] = 100;
+        ev.target.value = 100;
+      } else updArray[count][type] = ev.target.value;
+    } else updArray[count][type] = ev.target.value;
+
     setInputArray(updArray);
   };
 
   const createInput = (count) => {
     setCountStep(count);
     const updArray = inputsArray.slice(0);
-    updArray.push({ [`FunderName${count}`]: '', [`FunderInfo${count}`]: '' });
+    updArray.push({ [`FunderName${count}`]: '', [`FunderInfo${count}`]: '', [`FunderPart${count}`]: '' });
     setInputArray(updArray);
   };
 
@@ -181,6 +189,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             change={handleChange}
             registerInfo={register({ maxLength: 100 })}
             registerName={register({ maxLength: 100 })}
+            registerPart={register({ maxLength: 3 })}
             deleteInput={deleteInput}
           />
         ))}

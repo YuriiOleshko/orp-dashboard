@@ -119,6 +119,7 @@ p {
       }
   }
 
+
   &__login {
     padding: 17px 10px 17px 10px;
     display: flex;
@@ -147,6 +148,22 @@ p {
     border: none;
     @include theme-aware('color', 'body-color-font');
   }
+  &__reset{
+    box-shadow: none;
+    i{
+      &:before{
+        color:white!important;
+      }
+    }
+    background: $lightRed!important;
+    &:hover{
+      background: $red!important;
+    }
+    &:active{
+      background: $red!important;
+    }
+  }
+
 
 
 }

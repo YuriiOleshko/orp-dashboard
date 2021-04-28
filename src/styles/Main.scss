@@ -25,6 +25,8 @@
 @import "components/wizard";
 @import "components/map";
 @import "components/scaler";
+@import "components/prev-screen";
+@import "components/loader";
 
 
 
@@ -33,4 +35,5 @@
 @import 'pages/launch';
 @import 'pages/dashboard';
 @import 'pages/preview';
+@import 'pages/project';
 

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 import logo from '../../assets/image/ORPLogo.svg';
 import {
-  btnLabel, ste4Create, backPreview, previewFiles, titlePreview, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4,
+  btnLabel, ste4Create, backPreview, previewFiles, titlePreview, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4TitleCoast, step3Public, step3Private,
 } from '../../components/WizardForm/LangWizardForm';
 import CustomBtn from '../../components/CustomBtn';
 import PopupSuccess from '../../components/WizardForm/Steps/AnotherComponents/PopupSuccess';
@@ -50,6 +50,13 @@ const Preview = ({ state, back, handleMint }) => {
       }
     }
   }, []);
+
+  const chekSaveArray = (path) => {
+    const privateType = state.privateFiles.find((el) => el.path === path);
+    console.log(privateType, 'private');
+    if (privateType) return privateType.private;
+    return false;
+  };
   const [showPopup, setShowPopup] = useState(false);
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -63,25 +70,6 @@ const Preview = ({ state, back, handleMint }) => {
           <ReactSVG src={logo} />
         </div>
         <div>
-          <div className="wizard__unit-list">
-            <div className="wizard__unit__item">
-              <span>{intl.formatMessage(step4Coast1)}</span>
-              <span className="bold blue">50 USD</span>
-            </div>
-            <div className="wizard__unit__item">
-              <span>{intl.formatMessage(step4Coast2)}</span>
-              <span className="bold blue">150  USD</span>
-            </div>
-            <div className="wizard__unit__item">
-              <span>{intl.formatMessage(step4Coast3)}</span>
-              <span className="bold blue">50 USD</span>
-            </div>
-            <div className="wizard__unit__item">
-              <span>{intl.formatMessage(step4Coast4)}</span>
-              <span className="bold blue">1500 USD</span>
-            </div>
-
-          </div>
           <h2 className="wizard__title">
             {intl.formatMessage(titlePreview)}
           </h2>
@@ -95,9 +83,53 @@ const Preview = ({ state, back, handleMint }) => {
       <div className="preview__gen">
         <div className="preview__block">
           <h3 className="preview__title">
-            1
-            .
-            {' '}
+            {intl.formatMessage(step4TitleCoast)}
+          </h3>
+          <div className="preview__block-wrapper">
+            <div className="preview__wrapper-element">
+              <p className="preview__field center">
+                <span>
+                  {intl.formatMessage(step4Coast1)}
+                  {' '}
+                </span>
+                <span className="bold">50 USD</span>
+              </p>
+            </div>
+            <div className="preview__wrapper-element">
+              <p className="preview__field center">
+                <span>
+                  {intl.formatMessage(step4Coast2)}
+                  {' '}
+                </span>
+                <span className="bold">100 USD</span>
+
+              </p>
+            </div>
+            <div className="preview__wrapper-element">
+              <p className="preview__field center">
+                <span>
+                  {intl.formatMessage(step4Coast3)}
+                  {' '}
+                </span>
+                <span className="bold">50 USD</span>
+
+              </p>
+            </div>
+            <div className="preview__wrapper-element">
+              <p className="preview__field center">
+                <span>
+                  {intl.formatMessage(step4Coast4)}
+                  {' '}
+                </span>
+                <span className="bold">1500 USD</span>
+
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="preview__block">
+          <h3 className="preview__title">
             {intl.formatMessage(step1)}
           </h3>
           <div className="preview__block-wrapper">
@@ -154,9 +186,14 @@ const Preview = ({ state, back, handleMint }) => {
                 </div>
                 <div className="preview__wrapper-element">
                   {index === 0 && <span className="preview__label">{intl.formatMessage(step1Input5Info)}</span>}
-                  <p className="preview__field">
-                    {el.desc || ''}
-                  </p>
+                  <div className="preview__wrapper-info">
+                    <p className="preview__field">
+                      {el.desc || ''}
+                    </p>
+                    <p className="preview__field">
+                      {el.part || ''}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -183,9 +220,6 @@ const Preview = ({ state, back, handleMint }) => {
         </div>
         <div className="preview__block">
           <h3 className="preview__title">
-            2
-            .
-            {' '}
             {intl.formatMessage(step2)}
           </h3>
           <div className="preview__block-wrapper">
@@ -233,9 +267,6 @@ const Preview = ({ state, back, handleMint }) => {
         <div className="preview__block">
           <div className="preview__block">
             <h3 className="preview__title">
-              3
-              .
-              {' '}
               {intl.formatMessage(step3)}
             </h3>
             <div className="preview__block-wrapper">
@@ -287,6 +318,20 @@ const Preview = ({ state, back, handleMint }) => {
                       {' '}
                       {file.path}
                       {' '}
+                      {chekSaveArray(file.path)
+                        ? (
+                          <div className="wizard__file-types">
+                            <span className="gray">
+                              {intl.formatMessage(step3Public)}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="wizard__file-types">
+                            <span className="blue">
+                              {intl.formatMessage(step3Private)}
+                            </span>
+                          </div>
+                        )}
                     </li>
                   ))}
                 </ul>

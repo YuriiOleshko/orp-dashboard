@@ -24,19 +24,19 @@ const Menu = () => {
               <i className="icon-charning" />
               {intl.formatMessage(item1)}
             </NavLink>
-            <NavLink activeClassName="active" className="menu__item" to="/collaterial">
+            <Link activeClassName="active" className="menu__item" to="#">
               <i className="icon-shield" />
               {intl.formatMessage(item2)}
-            </NavLink>
-            <Link activeClassName="active" className="menu__item" to="#">
+            </Link>
+            <Link className="menu__item" to="#">
               <i className="icon-shield-gal" />
               {intl.formatMessage(item3)}
             </Link>
-            <Link activeClassName="active" className="menu__item" to="#">
+            <Link className="menu__item" to="#">
               <i className="icon-schems" />
               {intl.formatMessage(item4)}
             </Link>
-            <Link activeClassName="active" className="menu__item" to="#">
+            <Link className="menu__item" to="#">
               <i className="icon-vilka" />
               {intl.formatMessage(item5)}
             </Link>

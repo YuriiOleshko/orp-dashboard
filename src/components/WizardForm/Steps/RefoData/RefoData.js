@@ -13,25 +13,28 @@ import Benefits from '../AnotherComponents/Benefits';
 
 const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
+  const privateArray = state.privateFiles || [];
   const { register, handleSubmit, errors } = useForm();
   const [files, setFiles] = useState([]);
   const [avgTrees, setAvgTrees] = useState({ avgTrees: state.avgTrees || '' });
   // eslint-disable-next-line no-unused-vars
   const [additional, setAdditional] = useState({});
   const [benefits, setBenefits] = useState({});
+  const [filesSave, setFilesSave] = useState(privateArray);
 
   const intl = useIntl();
   // const options = [{ label: intl.formatMessage(step3Option1), value: intl.formatMessage(step3Option1) }, { label: intl.formatMessage(step3Option2), value: intl.formatMessage(step3Option2) }, { label: intl.formatMessage(step3Option3), value: intl.formatMessage(step3Option3) }];
   // eslint-disable-next-line no-unused-vars
   const onSubmit = (data) => {
     console.log(data, 'data');
-    setState({ ...state, ...data, ...additional, ...benefits, ...files, ...avgTrees });
+    const privateFiles = { privateFiles: filesSave };
+    setState({ ...state, ...data, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles });
     nextPage();
   };
 
   const changeAvgTrees = (ev) => {
     console.log(state.square / (+ev.target.value));
-    if (ev.target.value) setAvgTrees({ avgTrees: state.square / (+ev.target.value) });
+    if (ev.target.value) setAvgTrees({ avgTrees: ((+ev.target.value) / state.square).toFixed(3) });
     else setAvgTrees({ avgTrees: '' });
   };
 
@@ -83,7 +86,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
             <span className="input__label">{intl.formatMessage(step3Input5)}</span>
           </div>
 
-          <DropzoneInput classCutom="" change={setFiles} multi amountFiles={10} state={state} />
+          <DropzoneInput classCutom="" change={setFiles} multi amountFiles={10} state={state} filesSave={filesSave} setFilesSave={setFilesSave} />
         </div>
         <div className="wizard__textarea">
           <label className="input__label ">{intl.formatMessage(step3Area)}</label>

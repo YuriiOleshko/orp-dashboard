@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { appStore, onAppMount } from './state/app';
 import RenderRoutes from './components/RenderRoutes';
 import routes from './routes';
 
 const Main = () => {
+  console.log('render Main component');
   const { dispatch } = useContext(appStore);
 
   const onMount = () => {
@@ -17,4 +18,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default React.memo(Main);

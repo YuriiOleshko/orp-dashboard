@@ -10,6 +10,7 @@ import LaunchProject from './page/LaunchProject';
 import CollateralStatus from './page/CollateralStatus';
 import ExistingProject from './page/ExistingProject';
 import LayoutDash from './components/LayoutDash/LayoutDash';
+import ProjectPage from './page/ProjectPage';
 
 const routes = [
   { path: '/login', key: 'ROOT', exact: true, component: () => <Login /> },
@@ -32,6 +33,16 @@ const routes = [
         component: () => (
           <LayoutDash>
             <ExistingProject />
+          </LayoutDash>
+        ),
+      },
+      {
+        path: '/project/:name',
+        key: 'PROJECT',
+        exact: true,
+        component: () => (
+          <LayoutDash>
+            <ProjectPage />
           </LayoutDash>
         ),
       },

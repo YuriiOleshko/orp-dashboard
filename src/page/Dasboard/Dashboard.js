@@ -15,7 +15,7 @@ const Dashboard = () => {
         <div className="dashboard__wrapper">
           <Router history={history}>
             <Route exact path="/" component={() => <ExistingProject />} />
-            <Route exact path="/collaterial" component={() => <CollateralStatus />} />
+            {/* <Route exact path="/collaterial" component={() => <CollateralStatus />} /> */}
           </Router>
         </div>
       </section>

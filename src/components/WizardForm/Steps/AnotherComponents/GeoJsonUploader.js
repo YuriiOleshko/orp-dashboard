@@ -3,7 +3,8 @@ import React, {
 } from 'react';
 import { useIntl } from 'react-intl';
 import { useDropzone } from 'react-dropzone';
-import { step2GeoBtn } from '../../LangWizardForm';
+import { step2GeoBtn, step2Types } from '../../LangWizardForm';
+import CustomBtn from '../../../CustomBtn';
 
 // const defaultState = { region: '',
 //   polygon: [],
@@ -13,7 +14,7 @@ import { step2GeoBtn } from '../../LangWizardForm';
 //   coordinate: { longitude: '', latitude: '' } };
 // eslint-disable-next-line no-unused-vars
 const GeoJsonUploader = ({ coordinate, setCoordinate, jsonFile, state, setState,
-  setJsonFile }) => {
+  setJsonFile, setShowMap }) => {
   const intl = useIntl();
   const [geoJson, setGeoJson] = useState([]);
   const [myFiles, setMyFiles] = useState([]);
@@ -35,6 +36,7 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, jsonFile, state, setState,
     fileread.readAsText(acceptedFiles[0]);
     console.log(geoJson, 'geoJson');
   }, []);
+  // eslint-disable-next-line no-unused-vars
   const removeFile = (file) => {
     console.log(file, 'file');
     const newFiles = [...myFiles];
@@ -64,18 +66,17 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, jsonFile, state, setState,
       setState({ ...state, geoJson: { file: myFiles, geo: geoJson } });
 
       setJsonFile({ geoJson: { file: myFiles, geo: geoJson } });
+      setShowMap(true);
     } else {
       // setCoordinate(defaultState);
     }
   }, [geoJson]);
-  const files = myFiles.map((file, index) => (
-    <li key={file.path + file.path}>
-      {index + 1}
-      .
+  // eslint-disable-next-line no-unused-vars
+  const files = myFiles.map((file) => (
+    <li className="wizard__code-plus" key={file.path + file.path}>
       {' '}
       {file.path}
       {' '}
-      <i className="icon-trash" onClick={() => removeFile(file)} />
     </li>
   ));
   const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: 1, multiple: false });
@@ -84,19 +85,23 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, jsonFile, state, setState,
     <div className="wizard__geo-uploader">
       <div {...getRootProps()}>
         {geoJson.length === 0 && (
-        <div className="wizard__creator-wrapper">
+        <div className="wizard__geo-wrapper">
           <input {...getInputProps()} />
 
-          <i className="icon-plus-cir" />
-          <span>{intl.formatMessage(step2GeoBtn)}</span>
+          <CustomBtn label={intl.formatMessage(step2GeoBtn)} type="button" handleClick={() => {}} customClass="btn__map" />
+          <div className="wizard__types-file">
+            {intl.formatMessage(step2Types)}
+          </div>
         </div>
         )}
-        { myFiles.length > 0
-        && (
-          <aside>
-            <ul>{files}</ul>
-          </aside>
-        )}
+        {/* { myFiles.length > 0 */}
+        {/* && ( */}
+        {/*  <div> */}
+        {/*    <ul>{files}</ul> */}
+        {/*    <CustomBtn label={intl.formatMessage(step2GeoBtn)} type="button" handleClick={() => {}} customClass="btn__map" /> */}
+
+        {/*  </div> */}
+        {/* )} */}
       </div>
     </div>
   );
