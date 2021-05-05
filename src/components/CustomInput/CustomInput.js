@@ -1,6 +1,8 @@
 import React from 'react';
+import { Controller } from 'react-hook-form';
+import NumberFormat from 'react-number-format';
 
-const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change, onlyNumber }) => {
+const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change, onlyNumber, usdMask, control, prefix, suffix, rules, decimal, click }) => {
   const inputType = type || 'text';
   const changeError = (typeError) => {
     if (typeError === 'required') {
@@ -26,17 +28,38 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
     <div className="input">
       {label && <label className={customLabelClass}>{label}</label>}
       {iconClass && <i className={cssImage} />}
-      <input
-        type={inputType}
-        placeholder={placeholder}
-        name={name}
-        defaultValue={value}
-        ref={register}
-        className={classInput}
-        onKeyPress={onlyNumber ? onNumberOnlyChange : () => {}}
-        onChange={change}
-        onWheel={(ev) => ev.target.blur()}
-      />
+      { usdMask ? (
+        <Controller
+          control={control}
+          as={NumberFormat}
+          rules={rules}
+          name={name}
+          thousandSeparator
+          decimalScale={decimal ? 2 : null}
+          // eslint-disable-next-line
+          fixedDecimalScale={decimal ? true : false}
+          decimalSeparator={decimal ? '.' : null}
+          prefix={prefix}
+          suffix={suffix}
+          placeholder={placeholder}
+          className={classInput}
+          defaultValue={value}
+          onValueChange={change}
+          onClick={click}
+        />
+      ) : (
+        <input
+          type={inputType}
+          placeholder={placeholder}
+          name={name}
+          defaultValue={value}
+          ref={register}
+          className={classInput}
+          onKeyPress={onlyNumber ? onNumberOnlyChange : () => {}}
+          onChange={change}
+          onWheel={(ev) => ev.target.blur()}
+        />
+      )}
       {error && <div className="input__error">{changeError(error.type)}</div>}
 
     </div>

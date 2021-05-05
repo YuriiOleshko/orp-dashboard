@@ -4,8 +4,8 @@ import {
   step1CreatorLabel, step1Input5Place,
 } from '../../LangWizardForm';
 import CustomInput from '../../../CustomInput';
-
-const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerPart, count, intl, deleteInput }) => (
+// eslint-disable-next-line no-unused-vars
+const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerPart, count, intl, deleteInput, control, setInputElement }) => (
   <>
     {count > 0 ? (
       <div className="wizard__funder sup">
@@ -31,12 +31,14 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
               change={(ev) => change(ev, `FunderInfo${count}`, count)}
             />
             <CustomInput
-              type="number"
+              control={control}
               placeholder="%"
-              register={registerPart}
               value={inputsArray[count][`FunderPart${count}`]}
               name={`funders.${count}.part`}
+              usdMask
+              suffix="%"
               change={(ev) => change(ev, `FunderPart${count}`, count, true)}
+              click={(ev) => setInputElement(ev.target)}
             />
           </div>
         </div>
@@ -64,12 +66,14 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
               change={(ev) => change(ev, 'FunderInfo', count)}
             />
             <CustomInput
-              type="number"
+              control={control}
               placeholder="%"
-              register={registerPart}
               value={inputsArray[count][`FunderPart${count}`]}
               name="funders.0.part"
+              usdMask
+              suffix="%"
               change={(ev) => change(ev, `FunderPart${count}`, count, true)}
+              click={(ev) => setInputElement(ev.target)}
             />
           </div>
         </div>
