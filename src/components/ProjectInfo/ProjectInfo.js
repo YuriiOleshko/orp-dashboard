@@ -1,49 +1,57 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable no-unneeded-ternary */
 import React from 'react';
 import { useIntl } from 'react-intl';
 import {
-  size,
-  sqkm,
-  trees,
-  totalDuration,
-  months,
-  remainingDuration,
-  uploads,
-  currentOCC,
-  tokens,
-  projectedOCC,
+  sizeText,
+  sqkmText,
+  treesText,
+  totalDurationText,
+  monthsText,
+  remainingDurationText,
+  uploadsText,
+  currentOCCText,
+  tokensText,
+  projectedOCCText,
 } from './LangProjectInfo';
+import { formattedDate, convertDateToMonths } from '../../utils/convert-utils';
 
 const ProjectInfo = ({ data }) => {
+  const { square, amountTrees, startTimeProject, finishTimeProject, remainingUploads = 4, currentOCC = 19, projectedOCC = 87.945 } = data;
+  const noData = '---';
   const intl = useIntl();
+  const currentDate = Date.now();
+
   return (
     <>
       <div className="col col-1">
         <div className="info-item">
           <span className="info-size">
-            {intl.formatMessage(size)}:{' '}
+            {intl.formatMessage(sizeText)}:{' '}
             <span className="info-value">
-              {data.size.sqKm} {intl.formatMessage(sqkm)},
-              {data.size.trees} {intl.formatMessage(trees)}
+              {square ? square : noData} {intl.formatMessage(sqkmText)},
+              {amountTrees ? amountTrees : noData} {intl.formatMessage(treesText)}
             </span>
           </span>
         </div>
         <div className="info-item">
           <span className="info-total-duration">
-            {intl.formatMessage(totalDuration)}:{' '}
+            {intl.formatMessage(totalDurationText)}:{' '}
             <span className="info-value">
-              {data.totalDuration.start} - {data.totalDuration.end}
-              ({data.totalDuration.total} {intl.formatMessage(months)})
+              { startTimeProject && finishTimeProject ? (
+                `${formattedDate(startTimeProject, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - startTimeProject)} ${intl.formatMessage(monthsText)})`
+              ) : noData}
             </span>
           </span>
         </div>
         <div className="info-item">
           <span className="info-total-duration">
-            {intl.formatMessage(remainingDuration)}:{' '}
+            {intl.formatMessage(remainingDurationText)}:{' '}
             <span className="info-value">
-              {data.remainingDuration.start}-{data.remainingDuration.end}
-              ({data.remainingDuration.total} {intl.formatMessage(months)})
+              { startTimeProject && finishTimeProject ? (
+                `${formattedDate(currentDate, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - currentDate)} ${intl.formatMessage(monthsText)})`
+              ) : noData}
             </span>
           </span>
         </div>
@@ -52,25 +60,25 @@ const ProjectInfo = ({ data }) => {
       <div className="col col-2">
         <div className="info-item">
           <span className="info-uploads">
-            {intl.formatMessage(uploads)}:{' '}
+            {intl.formatMessage(uploadsText)}:{' '}
             <span className="info-value">
-              {data.uploads.value}
+              {remainingUploads}
             </span>
           </span>
         </div>
         <div className="info-item">
           <span className="info-current-occ">
-            {intl.formatMessage(currentOCC)}:{' '}
+            {intl.formatMessage(currentOCCText)}:{' '}
             <span className="info-value">
-              {data.currentOCC.value} {intl.formatMessage(tokens)}
+              {currentOCC} {intl.formatMessage(tokensText)}
             </span>
           </span>
         </div>
         <div className="info-item">
           <span className="info-size">
-            {intl.formatMessage(projectedOCC)}:{' '}
+            {intl.formatMessage(projectedOCCText)}:{' '}
             <span className="info-value">
-              {data.projectedOCC.value} {intl.formatMessage(tokens)}
+              {projectedOCC} {intl.formatMessage(tokensText)}
             </span>
           </span>
         </div>

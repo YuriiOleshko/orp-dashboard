@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   step1Input1Place,
-  step1CreatorLabel, step1Input5Place, step1Input5Info,
+  step1CreatorLabel, step1Input5Place,
 } from '../../LangWizardForm';
 import CustomInput from '../../../CustomInput';
 
@@ -57,7 +57,6 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
           <div className="wizard__funder-info">
             <CustomInput
               type="text"
-              label={intl.formatMessage(step1Input5Info)}
               placeholder={intl.formatMessage(step1Input5Place)}
               register={registerInfo}
               value={inputsArray[0].FunderInfo}

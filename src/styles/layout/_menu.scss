@@ -35,6 +35,7 @@
     @include theme-aware('background', 'transparent');
     transition: .3s;
     border-radius: 90px;
+    margin-bottom: 15px;
     & i{
       margin-right: 13px;
       &:before{

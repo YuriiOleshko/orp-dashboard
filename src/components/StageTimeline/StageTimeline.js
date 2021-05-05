@@ -54,9 +54,9 @@ const StageTimeline = ({ data }) => {
         <span className="title-item">{intl.formatMessage(collateral)}</span>
         <span className="title-item">{intl.formatMessage(startEnd)}</span>
       </div>
-      <div className="stage-list" style={data.length > 7 ? { overflowX: 'scroll' } : null}>
+      <div className="stage-list">
         {data.map((item, id) => (
-          <div className="stage-item">
+          <div className="stage-item" key={`StageTimeline${id + Date.now()}`}>
             <div className="stage-image">
               <img src={images[id]} alt="" />
             </div>

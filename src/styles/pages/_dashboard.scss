@@ -99,10 +99,17 @@
 
   &__item{
     border-radius: 8px;
+    border: 2px solid;
     width: 100%;
+    transition: 0.3s;
+    @include theme-aware('border-color', 'color-background-form');
     @include theme-aware('background-color', 'color-background-form');
     &:not(last-child){
       margin-bottom: 8px;
+    }
+    &:hover {
+      transition: 0.3s;
+      border-color: $color-bg-menu;
     }
   }
 
@@ -146,6 +153,7 @@
 
   &__location,&__users,&__log{
     flex-basis: 22%;
+    padding: 0 5px;
     display: flex;
     align-items: center;
     i {
@@ -196,55 +204,9 @@
     &__location, &__square, &__log {
       margin-right: 15px;
     }
-    &__filter-info {
-      flex-basis: 46%;
-    }
-    &__filter-location {
-      flex-basis: unset;
-    }
-  }
-}
-
-@media (max-width: 1200px) {
-  .dashboard {
-    &__filter-info {
-      flex-basis: 50%;
-    }
-  }
-}
-
-@media (max-width: 1170px) {
-  .dashboard {
-    &__filter-info {
-      flex-basis: 54%;
-    }
     &__filter-duration {
-      display: flex;
-      justify-content: center;
-    }
-  }
-}
-
-@media (max-width: 1130px) {
-  .dashboard {
-    &__filter-info {
-      flex-basis: 56%;
-    }
-  }
-}
-
-@media (max-width: 1100px) {
-  .dashboard {
-    &__filter-info {
-      flex-basis: 58%;
-    }
-  }
-}
-
-@media (max-width: 1050px) {
-  .dashboard {
-    &__filter-info {
-      flex-basis: 61%;
+      flex-basis: unset;
+      width: 235px;
     }
   }
 }

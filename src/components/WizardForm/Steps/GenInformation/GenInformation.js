@@ -20,19 +20,18 @@ import CustomSelect from '../../../CustomSelect';
 
 const options = [{ label: 'Trees', value: 'Trees' }, { label: 'Reserves', value: 'Reserves' }, { label: 'Forest', value: 'Forest' }];
 const GenInformation = ({ step, nextPage, state, setState }) => {
-  // eslint-disable-next-line no-unused-vars
-  const { handleSubmit, errors, register, control } = useForm();
+  const { handleSubmit, errors, register } = useForm();
   const [startDate, setStartDate] = useState(new Date());
   const [countStep, setCountStep] = useState(0);
   const [details, setDetails] = useState({});
   const [fileIcon, setFileIcon] = useState({});
   const [inputsArray, setInputArray] = useState([{ FunderName: '', FunderInfo: '', FunderPart: '' }]);
+  const [myFiles, setMyFiles] = useState([]);
+  const [previewImg, setPreviewImg] = useState('');
+
   const handleChange = (ev, type, count, typeInput) => {
     const updArray = inputsArray.slice(0);
-    console.log(typeInput, 'typeInput');
-
     if (typeInput) {
-      console.log((+ev.target.value), 'sdfds');
       if ((+ev.target.value) > 100) {
         updArray[count][type] = 100;
         ev.target.value = 100;
@@ -147,60 +146,34 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           onlyNumber
           currency="USD"
         />
-        {/*        <Controller */}
-        {/*          render={() => ( */}
-        {/*            <NumberFormat */}
-        {/*              customInput={( */}
-        {/*                <CustomInput */}
-        {/*                  type="text" */}
-        {/*                  label={intl.formatMessage(step1Input4)} */}
-        {/*                  placeholder={intl.formatMessage(step1Input4Place)} */}
-        {/*                  register={register({ required: 'This is required', maxLength: 100 })} */}
-        {/*                  required */}
-        {/*                  error={errors.budjet} */}
-        {/*                  value={state.budjet} */}
-        {/*                  name="budjet" */}
-        {/*                /> */}
-        {/* )} */}
-        {/*              onValueChange={(v) => { */}
-        {/*                // value without dollar signe */}
-        {/*                console.log(v.value); */}
-        {/*              }} */}
-        {/*              // value={value} */}
-        {/*            /> */}
-        {/*          )} */}
-        {/*          name="budjet" */}
-        {/*          control={control} */}
-        {/*          fixedDecimalScale */}
-        {/*        /> */}
         <div className="wizard__funders-wrapper">
-          <div className="wizard__creator" onClick={() => createInput(countStep + 1)}>
+          <div className="wizard__create" onClick={() => createInput(countStep + 1)}>
             <i className="icon-plus-cir" />
             <span>{intl.formatMessage(step1Creator)}</span>
           </div>
-        </div>
-        {inputsArray.length > 0 && inputsArray.map((el, index) => (
-          <FunderInfo
+          {inputsArray.length > 0 && inputsArray.map((el, index) => (
+            <FunderInfo
             // eslint-disable-next-line react/no-array-index-key
-            key={`${index}FundersName${index}`}
-            inputsArray={inputsArray}
-            intl={intl}
-            count={index}
-            change={handleChange}
-            registerInfo={register({ maxLength: 100 })}
-            registerName={register({ maxLength: 100 })}
-            registerPart={register({ maxLength: 3 })}
-            deleteInput={deleteInput}
-          />
-        ))}
+              key={`${index}FundersName${index}`}
+              inputsArray={inputsArray}
+              intl={intl}
+              count={index}
+              change={handleChange}
+              registerInfo={register({ maxLength: 100 })}
+              registerName={register({ maxLength: 100 })}
+              registerPart={register({ maxLength: 3 })}
+              deleteInput={deleteInput}
+            />
+          ))}
+        </div>
         <div className="wizard__icon-file">
           <span className="input__label">{intl.formatMessage(step1Input6)}</span>
-          <DropzoneInput classCutom="" change={setFileIcon} state={state} />
+          <DropzoneInput classCutom="" change={setFileIcon} state={state} myFiles={myFiles} setMyFiles={setMyFiles} previewImg={previewImg} setPreviewImg={setPreviewImg} />
         </div>
         <div className="wizard__textarea">
           <label className="input__label ">{intl.formatMessage(step1Input7)}</label>
 
-          <textarea name="GenInfo" onChange={(ev) => setDetails({ details: ev.target.value })} />
+          <textarea name="GenInfo" placeholder={intl.formatMessage(step1Input2Place)} onChange={(ev) => setDetails({ details: ev.target.value })} />
         </div>
         <div className="wizard__wrapper-btn-next">
           <CustomBtn label={intl.formatMessage(wizardBtnNext)} type="submit" handleClick={() => {}} customClass="btn__next" />

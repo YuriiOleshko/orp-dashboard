@@ -94,6 +94,7 @@
       justify-content: flex-start;
       align-items: flex-end;
       flex: 1;
+      overflow-x: auto;
 
       .stage-item {
         min-width: 120px;

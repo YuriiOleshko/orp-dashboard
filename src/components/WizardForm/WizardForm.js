@@ -13,14 +13,16 @@ import { appStore } from '../../state/app';
 import { initIPFS } from '../../state/ipfs';
 
 import CustomBtn from '../CustomBtn';
-import { btnLabel, title } from './LangWizardForm';
+import {
+  btnLabel, title, titlePreview,
+} from './LangWizardForm';
 import GenInformation from './Steps/GenInformation';
 import ProjectLocation from './Steps/ProjectLocation';
 import StepWizard from './Steps';
 import logo from '../../assets/image/ORPLogo.svg';
 import RefoData from './Steps/RefoData';
 import ProjectInit from './Steps/ProjectInit';
-import Preview from '../../page/PreviewProject';
+import Preview from './Steps/PreviewProject';
 import { setting } from '../Layout/LangLayot';
 import PopupSuccess from './Steps/AnotherComponents/PopupSuccess';
 
@@ -32,7 +34,6 @@ const WizardForm = () => {
   const { profile } = app;
   // eslint-disable-next-line
   const getUserName = () => `${profile?.firstName} ${profile?.lastName}`;
-
   const [step, setStep] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
   const [defaultState, setDefaultState] = useState({ developer: intl.formatMessage(setting) });
@@ -78,34 +79,33 @@ const WizardForm = () => {
       }, GAS, deposit);
     }
   };
-  console.log(defaultState, 'defaultState');
+  console.log(step, 'defaultState');
   return (
     <>
       { nftTxHash && <PopupSuccess close={togglePopup} hash={nftTxHash} />}
       <section className="wizard">
         <div className="wizard__wrapper">
-          {!showPreview && (
-            <div>
-              <div className="wizard__intro ">
-                <div className="wizard__logo">
-                  <ReactSVG src={logo} />
-                </div>
-                <h2 className="wizard__title">
-                  {intl.formatMessage(title)}
-                </h2>
-                <div className="wizard__wrapper-btn">
-                  <CustomBtn
-                    label={intl.formatMessage(btnLabel)}
-                    customClass="btn__cancel"
-                    handleClick={() => {
-                      history.push('start-project');
-                    }}
-                    iconClass="icon-close"
-                  />
-                </div>
+          <div>
+            <div className="wizard__intro ">
+              <div className="wizard__logo">
+                <ReactSVG src={logo} />
               </div>
-              <StepWizard step={step} />
-              {loadProfile && (
+
+              {step < 4 ? <h2 className="wizard__title">{intl.formatMessage(title)}</h2> : <h2 className="wizard__title center">{intl.formatMessage(titlePreview)}</h2>}
+
+              <div className="wizard__wrapper-btn">
+                <CustomBtn
+                  label={intl.formatMessage(btnLabel)}
+                  customClass="btn__cancel"
+                  handleClick={() => {
+                    history.push('start-project');
+                  }}
+                  iconClass="icon-close"
+                />
+              </div>
+            </div>
+            {step < 4 && <StepWizard step={step} />}
+            {loadProfile && (
               <div className="wizard__gen-wrapper">
                 {state.loading && (
                 <p className="wizard__loading">
@@ -116,12 +116,12 @@ const WizardForm = () => {
                 <GenInformation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} />
                 <ProjectLocation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
                 <RefoData step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
-                <ProjectInit step={step} handleMint={handleMint} state={defaultState} setState={setDefaultState} prevPage={prevPage} toPreview={setShowPreview} />
+                <ProjectInit step={step} handleMint={handleMint} state={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} />
+                <Preview state={defaultState} handleMint={handleMint} prevPage={prevPage} step={step} showPreview={showPreview} setShowPreview={setShowPreview} />
               </div>
-              )}
-            </div>
-          )}
-          {showPreview && <Preview state={defaultState} handleMint={handleMint} back={setShowPreview} />}
+            )}
+          </div>
+
         </div>
       </section>
     </>

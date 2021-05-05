@@ -42,8 +42,6 @@ const CreateAcc = () => {
     }
   };
 
-
-
   console.log('Errors', errors);
 
   return (
@@ -59,7 +57,6 @@ const CreateAcc = () => {
               <CustomInput
                 type="text"
                 error={errors.firstName}
-                placeholder={intl.formatMessage(inputPlaceholderName)}
                 name="firstName"
                 label={intl.formatMessage(inputPlaceholderName)}
                 register={register({
@@ -70,19 +67,20 @@ const CreateAcc = () => {
               <CustomInput type="text"
                            error={errors.lastName}
                            label={intl.formatMessage(inputPlaceholderLast)}
-                           placeholder={intl.formatMessage(inputPlaceholderLast)}
                            name="lastName" register={register({
                 required: true,
                 maxLength: 100
               })}/>
-              <CustomInput type="text" label={intl.formatMessage(inputPlaceholderEmail)} placeholder={intl.formatMessage(inputPlaceholderEmail)}
+
+              <CustomInput type="text" label={intl.formatMessage(inputPlaceholderCompany)}  name="companyName" register={register({ maxLength: 180 })}/>
+              <CustomInput type="text" label={intl.formatMessage(inputPlaceholderEmail)}
+
                            error={errors.email}
                            name="email" register={register({
                 required: true,
                 maxLength: 180,
                 pattern: /^\S+@\S+$/i
               })}/>
-              <CustomInput type="text" label={intl.formatMessage(inputPlaceholderCompany)} placeholder={intl.formatMessage(inputPlaceholderCompany)} name="companyName" register={register({ maxLength: 180 })}/>
               <div className="login__wrapper-btn_acc">
                 <CustomBtn label={intl.formatMessage(btnLabel)}
                            customClass="btn__acc"

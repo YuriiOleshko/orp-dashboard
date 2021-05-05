@@ -1,13 +1,15 @@
 {
-  "login.button": "Login with Near Wallet",
+  "login.button": "Login with the NEAR Wallet",
   "login.copy": "© Open Reforestation Protocol Foundation, ",
-  "login.title": "Launching On The Outset of the UN Decade of Ecosystem Restoration.",
+  "login.title": "Let’s Reforest the Planet!",
+  "login.sub-title": "I don’t have a NEAR wallet",
+  "login.tooltip": "Don’t have a NEAR wallet? Go ahead and click the button above to get started! All you need to do is select “Create a New Account” from the dropdown menu.",
 
   "acc.title": "Setup Your Account",
   "acc.input-name": "First Name",
   "acc.input-last": "Last Name",
-  "acc.input-company": "Company",
-  "acc.input-email": "Email",
+  "acc.input-company": "Name of Organization",
+  "acc.input-email": "E-mail",
   "acc.input-pas": "Password",
   "acc.input-repas": "Repeat Password",
   "acc.btn-label": "Setup Dashboard",
@@ -23,7 +25,7 @@
 
 
   "launch.title" : "Launch Your First Project",
-  "launch.desc" : "ORP provides the digital infrastructure for collecting, uploading, confirming, and visualizing reforestation data. ORP is an open-source and permissionless protocol for reforestation projects to transparently measure, report, and verify (MRV) the entire life cycle of their trees.",
+  "launch.desc" : "ORP provides the digital infrastructure for collecting, uploading, confirming, and visualizing reforestation data. ORP is an open-source and secure protocol for reforestation projects to transparently measure, report, and verify (MRV) the entire life cycle of their trees. Let’s get started saving the planet!",
   "launch.label-btn": "Launch a Project",
 
   "wizard.title" : "Launch a New Project",
@@ -43,14 +45,14 @@
   "wizard.step1.input3": "Duration Of Project",
   "wizard.step1.input3.place1": "From",
   "wizard.step1.input3.place2": "To",
-  "wizard.step1.input4": "Project Budget ($USD)",
-  "wizard.step1.input4.place": "Budget",
+  "wizard.step1.input4": "Project Budget",
+  "wizard.step1.input4.place": "USD",
   "wizard.step1.creator": "Add Funder",
   "wizard.step1.input5": "Funders",
-  "wizard.step1.input5.label": "Funder Information",
+  "wizard.step1.input5.label": "Funders Information",
 
   "wizard.step1.input5.place": "Information",
-  "wizard.step1.creator-label": "Funder",
+  "wizard.step1.creator-label": "Funders",
   "wizard.step1.input6": "Project Icon",
   "wizard.step1.input7": "Project Description",
   "wizard.step1.btn-label.next": "Next",
@@ -87,7 +89,7 @@
   "wizard.step3.input5" : "Project Documentation",
   "wizard.preview.files" : "Uploaded Files",
   "wizard.step3.area" : "Additional Project Information:",
-  "wizard.step3.area.place" : "Species",
+  "wizard.step3.area.place" : "Project information",
   "wizard.step3.tooltip.textarea" : "The more details you provide about your project, the better it is introduced to the community. Include tree species, suppliers, information about yourself and your team, etc.",
   "wizard.step3.tooltip.files": "Add supporting documentation on your project. Legal documentation on your rights to use the plot of land (i.e. rent agreement, legal ownership, local community permission, etc) will greatly boost your project launch and incentivise collateral providers’ and validators’ support and commitment.",
   "wizard.step4.title-coast" : "Project Costs",
@@ -151,7 +153,6 @@
   "projectPage.benefits": "Sustainable Development Goals",
 
   "projectPage.description.title": "Project Description",
-  "projectPage.description.text": "Given the potentially large number of people that may be involved in such projects, including clients, consultants, contractors, subcontractors, and other stakeholders, the amount of information created can be enormous and may include letters, sketches, drawings, schedules, bills of quantities, specifications, contracts, models and so on. This includes information that, whilst it may have been superseded",
 
   "projectPage.state.edit": "Edit Project",
   "projectPage.documentation": "Project Documentation",

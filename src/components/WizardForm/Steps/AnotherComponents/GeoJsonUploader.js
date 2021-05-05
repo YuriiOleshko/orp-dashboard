@@ -3,21 +3,32 @@ import React, {
 } from 'react';
 import { useIntl } from 'react-intl';
 import { useDropzone } from 'react-dropzone';
+// import togeojson from '@mapbox/togeojson';
 import { step2GeoBtn, step2Types } from '../../LangWizardForm';
 import CustomBtn from '../../../CustomBtn';
 
-// const defaultState = { region: '',
-//   polygon: [],
-//   codePlus: null,
-//   polygonCoordinate: [],
-//   square: 0,
-//   coordinate: { longitude: '', latitude: '' } };
-// eslint-disable-next-line no-unused-vars
-const GeoJsonUploader = ({ coordinate, setCoordinate, jsonFile, state, setState,
+const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
   setJsonFile, setShowMap }) => {
   const intl = useIntl();
   const [geoJson, setGeoJson] = useState([]);
   const [myFiles, setMyFiles] = useState([]);
+  // const checkTypeFile = (file) => {
+  //   const fileread = new FileReader();
+  //
+  //   console.log(file, 'file');
+  //   console.log(file.type === 'application/vnd.google-earth.kml+xml', 'file.type === \'application/vnd.google-earth.kml+xml\'');
+  //   if (file.type === 'application/vnd.google-earth.kml+xml') {
+  //     fileread.onload = function (e) {
+  //       const content = e.target.result;
+  //       console.log(content, 'content');
+  //
+  //       const geo = togeojson.kml(content);
+  //       console.log(geo, 'geo');
+  //       console.log(content, 'content');
+  //     };
+  //     fileread.readAsDataURL(file);
+  //   }
+  // };
 
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files

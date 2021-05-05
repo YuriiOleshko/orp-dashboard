@@ -121,7 +121,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
         }
         if (data.features.length > 0) {
           const areaData = area(data);
-          const roundedArea = Math.round(areaData * 100) / 100;
+          const roundedArea = (Math.round(areaData * 100) / 100 / 1000000).toFixed(0);
           setDataPolygon({
             region: placeName,
             polygon: data.features,

@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useState,
+  useCallback, useContext, useEffect,
 } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useIntl } from 'react-intl';
@@ -10,9 +10,8 @@ import {
 import { initIPFS } from '../../../../state/ipfs';
 import { appStore } from '../../../../state/app';
 
-const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, filesSave, setFilesSave }) => {
-  const [previewImg, setPreviewImg] = useState('');
-  const [myFiles, setMyFiles] = useState([]);
+const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, filesSave, setFilesSave, myFiles, setMyFiles, previewImg, setPreviewImg }) => {
+  // const [previewImg, setPreviewImg] = useState('');
   const { update } = useContext(appStore);
 
   const onDrop = useCallback(async (acceptedFiles) => {
@@ -149,6 +148,7 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
     </li>
   ));
 
+  // eslint-disable-next-line no-unused-vars
   const getIpfsFile = async () => {
     const ipfs = await initIPFS();
     if (multi && state.filesCidDir) {
@@ -176,9 +176,8 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
   };
 
   useEffect(async () => {
-    await getIpfsFile();
+    // await getIpfsFile();
   }, []);
-  console.log(filesSave, '@@@@');
 
   const customClass = `dropzone ${classCustom}`;
   const customCreator = `wizard__creator ${multi ? 'multi' : ''}`;

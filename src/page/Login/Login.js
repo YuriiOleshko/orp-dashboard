@@ -9,8 +9,12 @@ import {
   title,
   btnLabel,
   copyRight,
+  subTitle,
+  tooltipText,
 } from './LangLogin';
-import { initIPFS } from '../../state/ipfs';
+import ReactTooltip from 'react-tooltip';
+import { ReactSVG } from 'react-svg';
+import buble from '../../assets/image/wizard/buble.svg';
 
 const Login = () => {
   const intl = useIntl();
@@ -28,7 +32,7 @@ const Login = () => {
         <IntroPage />
         <div className="login__entry">
           <h2 className="login__title">
-            { intl.formatMessage(title)}
+            {intl.formatMessage(title)}
           </h2>
           <div className="login__wrapper-btn">
             <CustomBtn
@@ -40,6 +44,15 @@ const Login = () => {
               handleClick={() => wallet.signIn()}
               idLang="login.button"
             />
+            <div className="login__subtitle" data-tip data-for="login-tooltip">
+              <span>{intl.formatMessage(subTitle)}</span>
+              <div className="login__tooltip-point">
+                <ReactSVG src={buble} />
+              </div>
+              <ReactTooltip className="login__tooltip" place="bottom" width={320} type="light" id="login-tooltip" effect="float">
+                {intl.formatMessage(tooltipText)}
+              </ReactTooltip>
+            </div>
           </div>
           <p className="login__copy">
             {intl.formatMessage(copyRight)}

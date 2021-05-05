@@ -1,14 +1,16 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import ReactTooltip from 'react-tooltip';
+import { ReactSVG } from 'react-svg';
 import {
   step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, ste4Create, step4Tooltip1,
   step4Tooltip2, step4Tooltip3, step4Tooltip4, wizardBtnBack, step4Preview,
 } from '../../LangWizardForm';
 import Chart from '../AnotherComponents/Chart';
 import CustomBtn from '../../../CustomBtn';
+import buble from '../../../../assets/image/wizard/buble.svg';
 
-const ProjectInit = ({ step, handleMint, prevPage, toPreview }) => {
+const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview }) => {
   const intl = useIntl();
 
   const dataChart = [
@@ -40,6 +42,12 @@ const ProjectInit = ({ step, handleMint, prevPage, toPreview }) => {
     },
   ];
 
+  const goToPreview = () => {
+    console.log('sdsd');
+    setShowPreview(true);
+    nextPage();
+  };
+
   if (step !== 3) {
     return null;
   }
@@ -50,34 +58,34 @@ const ProjectInit = ({ step, handleMint, prevPage, toPreview }) => {
         <div className="wizard__cost-list">
           <div className="wizard__cost-item">
             <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-1">
-              ?
+              <ReactSVG src={buble} />
             </div>
-            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-1" effect="float">
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-1" effect="float">
               {intl.formatMessage(step4Tooltip1)}
             </ReactTooltip>
             <span>{intl.formatMessage(step4Coast1)}</span>
             <span className="bold">50 USD</span>
           </div>
-          <p className="wizard__cost-item">
+          <div className="wizard__cost-item">
             <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-2">
-              ?
+              <ReactSVG src={buble} />
             </div>
-            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-2" effect="float">
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-2" effect="float">
               {intl.formatMessage(step4Tooltip2)}
             </ReactTooltip>
             <span>{intl.formatMessage(step4Coast2)}</span>
             <span className="bold">150  USD</span>
-          </p>
-          <p className="wizard__cost-item">
+          </div>
+          <div className="wizard__cost-item">
             <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-3">
-              ?
+              <ReactSVG src={buble} />
             </div>
-            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-3" effect="float">
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-3" effect="float">
               {intl.formatMessage(step4Tooltip3)}
             </ReactTooltip>
             <span>{intl.formatMessage(step4Coast3)}</span>
             <span className="bold">150 USD</span>
-          </p>
+          </div>
         </div>
       </div>
       <div className="wizard__chart">
@@ -94,20 +102,20 @@ const ProjectInit = ({ step, handleMint, prevPage, toPreview }) => {
         </div>
       </div>
       <div className="wizard__total-block">
-        <p className="wizard__cost-item">
+        <div className="wizard__cost-item">
           <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-4">
-            ?
+            <ReactSVG src={buble} />
           </div>
-          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="dark" id="step4-tooltip-4" effect="float">
+          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-4" effect="float">
             {intl.formatMessage(step4Tooltip4)}
           </ReactTooltip>
           <span>{intl.formatMessage(step4Coast4)}</span>
           <span className="bold">1500 USD</span>
-        </p>
+        </div>
       </div>
       <div className="wizard__btn-init">
         <CustomBtn label={intl.formatMessage(wizardBtnBack)} handleClick={() => prevPage()} type="button" customClass="btn__cancel" />
-        <CustomBtn label={intl.formatMessage(step4Preview)} handleClick={() => toPreview(true)} type="button" customClass="btn__cancel" />
+        <CustomBtn label={intl.formatMessage(step4Preview)} handleClick={() => goToPreview()} type="button" customClass="btn__cancel" />
         <CustomBtn label={intl.formatMessage(ste4Create)} type="submit" handleClick={handleMint} customClass="btn__next" />
       </div>
     </div>

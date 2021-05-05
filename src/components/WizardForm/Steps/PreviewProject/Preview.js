@@ -1,55 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { ReactSVG } from 'react-svg';
 import { useIntl } from 'react-intl';
-import { useHistory } from 'react-router';
-import logo from '../../assets/image/ORPLogo.svg';
+import { CSVLink } from 'react-csv';
 import {
-  btnLabel, ste4Create, backPreview, previewFiles, titlePreview, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4TitleCoast, step3Public, step3Private,
-} from '../../components/WizardForm/LangWizardForm';
-import CustomBtn from '../../components/CustomBtn';
-import PopupSuccess from '../../components/WizardForm/Steps/AnotherComponents/PopupSuccess';
-import { initIPFS } from '../../state/ipfs';
-import WrapperScaleImg from '../../components/WizardForm/Steps/AnotherComponents/WrapperScaleImg';
+  ste4Create, backPreview, previewFiles, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4TitleCoast, step3Public, step3Private, step2List,
+} from '../../LangWizardForm';
+import CustomBtn from '../../../CustomBtn';
+import { initIPFS, getFilesFromDirectory } from '../../../../state/ipfs';
+import WrapperScaleImg from '../AnotherComponents/WrapperScaleImg';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 
-const Preview = ({ state, back, handleMint }) => {
+const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPreview }) => {
   const intl = useIntl();
-  const history = useHistory();
-
   const [iconHash, setIconHash] = useState('');
   const [screenHash, setScreenHash] = useState('');
   const [filesNames, setFilesNames] = useState([]);
   useEffect(async () => {
-    const ipfs = await initIPFS();
-    console.log(state.filesCidDir, 'state.filesCidDir');
-    if (state.filesCidDir) {
-      const updateArray = [];
-      for await (const file of ipfs.get(state.filesCidDir)) {
-        // eslint-disable-next-line no-continue
-        if (!file.content) continue;
-        console.log(file, 'file');
-        updateArray.push({ path: file.path.split('/')[1] });
-        const content = [];
-        for await (const chunk of file.content) {
-          content.push(chunk);
+    if (showPreview) {
+      const ipfs = await initIPFS();
+      console.log(state.filesCidDir, 'state.filesCidDir');
+      if (state.filesCidDir) {
+        const updateArray = await getFilesFromDirectory(ipfs, state.filesCidDir);
+        setFilesNames(updateArray);
+      }
+      if (state.cidScreenShot) {
+        setScreenHash(state.cidScreenShot);
+      }
+      if (state.iconCidDir) {
+        let count = 0;
+        for await (const file of ipfs.get(state.iconCidDir)) {
+          if (count === 1) {
+            setIconHash(file.path);
+          }
+          count++;
         }
       }
-      setFilesNames(updateArray);
     }
-    if (state.cidScreenShot) {
-      setScreenHash(state.cidScreenShot);
-    }
-    if (state.iconCidDir) {
-      let count = 0;
-      for await (const file of ipfs.get(state.iconCidDir)) {
-        if (count === 1) {
-          setIconHash(file.path);
-        }
-        count++;
-      }
-    }
-  }, []);
+  }, [showPreview]);
 
   const chekSaveArray = (path) => {
     const privateType = state.privateFiles.find((el) => el.path === path);
@@ -57,29 +44,16 @@ const Preview = ({ state, back, handleMint }) => {
     if (privateType) return privateType.private;
     return false;
   };
-  const [showPopup, setShowPopup] = useState(false);
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-    document.body.classList.toggle('no-scroll');
+  const backTo = () => {
+    setShowPreview(false);
+    prevPage();
   };
+  console.log(showPreview, 'showPreview');
+  if (step !== 4) {
+    return null;
+  }
   return (
     <div className="preview">
-      {showPopup && <PopupSuccess close={togglePopup} />}
-      <div className="wizard__intro wizard__intro-preview">
-        <div className="wizard__logo">
-          <ReactSVG src={logo} />
-        </div>
-        <div>
-          <h2 className="wizard__title">
-            {intl.formatMessage(titlePreview)}
-          </h2>
-        </div>
-
-        <div className="wizard__wrapper-btn">
-          <CustomBtn label={intl.formatMessage(btnLabel)} customClass="btn__cancel" handleClick={() => { history.push('start-project'); }} iconClass="icon-close" />
-        </div>
-      </div>
-
       <div className="preview__gen">
         <div className="preview__block">
           <h3 className="preview__title">
@@ -223,26 +197,11 @@ const Preview = ({ state, back, handleMint }) => {
             {intl.formatMessage(step2)}
           </h3>
           <div className="preview__block-wrapper">
-            <div className="preview__wrapper-element big">
-              <span className="preview__label">{intl.formatMessage(step2Input1)}</span>
-              <div className="wizard__wrapper-coor">
-                {state.polygonCoordinate.length > 0 && state.polygonCoordinate[0].map((point, index) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <div className="wizard__wrapper-input" key={point[0] + index + index + index}>
-                    <span className="wizard__word">
-                      {alphabet[index]}
-                      .
-                    </span>
-                    <p className="wizard__point-coord">
-                      {parseFloat(point[0]).toFixed(9)}
-                    </p>
-                    <p className="wizard__point-coord">
-                      {parseFloat(point[1]).toFixed(9)}
-                    </p>
-                  </div>
-                ))}
+            {screenHash && (
+              <div className="preview__wrapper-element big">
+                <WrapperScaleImg cid={screenHash} />
               </div>
-            </div>
+            )}
             <div className="preview__wrapper-element">
               <span className="preview__label">{intl.formatMessage(step2Input2)}</span>
               <p className="preview__field  small">
@@ -257,11 +216,47 @@ const Preview = ({ state, back, handleMint }) => {
               </p>
             </div>
 
-            {screenHash && (
             <div className="preview__wrapper-element big">
-              <WrapperScaleImg cid={screenHash} />
+              <span className="preview__label">{intl.formatMessage(step2Input1)}</span>
+              <div className="wizard__wrapper-coor">
+                {state.polygonCoordinate.length > 0 && state.polygonCoordinate[0].map((point, index) => {
+                  if (index <= 8) {
+                    return (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <div className="wizard__wrapper-input" key={point[0] + index + index + index}>
+                        <span className="wizard__word">
+                          {alphabet[index]}
+                          .
+                        </span>
+                        <p className="wizard__point-coord">
+                          {parseFloat(point[0])
+                            .toFixed(9)}
+                        </p>
+                        <p className="wizard__point-coord">
+                          {parseFloat(point[1])
+                            .toFixed(9)}
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (index === 9) {
+                    return (
+                      <CSVLink
+                        data={state.polygonCoordinate[0].map((el) => [`longitude: ${el[0]}`, `latitude: ${el[1]}`])}
+                        filename="Coordinate"
+                        className="wizard__list-dwn"
+                      >
+                        {intl.formatMessage(step2List)}
+                        {' '}
+
+                      </CSVLink>
+                    );
+                  }
+                  return null;
+                }) }
+              </div>
             </div>
-            )}
+
           </div>
         </div>
         <div className="preview__block">
@@ -269,24 +264,26 @@ const Preview = ({ state, back, handleMint }) => {
             <h3 className="preview__title">
               {intl.formatMessage(step3)}
             </h3>
-            <div className="preview__block-wrapper">
-              <div className="preview__wrapper-element">
-                <span className="preview__label">{intl.formatMessage(step3Input1)}</span>
-                <p className="preview__field ">
-                  {state.square || ''}
-                </p>
-              </div>
-              <div className="preview__wrapper-element">
-                <span className="preview__label">{intl.formatMessage(step3Input2)}</span>
-                <p className="preview__field ">
-                  {state.amountTrees || ''}
-                </p>
-              </div>
-              <div className="preview__wrapper-element">
-                <span className="preview__label">{intl.formatMessage(step3Input3)}</span>
-                <p className="preview__field  ">
-                  {state.avgTrees || ''}
-                </p>
+            <div className="preview__block-wrapper more">
+              <div className="preview__step1-wrapper">
+                <div className="preview__wrapper-element">
+                  <span className="preview__label">{intl.formatMessage(step3Input1)}</span>
+                  <p className="preview__field ">
+                    {state.square || ''}
+                  </p>
+                </div>
+                <div className="preview__wrapper-element">
+                  <span className="preview__label">{intl.formatMessage(step3Input2)}</span>
+                  <p className="preview__field ">
+                    {state.amountTrees || ''}
+                  </p>
+                </div>
+                <div className="preview__wrapper-element">
+                  <span className="preview__label">{intl.formatMessage(step3Input3)}</span>
+                  <p className="preview__field  ">
+                    {state.avgTrees || ''}
+                  </p>
+                </div>
               </div>
               {state.benefits && (
               <div className="wizard__benefits preview__benefits ">
@@ -347,7 +344,7 @@ const Preview = ({ state, back, handleMint }) => {
           </div>
         </div>
         <div className="preview__btn-wrapper">
-          <CustomBtn label={intl.formatMessage(backPreview)} handleClick={() => back(false)} type="button" customClass="btn__cancel" />
+          <CustomBtn label={intl.formatMessage(backPreview)} handleClick={() => backTo()} type="button" customClass="btn__cancel" />
           <CustomBtn label={intl.formatMessage(ste4Create)} type="submit" handleClick={handleMint} customClass="btn__next" />
         </div>
       </div>
