@@ -69,7 +69,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 </span>
               </p>
             </div>
-            <div className="preview__wrapper-element">
+            <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
                   {intl.formatMessage(step4Coast2)}
@@ -81,7 +81,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
 
               </p>
             </div>
-            <div className="preview__wrapper-element">
+            <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
                   {intl.formatMessage(step4Coast3)}
@@ -93,7 +93,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
 
               </p>
             </div>
-            <div className="preview__wrapper-element">
+            <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
                   {intl.formatMessage(step4Coast4)}
