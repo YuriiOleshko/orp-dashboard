@@ -83,7 +83,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
     const copyData = { ...data };
     const { budjet, funders } = copyData;
     const updBudjet = budjet.replace(/(\$|,|\.00)/g, '');
-    const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: (`${item.part}`).replace(/\D/g, '') }));
+    const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: +((`${item.part}`).replace(/\D/g, '')) }));
     const updData = { ...copyData, budjet: updBudjet, funders: updFunders };
     const fromDate = {
       startTimeProject: Date.parse(startDate),

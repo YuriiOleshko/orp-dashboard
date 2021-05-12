@@ -6,9 +6,17 @@ export const formattedDate = (timestamp, divider) => {
   return `${addZeroAheadToDate(time.getMonth() + 1)}${divider}${addZeroAheadToDate(time.getDate())}${divider}${time.getFullYear().toString().slice(-2)}`;
 };
 
-export const convertDateToMonths = (timestamp) => {
-  const date = new Date(timestamp);
-  return (date.getFullYear() - 1970) * 12 + date.getMonth() + 1;
+export const convertDateToMonths = (timestamp, monthsText, daysText) => {
+  const date = new Date();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  const totalDays = Math.ceil(timestamp / (1000 * 60 * 60 * 24));
+  const restMonthsDec = totalDays / daysInMonth;
+  const restMonths = Math.trunc(restMonthsDec);
+  const restDays = Math.ceil((restMonthsDec - restMonths) * daysInMonth);
+  return `${restMonths} ${monthsText} ${restDays} ${daysText}`;
 };
 
 export const randomHexColor = () => {

@@ -30,7 +30,7 @@ const ProjectPage = () => {
   let filesCounter = 0;
   let hasPublic;
 
-  if (privateFiles.length) {
+  if (privateFiles && privateFiles.length) {
     hasPublic = privateFiles.find((item) => !item.private);
   }
 
@@ -134,7 +134,7 @@ const ProjectPage = () => {
                 <span className="description-text">{details}</span>
               </div>
             )}
-            {!!(privateFiles.length && hasPublic) && (
+            {!!(privateFiles && privateFiles.length && hasPublic) && (
               <div className="project__files">
                 <span className="files-title">{intl.formatMessage(documentationTitle)}</span>
                 <div className="files-list">

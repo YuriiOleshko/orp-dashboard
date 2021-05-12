@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/no-array-index-key */
 import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
 import {
   Pie,
   PieChart,
@@ -9,10 +10,12 @@ import {
   Legend,
 } from 'recharts';
 import { randomHexColor } from '../../utils/convert-utils';
+import { freeToGet, free } from './LangCustomChart';
 
 const CustomChart = ({ data }) => {
   const [colors, setColors] = useState([]);
   const [updFunders, setUpdFunders] = useState([]);
+  const intl = useIntl();
 
   const getAllColors = (funders) => {
     const res = [];
@@ -28,8 +31,8 @@ const CustomChart = ({ data }) => {
     if (sumOfParts < 100) {
       const freePart = 100 - sumOfParts;
       const freePartObj = {
-        desc: 'Free part to get',
-        name: 'Free',
+        desc: intl.formatMessage(freeToGet),
+        name: intl.formatMessage(free),
         part: freePart,
       };
       if (sumOfParts === 0) return [freePartObj];

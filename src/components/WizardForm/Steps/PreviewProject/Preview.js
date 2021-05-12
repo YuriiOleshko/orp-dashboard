@@ -58,7 +58,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
             {intl.formatMessage(step4TitleCoast)}
           </h3>
           <div className="preview__block-wrapper">
-            <div className="preview__wrapper-element">
+            <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
                   {intl.formatMessage(step4Coast1)}
@@ -287,7 +287,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 <div className="preview__wrapper-element">
                   <span className="preview__label">{intl.formatMessage(step3Input3)}</span>
                   <p className="preview__field  ">
-                    {state.avgTrees || ''}
+                    {<NumberFormat value={state.avgTrees} displayType="text" thousandSeparator /> || ''}
                   </p>
                 </div>
               </div>

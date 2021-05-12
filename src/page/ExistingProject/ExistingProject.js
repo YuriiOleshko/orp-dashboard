@@ -11,6 +11,8 @@ import {
   filterLocation,
   filterArea,
   filterDuration,
+  noProjects,
+  ipfsError,
 } from './LangExistingProject';
 import ProjectCard from './ProjectCard';
 import Loader from '../../components/Loader';
@@ -63,7 +65,6 @@ const ExistingProject = () => {
       );
       update('app.nftTokens', allTokens);
     } catch (e) {
-      console.log(e);
       setErr(true);
     }
   };
@@ -108,16 +109,7 @@ const ExistingProject = () => {
           <div className="dashboard__filter-space">.</div>
         </div>
       </div>
-      {app.nftTokens.length ? (
-        <div className="dashboard__list">
-          {app.nftTokens.map((data, index) => (
-            /* eslint-disable-next-line react/no-array-index-key */
-            <ProjectCard data={data} key={`${index} - ${data.cid}`} />
-          ))}
-        </div>
-
-      ) : <div className="dashboard__loader"><Loader /></div>}
-      {err ? <div className="dashboard__error">Some error with IPFS, try later</div>
+      {err ? <div className="dashboard__error">{intl.formatMessage(ipfsError)}</div>
         : loading
           ? app.nftTokens.length ? (
             <div className="dashboard__list">
@@ -127,7 +119,7 @@ const ExistingProject = () => {
               ))}
             </div>
           ) : <div className="dashboard__loader"><Loader /></div>
-          : <div className="dashboard__loader">No projects yet</div>}
+          : <div className="dashboard__loader">{intl.formatMessage(noProjects)}</div>}
     </>
   );
 };

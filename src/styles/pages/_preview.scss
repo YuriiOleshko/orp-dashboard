@@ -70,6 +70,9 @@
 
   &__wrapper-element{
     flex-basis: 47%;
+    &.cost{
+      flex-basis: 48%;
+    }
 
 
     overflow-x: hidden;

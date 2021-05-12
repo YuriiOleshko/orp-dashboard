@@ -161,7 +161,6 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
     };
     let coordinate;
     if (state.polygon.length > 0) {
-      console.log({ longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom }, '{ lng: state.coordinate.longitude, lat: state.coordinate.latitude, zoom: state.coordinate.zoom }');
       coordinate = { longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom };
       setCoord({ longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom });
     } else {
@@ -216,7 +215,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
           <p>Draw a polygon using the draw tools.</p>
           {datePolygon.square > 0 && (
             <div className="map__inside-block">
-              <span>Square Meters</span>
+              <span>Square kilometers</span>
               <span>{datePolygon.square}</span>
               <span>Region</span>
               <span>{datePolygon.region}</span>

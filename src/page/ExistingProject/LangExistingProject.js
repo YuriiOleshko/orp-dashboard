@@ -4,4 +4,6 @@ const filterName = { id: 'existing.filter.name', defaultMessage: 'Name' };
 const filterLocation = { id: 'existing.filter.location', defaultMessage: 'Location' };
 const filterArea = { id: 'existing.filter.area', defaultMessage: 'Area, sq.km' };
 const filterDuration = { id: 'existing.filter.duration', defaultMessage: 'Duration' };
-export { title, filterStatus, filterName, filterLocation, filterArea, filterDuration };
+const noProjects = { id: 'existing.noProjects', defaultMessage: 'No projects yet' };
+const ipfsError = { id: 'existing.ipfsError', defaultMessage: 'Some error with IPFS, try later' };
+export { title, filterStatus, filterName, filterLocation, filterArea, filterDuration, noProjects, ipfsError };

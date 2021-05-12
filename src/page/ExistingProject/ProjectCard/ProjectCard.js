@@ -1,5 +1,6 @@
 /* eslint-disable no-unneeded-ternary */
 import React from 'react';
+import NumberFormat from 'react-number-format';
 import { useHistory } from 'react-router';
 import { formattedDate } from '../../../utils/convert-utils';
 
@@ -32,7 +33,7 @@ const ProjectCard = ({ data }) => {
             <span>{location ? location : noData}</span>
           </div>
           <div className="dashboard__square">
-            <span>{ square ? square : noData}</span>
+            <span>{ square ? <NumberFormat value={square} displayType="text" thousandSeparator decimalScale={3} /> : noData}</span>
           </div>
           <div className="dashboard__log">
             <i className="icon-clock" />

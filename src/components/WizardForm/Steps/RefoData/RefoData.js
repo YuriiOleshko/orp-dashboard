@@ -74,7 +74,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           <div className="wizard__coord">
             <span className="input__label">{intl.formatMessage(step3Input3)}</span>
             <p className="wizard__code-plus">
-              {avgTrees.avgTrees}
+              <NumberFormat value={avgTrees.avgTrees} displayType="text" thousandSeparator />
             </p>
           </div>
         </div>

@@ -128,6 +128,8 @@
   "existing.filter.location": "Location",
   "existing.filter.area": "Area, sq.km",
   "existing.filter.duration": "Duration",
+  "existing.noProjects": "No projects yet",
+  "existing.ipfsError": "Some error with IPFS, try later",
 
   "projectPage.state.stage": "Stage",
   "projectPage.state.upload": "Data Upload",
@@ -138,12 +140,16 @@
   "projectPage.state.tooltip": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
 
   "projectPage.funders": "Project Funders",
+  "projectPage.funders.freeToGet": "Free part to get",
+  "projectPage.funders.free": "Free",
+
 
   "projectPage.info.size": "The Size of the Project",
   "projectPage.info.sqkm": "Sq.Km.",
   "projectPage.info.trees": "trees",
   "projectPage.info.totalDuration": "The total project duration",
   "projectPage.info.months": "months",
+  "projectPage.info.days": "days",
   "projectPage.info.remainingDuration": "The remaining duration",
   "projectPage.info.uploads": "The remaining uploads",
   "projectPage.info.currentOCC": "The current OCC Yield",

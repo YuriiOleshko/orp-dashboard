@@ -3,12 +3,14 @@
 /* eslint-disable no-unneeded-ternary */
 import React from 'react';
 import { useIntl } from 'react-intl';
+import NumberFormat from 'react-number-format';
 import {
   sizeText,
   sqkmText,
   treesText,
   totalDurationText,
   monthsText,
+  daysText,
   remainingDurationText,
   uploadsText,
   currentOCCText,
@@ -30,8 +32,8 @@ const ProjectInfo = ({ data }) => {
           <span className="info-size">
             {intl.formatMessage(sizeText)}:{' '}
             <span className="info-value">
-              {square ? square : noData} {intl.formatMessage(sqkmText)},
-              {amountTrees ? amountTrees : noData} {intl.formatMessage(treesText)}
+              {square ? <NumberFormat value={square} displayType="text" thousandSeparator decimalScale={3} /> : noData} {intl.formatMessage(sqkmText)},
+              {amountTrees ? <NumberFormat value={amountTrees} displayType="text" thousandSeparator /> : noData} {intl.formatMessage(treesText)}
             </span>
           </span>
         </div>
@@ -40,7 +42,7 @@ const ProjectInfo = ({ data }) => {
             {intl.formatMessage(totalDurationText)}:{' '}
             <span className="info-value">
               { startTimeProject && finishTimeProject ? (
-                `${formattedDate(startTimeProject, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - startTimeProject)} ${intl.formatMessage(monthsText)})`
+                `${formattedDate(startTimeProject, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - startTimeProject, intl.formatMessage(monthsText), intl.formatMessage(daysText))})`
               ) : noData}
             </span>
           </span>
@@ -50,7 +52,7 @@ const ProjectInfo = ({ data }) => {
             {intl.formatMessage(remainingDurationText)}:{' '}
             <span className="info-value">
               { startTimeProject && finishTimeProject ? (
-                `${formattedDate(currentDate, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - currentDate)} ${intl.formatMessage(monthsText)})`
+                `${formattedDate(currentDate, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - currentDate, intl.formatMessage(monthsText), intl.formatMessage(daysText))})`
               ) : noData}
             </span>
           </span>
