@@ -33,9 +33,6 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [isActiveWarning, setIsActiveWarning] = useState(false);
   const [isDisabledBtn, setIsDisabledBtn] = useState(false);
 
-  console.log(inputElement);
-  console.log(inputsArray);
-
   const countSumOfParts = (funders) => {
     const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
     const sumOfParts = parts.reduce((sum, curr) => sum + curr, 0);
@@ -50,7 +47,6 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
 
   const handleChange = (ev, type, count, typeInput) => {
     const updArray = inputsArray.slice(0);
-    console.log(typeInput, 'typeInput');
 
     if (typeInput) {
       // here ev is object: {formattedValue, value, floatValue} ==> follow NumberFormat doc
@@ -84,12 +80,10 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [endDate, setEndDate] = useState(new Date());
   const intl = useIntl();
   const onSubmit = (data) => {
-    console.log(data);
     const copyData = { ...data };
     const { budjet, funders } = copyData;
     const updBudjet = budjet.replace(/(\$|,|\.00)/g, '');
-    console.log(funders, 'funders');
-    const updFunders = funders.map((item) => ({ ...item, part: (`${item.part}`).replace(/\D/g, '') }));
+    const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: (`${item.part}`).replace(/\D/g, '') }));
     const updData = { ...copyData, budjet: updBudjet, funders: updFunders };
     const fromDate = {
       startTimeProject: Date.parse(startDate),

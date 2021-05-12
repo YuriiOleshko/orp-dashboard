@@ -36,10 +36,10 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	if (wallet.signedIn) {
 		account = wallet.account();
 		wallet.balance = formatNearAmount((await wallet.account().getAccountBalance()).available, 2);
-		await update('', { near, wallet, contractAccount, account });
 		const contract = getContract(account, contractMethods);
 		const userProfile = await contract.get_data({account_id: account.accountId});
 		await update('app', {profile: JSON.parse(userProfile)});
+		await update('', { near, wallet, contractAccount, account });
 	}
 
 	await update('', { near, wallet, contractAccount, account });

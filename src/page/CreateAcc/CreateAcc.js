@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedDate, useIntl } from 'react-intl';
-import { useHistory } from 'react-router';
+import { Redirect, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { appStore } from '../../state/app';
 import IntroPage from '../../components/IntroPage';
@@ -28,7 +28,8 @@ const CreateAcc = () => {
   const history = useHistory();
   const intl = useIntl();
   const { state, update } = useContext(appStore);
-  const { wallet, account } = state;
+  const { wallet, account, app } = state;
+  const { profile } = app;
   const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = async (data) => {
@@ -42,7 +43,9 @@ const CreateAcc = () => {
     }
   };
 
-  console.log('Errors', errors);
+  if (profile && Object.keys(profile).length) {
+    return <Redirect to="/" />
+  }
 
   return (
     <section className="login">

@@ -13,9 +13,9 @@ import PrevScreenLocation from './PrevScreenLocation';
 import WrapperScaleImg from '../AnotherComponents/WrapperScaleImg';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
+
 const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
-  console.log(state.coordinate, state.coordinate);
   const defaultCoordinate = state.coordinate
     ? {
       region: state.region,
@@ -44,8 +44,6 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   };
   const handleChange = (ev, type, subType) => {
     const updObj = { ...coordinate };
-    console.log(type, 'type');
-    console.log(updObj, 'updObj');
     if (subType)updObj[type][subType] = ev.target.value;
     else updObj[type] = ev.target.value;
     setCoordinate(updObj);
@@ -68,7 +66,6 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
     setJsonFile({});
     setCoordinate(clearObj);
   };
-  console.log(state, 'taes');
   const { polygonCoordinate } = coordinate;
   return (
     <div className="wizard__wrapper-form">
@@ -156,6 +153,8 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
                     data={coordinate.polygonCoordinate[0].map((el) => [`longitude: ${el[0]}`, `latitude: ${el[1]}`])}
                     filename="Coordinate"
                     className="wizard__list-dwn"
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index + point[0] + index}
                   >
                     {intl.formatMessage(step2List)}
                     {' '}

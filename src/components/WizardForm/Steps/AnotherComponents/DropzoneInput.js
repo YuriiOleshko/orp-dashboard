@@ -17,8 +17,6 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
   const onDrop = useCallback(async (acceptedFiles) => {
     const newArray = [];
     const currentlyFiles = [...myFiles, ...acceptedFiles];
-    console.log(currentlyFiles, 'currentlyFiles');
-    console.log(acceptedFiles, 'acceptedFiles');
     if (currentlyFiles.length >= 10) currentlyFiles.splice(10);
     currentlyFiles.forEach((el, index, arr) => {
       const reader = new window.FileReader();
@@ -26,8 +24,6 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
       reader.readAsArrayBuffer(el);
       readerUrl.readAsDataURL(el);
       reader.onloadend = () => {
-        console.log(reader, 'reader');
-
         // eslint-disable-next-line no-use-before-define
         convertToBuffer(reader, index, arr, el.path);
       };
@@ -39,7 +35,6 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
     });
     const convertToBuffer = async (reader, index, arr, path) => {
       const buffer = await Buffer.from(reader.result);
-      console.log(buffer, 'buffer');
       newArray.push({ path, content: buffer });
       const addOptions = {
         pin: true,
@@ -52,16 +47,12 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
         let count = 0;
         update('loading', true);
         const resultArray = [];
-        console.log(newArray, 'newArray');
         for await (const result of ipfs.addAll(newArray, addOptions)) {
-          console.log(result, 'resultArray');
-          console.log(count, 'count');
-          console.log(newArray.length, 'result.length');
           if (!result.path) {
             if (multi) change({ filesCidDir: result.cid.string });
             else change({ iconCidDir: result.cid.string });
           } else resultArray.push({ idCid: result.cid.string, private: false, path: result.path });
-
+          // eslint-disable-next-line no-unused-vars
           count++;
         }
         if (multi) setFilesSave([...filesSave, ...resultArray]);
@@ -69,16 +60,13 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
         update('loading', false);
       }
     };
-    console.log(currentlyFiles, 'end');
 
     if (multi) setMyFiles([...currentlyFiles]);
     else setMyFiles([...acceptedFiles]);
   }, [myFiles]);
   const intl = useIntl();
   const validFile = (file) => {
-    console.log(file, 'file');
     const unique = myFiles.map((el) => el.path).some((el, index, arr) => arr.includes(file.path));
-    console.log(unique, 'unqier');
     if (unique && myFiles.length) {
       return null;
     }
@@ -86,7 +74,6 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
   const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: amountFiles, multiple: multi, validator: validFile });
 
   const removeFile = (file) => {
-    console.log(file, 'file');
     const newFiles = [...myFiles];
     newFiles.splice(newFiles.indexOf(file), 1);
     setMyFiles(newFiles);
@@ -97,20 +84,16 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
 
   const chekSaveArray = (path) => {
     const privateType = filesSave.find((el) => el.path === path);
-    console.log(privateType, 'private');
     if (privateType) return privateType.private;
     return false;
   };
   const changeTypeFiles = (path) => {
-    console.log(filesSave, 'index');
-    console.log(path, 'path');
     const currentlyArray = filesSave.map((el) => {
       if (el.path === path) {
         el.private = !el.private;
       }
       return el;
     });
-    console.log(currentlyArray, 'currentlyArray');
     setFilesSave(currentlyArray);
   };
   const files = myFiles.map((file, index) => (

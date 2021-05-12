@@ -79,7 +79,7 @@ const WizardForm = () => {
       }, GAS, deposit);
     }
   };
-  console.log(step, 'defaultState');
+
   return (
     <>
       { nftTxHash && <PopupSuccess close={togglePopup} hash={nftTxHash} />}

@@ -4,7 +4,6 @@ import RenderRoutes from './components/RenderRoutes';
 import routes from './routes';
 
 const Main = () => {
-  console.log('render Main component');
   const { dispatch } = useContext(appStore);
 
   const onMount = () => {

@@ -1,6 +1,7 @@
 import React, {
   useContext,
   useEffect,
+  useState,
 } from 'react';
 import { useIntl } from 'react-intl';
 import {
@@ -11,7 +12,7 @@ import {
   filterArea,
   filterDuration,
 } from './LangExistingProject';
-import ProjectCard from '../../components/ProjectCard';
+import ProjectCard from './ProjectCard';
 import Loader from '../../components/Loader';
 import { getNftContract, nftContractMethods } from '../../utils/near-utils';
 import { appStore } from '../../state/app';
@@ -21,6 +22,8 @@ const ExistingProject = () => {
   const intl = useIntl();
   const { state, update } = useContext(appStore);
   const { account, app } = state;
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(false);
 
   const loadTokens = async () => {
     const ipfs = await initIPFS();
@@ -31,32 +34,38 @@ const ExistingProject = () => {
       tokenIds = await nftContract.get_account({
         account_id: account.accountId,
       });
+      if (tokenIds.length === 0) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+
+      // Get nft tokens from near network
+      const data = await Promise.all(
+        tokenIds.map(async (id) => {
+          const item = await nftContract.nft_token({ token_id: id });
+          return {
+            id,
+            ...item,
+          };
+        }),
+      );
+
+      // Get all files saved to ipfs for each nft token
+      const allTokens = await Promise.all(
+        data.map(async (token) => {
+          const item = await getJSONFileFromIpfs(ipfs, token.metadata);
+          return {
+            cid: token.metadata,
+            item,
+          };
+        }),
+      );
+      update('app.nftTokens', allTokens);
     } catch (e) {
       console.log(e);
+      setErr(true);
     }
-
-    // Get nft tokens from near network
-    const data = await Promise.all(
-      tokenIds.map(async (id) => {
-        const item = await nftContract.nft_token({ token_id: id });
-        return {
-          id,
-          ...item,
-        };
-      }),
-    );
-
-    // Get all files saved to ipfs for each nft token
-    const allTokens = await Promise.all(
-      data.map(async (token) => {
-        const item = await getJSONFileFromIpfs(ipfs, token.metadata);
-        return {
-          cid: token.metadata,
-          item,
-        };
-      }),
-    );
-    update('app.nftTokens', allTokens);
   };
 
   useEffect(async () => {
@@ -106,7 +115,19 @@ const ExistingProject = () => {
             <ProjectCard data={data} key={`${index} - ${data.cid}`} />
           ))}
         </div>
+
       ) : <div className="dashboard__loader"><Loader /></div>}
+      {err ? <div className="dashboard__error">Some error with IPFS, try later</div>
+        : loading
+          ? app.nftTokens.length ? (
+            <div className="dashboard__list">
+              {app.nftTokens.map((data, index) => (
+                /* eslint-disable-next-line react/no-array-index-key */
+                <ProjectCard data={data} key={`${index} - ${data.cid}`} />
+              ))}
+            </div>
+          ) : <div className="dashboard__loader"><Loader /></div>
+          : <div className="dashboard__loader">No projects yet</div>}
     </>
   );
 };

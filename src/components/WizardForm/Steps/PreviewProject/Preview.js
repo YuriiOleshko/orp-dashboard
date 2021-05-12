@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { CSVLink } from 'react-csv';
+import NumberFormat from 'react-number-format';
 import {
   ste4Create, backPreview, previewFiles, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4TitleCoast, step3Public, step3Private, step2List,
 } from '../../LangWizardForm';
@@ -18,7 +19,6 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
   useEffect(async () => {
     if (showPreview) {
       const ipfs = await initIPFS();
-      console.log(state.filesCidDir, 'state.filesCidDir');
       if (state.filesCidDir) {
         const updateArray = await getFilesFromDirectory(ipfs, state.filesCidDir);
         setFilesNames(updateArray);
@@ -40,7 +40,6 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
 
   const chekSaveArray = (path) => {
     const privateType = state.privateFiles.find((el) => el.path === path);
-    console.log(privateType, 'private');
     if (privateType) return privateType.private;
     return false;
   };
@@ -48,7 +47,6 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
     setShowPreview(false);
     prevPage();
   };
-  console.log(showPreview, 'showPreview');
   if (step !== 4) {
     return null;
   }
@@ -66,7 +64,9 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   {intl.formatMessage(step4Coast1)}
                   {' '}
                 </span>
-                <span className="bold">50 USD</span>
+                <span className="bold">
+                  <NumberFormat value="50" displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                </span>
               </p>
             </div>
             <div className="preview__wrapper-element">
@@ -75,7 +75,9 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   {intl.formatMessage(step4Coast2)}
                   {' '}
                 </span>
-                <span className="bold">100 USD</span>
+                <span className="bold">
+                  <NumberFormat value="100" displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                </span>
 
               </p>
             </div>
@@ -85,7 +87,9 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   {intl.formatMessage(step4Coast3)}
                   {' '}
                 </span>
-                <span className="bold">50 USD</span>
+                <span className="bold">
+                  <NumberFormat value="50" displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                </span>
 
               </p>
             </div>
@@ -95,7 +99,9 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   {intl.formatMessage(step4Coast4)}
                   {' '}
                 </span>
-                <span className="bold">1500 USD</span>
+                <span className="bold">
+                  <NumberFormat value="1500" displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                </span>
 
               </p>
             </div>
@@ -145,7 +151,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
             <div className="preview__wrapper-element">
               <span className="preview__label">{intl.formatMessage(step1Input4)}</span>
               <p className="preview__field">
-                {state.budjet || ''}
+                {<NumberFormat value={state.budjet} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" /> || ''}
               </p>
             </div>
 
@@ -165,7 +171,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                       {el.desc || ''}
                     </p>
                     <p className="preview__field">
-                      {el.part || ''}
+                      {<NumberFormat value={el.part} displayType="text" fixedDecimalScale suffix="%" /> || ''}
                     </p>
                   </div>
                 </div>
@@ -269,13 +275,13 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 <div className="preview__wrapper-element">
                   <span className="preview__label">{intl.formatMessage(step3Input1)}</span>
                   <p className="preview__field ">
-                    {state.square || ''}
+                    {<NumberFormat value={state.square} displayType="text" thousandSeparator /> || ''}
                   </p>
                 </div>
                 <div className="preview__wrapper-element">
                   <span className="preview__label">{intl.formatMessage(step3Input2)}</span>
                   <p className="preview__field ">
-                    {state.amountTrees || ''}
+                    {<NumberFormat value={state.amountTrees} displayType="text" thousandSeparator /> || ''}
                   </p>
                 </div>
                 <div className="preview__wrapper-element">

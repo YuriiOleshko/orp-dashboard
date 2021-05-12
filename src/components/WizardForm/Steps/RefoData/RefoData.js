@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import ReactTooltip from 'react-tooltip';
 import { ReactSVG } from 'react-svg';
+import NumberFormat from 'react-number-format';
 import {
   // eslint-disable-next-line no-unused-vars
   wizardBtnBack, wizardBtnNext, step3Input1, step3Input2, step3Input3, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step3Option1, step3Option2, step3Option3, step3TooltipTextArea, step3TooltipFiles,
@@ -16,7 +17,8 @@ import buble from '../../../../assets/image/wizard/buble.svg';
 const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
   const privateArray = state.privateFiles || [];
-  const { register, handleSubmit, errors } = useForm();
+  // eslint-disable-next-line no-unused-vars
+  const { register, handleSubmit, errors, control } = useForm();
   const [files, setFiles] = useState([]);
   const [avgTrees, setAvgTrees] = useState({ avgTrees: state.avgTrees || '' });
   // eslint-disable-next-line no-unused-vars
@@ -29,21 +31,23 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   // const options = [{ label: intl.formatMessage(step3Option1), value: intl.formatMessage(step3Option1) }, { label: intl.formatMessage(step3Option2), value: intl.formatMessage(step3Option2) }, { label: intl.formatMessage(step3Option3), value: intl.formatMessage(step3Option3) }];
   // eslint-disable-next-line no-unused-vars
   const onSubmit = (data) => {
-    console.log(data, 'data');
+    const copyData = { ...data };
+    const updAmountTrees = copyData.amountTrees.replace(/\D/g, '');
+    const updData = { ...copyData, amountTrees: updAmountTrees };
     const privateFiles = { privateFiles: filesSave };
-    setState({ ...state, ...data, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles });
+    setState({ ...state, ...updData, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles });
     nextPage();
   };
 
   const changeAvgTrees = (ev) => {
-    if (ev.target.value) setAvgTrees({ avgTrees: ((+ev.target.value) / state.square).toFixed(3) });
+    // here ev is object: {formattedValue, value, floatValue} ==> follow NumberFormat doc
+    if (ev.value) setAvgTrees({ avgTrees: Math.floor((+ev.value) / state.square) });
     else setAvgTrees({ avgTrees: '' });
   };
 
   if (step !== 2) {
     return null;
   }
-  console.log(myFiles, 'www');
 
   return (
     <div className="wizard__wrapper-form">
@@ -52,19 +56,20 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           <div className="wizard__coord">
             <span className="input__label">{intl.formatMessage(step3Input1)}</span>
             <p className="wizard__code-plus">
-              {state.square}
+              <NumberFormat value={state.square} displayType="text" thousandSeparator />
             </p>
           </div>
           <CustomInput
-            type="number"
+            control={control}
+            rules={{ required: true }}
             label={intl.formatMessage(step3Input2)}
             placeholder={intl.formatMessage(step3Input2)}
             required
             change={changeAvgTrees}
-            register={register({ required: 'This is required' })}
             error={errors.amountTrees}
             value={state.amountTrees}
             name="amountTrees"
+            usdMask
           />
           <div className="wizard__coord">
             <span className="input__label">{intl.formatMessage(step3Input3)}</span>

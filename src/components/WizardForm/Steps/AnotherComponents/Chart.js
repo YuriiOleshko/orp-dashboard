@@ -21,7 +21,6 @@ const Chart = ({ data }) => (
     <XAxis interval={0} dataKey="name" padding={{ left: 20, right: 20 }} width={800} />
     <YAxis />
     <Tooltip />
-    {/* <Area type="monotone" dataKey="amt" fill="#8884d8" stroke="#8884d8" /> */}
     <Bar dataKey="Data Upload Fee, USD" barSize={60} fill="#3FDD7E" />
     <Line
       type="monotone"

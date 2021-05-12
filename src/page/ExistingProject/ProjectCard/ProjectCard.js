@@ -1,7 +1,7 @@
 /* eslint-disable no-unneeded-ternary */
 import React from 'react';
 import { useHistory } from 'react-router';
-import { formattedDate } from '../../utils/convert-utils';
+import { formattedDate } from '../../../utils/convert-utils';
 
 const ProjectCard = ({ data }) => {
   const history = useHistory();

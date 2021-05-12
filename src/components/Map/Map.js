@@ -24,9 +24,9 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
     square: 0,
     coordinate: { longitude: '', latitude: '' } });
   const [coord, setCoord] = useState({
-    lng: state.coordinate.longitude || 5,
-    lat: state.coordinate.latitude || 34,
-    zoom: 0,
+    longitude: 5,
+    latitude: 34,
+    zoom: 2,
   });
   const mapContainer = useRef(null);
   const screen = useRef(null);
@@ -48,26 +48,25 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
         setDataPolygon(updDatePolygon);
         setLoadingIPfs(true);
         setLoadingMap(false);
-        console.log('SAVE MAP TO IPFS -------------->', res);
+        // console.log('SAVE MAP TO IPFS -------------->', res);
       }, 'canvas.toBlob');
     });
   };
   useEffect(() => {
-    console.log(state, 'asdsfState');
     mapboxgl.accessToken = process.env.REACT_APP_MAP_KEY;
     // eslint-disable-next-line no-shadow
-    const initializeMap = ({ setMap, mapContainer }) => {
+    const initializeMap = ({ setMap, mapContainer, coordinate }) => {
       // eslint-disable-next-line no-shadow
       const map = new mapboxgl.Map({
         container: mapContainer.current, // container id
         style: 'mapbox://styles/mapbox/satellite-v9', // hosted style id
-        center: [coord.lng, coord.lat], // starting position
-        zoom: coord.zoom,
+        center: [coordinate.longitude, coordinate.latitude], // starting position
+        zoom: 0,
         preserveDrawingBuffer: true,
       });
 
       function rotate() {
-        map.easeTo({ bearing: 40, duration: 5000, pitch: 0, zoom: 5 });
+        map.flyTo({ center: [coordinate.longitude, coordinate.latitude], zoom: (coordinate.zoom || 3) });
       }
 
       map.on('load', () => {
@@ -78,8 +77,8 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
 
       map.on('move', () => {
         setCoord({
-          lng: map.getCenter().lng.toFixed(4),
-          lat: map.getCenter().lat.toFixed(4),
+          longitude: map.getCenter().lng.toFixed(4),
+          latitude: map.getCenter().lat.toFixed(4),
           zoom: map.getZoom().toFixed(2),
         });
       });
@@ -99,15 +98,15 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
       map.on('draw.delete', updateArea);
       // eslint-disable-next-line no-use-before-define
       map.on('draw.update', updateArea);
-      console.log(state.polygon, 'state.polygon[0]!!!!!!');
+
       if (state.polygon.length > 0) {
         draw.add(state.polygon[0]);
-        setCoord({ lng: state.coordinate[0], lat: state.coordinate[1], zoom: 0 });
+        setCoord({ longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom });
+
         // eslint-disable-next-line no-use-before-define
         updateArea(state.polygon[0], true);
       }
       async function updateArea(e, update = false) {
-        console.log(e, 'e');
         const features = update ? e : e.features[0];
         const data = draw.getAll();
         const center = centerOfMass(features).geometry.coordinates;
@@ -121,14 +120,14 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
         }
         if (data.features.length > 0) {
           const areaData = area(data);
-          const roundedArea = (Math.round(areaData * 100) / 100 / 1000000).toFixed(0);
+          const roundedArea = (Math.round(areaData * 100) / 100 / 1000000).toFixed(3);
           setDataPolygon({
             region: placeName,
             polygon: data.features,
             polygonCoordinate: features.geometry.coordinates,
             codePlus: olc.encode(center[1], center[0]),
             square: roundedArea,
-            coordinate: { longitude: center[0], latitude: center[1] },
+            coordinate: { longitude: center[0], latitude: center[1], zoom: coordinate.zoom },
           });
           setState({
             region: placeName,
@@ -136,7 +135,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
             codePlus: olc.encode(center[1], center[0]),
             square: roundedArea,
             polygonCoordinate: features.geometry.coordinates,
-            coordinate: { longitude: center[0], latitude: center[1] },
+            coordinate: { longitude: center[0], latitude: center[1], zoom: coordinate.zoom },
           });
         } else {
           setDataPolygon({
@@ -145,7 +144,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
             codePlus: null,
             square: 0,
             polygonCoordinate: [],
-            coordinate: { longitude: 0, latitude: 0 },
+            coordinate: { longitude: 0, latitude: 0, zoom: 0 },
           });
           setState({
             region: '',
@@ -153,15 +152,23 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
             polygonCoordinate: [],
             codePlus: null,
             square: 0,
-            coordinate: { longitude: '', latitude: '' },
+            coordinate: { longitude: '', latitude: '', zoom: 0 },
           });
 
           // if (e.type !== 'draw.delete') alert('Use the draw tools to draw a polygon!');
         }
       }
     };
-
-    if (!map) initializeMap({ setMap, mapContainer });
+    let coordinate;
+    if (state.polygon.length > 0) {
+      console.log({ longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom }, '{ lng: state.coordinate.longitude, lat: state.coordinate.latitude, zoom: state.coordinate.zoom }');
+      coordinate = { longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom };
+      setCoord({ longitude: state.coordinate.longitude, latitude: state.coordinate.latitude, zoom: state.coordinate.zoom });
+    } else {
+      setCoord(coord);
+      coordinate = coord;
+    }
+    if (!map) initializeMap({ setMap, mapContainer, coordinate });
   }, [map]);
 
   const uploadStateCoordinate = async () => {
@@ -171,8 +178,9 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
   useEffect(() => {
     if (loadingIPfs) {
       clear(['latitude', 'region', 'longitude']);
-      console.log(datePolygon, 'datePolygon');
-      setState(datePolygon);
+      const newData = { ...datePolygon, coordinate: { ...coord } };
+
+      setState(newData);
       setShow(false);
       setShowPrev(false);
     }
@@ -190,10 +198,10 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
         <div className="map__box-info">
           <div>
             Longitude:
-            {coord.lng}
+            {coord.longitude}
             {' '}
             | Latitude:
-            {coord.lat}
+            {coord.latitude}
             {' '}
             | Zoom:
             {coord.zoom}

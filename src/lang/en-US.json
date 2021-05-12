@@ -70,7 +70,7 @@
   "wizard.step2.prev.desc" : "Outline your area with precision, by either drawing it manually on the map or uploading the GEO data file. Make sure to check the location and borders of your zone once it’s outlined on the map. This will help to avoid overlaps with other reforestation projects’ areas, and incentivise collateral providers and validators to commit to your project.",
   "wizard.step2.geo.btn" : "Upload file",
   "wizard.step2.btn-label" : "Draw Zone",
-  "wizard.step2.types": ".geojson, .kml, .shp (files accepted)",
+  "wizard.step2.types": ".geojson, .kml (files accepted)",
   "wizard.step2.geo.reset": "Reset",
   "wizard.step2.list.dwn" : "Download full coordinates list",
   "wizard.step2.code-plus" : "Google Plus Code",

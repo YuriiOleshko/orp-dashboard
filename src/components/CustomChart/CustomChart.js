@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Pie,
   PieChart,
@@ -8,8 +8,44 @@ import {
   Cell,
   Legend,
 } from 'recharts';
+import { randomHexColor } from '../../utils/convert-utils';
 
-const CustomChart = ({ data, colors }) => {
+const CustomChart = ({ data }) => {
+  const [colors, setColors] = useState([]);
+  const [updFunders, setUpdFunders] = useState([]);
+
+  const getAllColors = (funders) => {
+    const res = [];
+    for (let i = 1; i <= funders.length; i++) {
+      res.push(randomHexColor());
+    }
+    return res;
+  };
+
+  const getAllPartsWithFree = (funders) => {
+    const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
+    const sumOfParts = parts.reduce((sum, curr) => sum + curr, 0);
+    if (sumOfParts < 100) {
+      const freePart = 100 - sumOfParts;
+      const freePartObj = {
+        desc: 'Free part to get',
+        name: 'Free',
+        part: freePart,
+      };
+      if (sumOfParts === 0) return [freePartObj];
+      const newFunders = [...funders, freePartObj];
+      return newFunders;
+    }
+    return data;
+  };
+
+  if (!updFunders.length && !colors.length) {
+    const allParts = getAllPartsWithFree(data);
+    const allColors = getAllColors(allParts);
+    setColors(allColors);
+    setUpdFunders(allParts);
+  }
+
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -20,8 +56,8 @@ const CustomChart = ({ data, colors }) => {
     percent,
   }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const x = cx + (percent === 1 ? 0 : (radius * Math.cos(-midAngle * RADIAN)));
+    const y = cy + (percent === 1 ? 0 : (radius * Math.sin(-midAngle * RADIAN)));
 
     return (
       <text
@@ -61,13 +97,13 @@ const CustomChart = ({ data, colors }) => {
       </ul>
     );
   };
-  return (
+  return updFunders.length && colors.length && (
     <div className="funders-chart">
       <ResponsiveContainer>
         <PieChart barGap="0">
           <Pie
-            data={data}
-            dataKey="value"
+            data={updFunders}
+            dataKey="part"
             nameKey="name"
             cx="50%"
             cy="50%"
@@ -78,11 +114,13 @@ const CustomChart = ({ data, colors }) => {
             paddingAngle={0}
             startAngle={90}
             endAngle={450}
+            isAnimationActive={false}
           >
-            {data.map((entry, index) => (
+            {updFunders.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={colors[index % colors.length]}
+                strokeWidth={0}
               />
             ))}
           </Pie>
