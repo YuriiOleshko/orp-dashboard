@@ -7,7 +7,7 @@ import togeojson from '@mapbox/togeojson';
 import { step2GeoBtn, step2Types } from '../../LangWizardForm';
 import CustomBtn from '../../../CustomBtn';
 
-const acceptType = ['json', 'kml'];
+const acceptType = ['7b202274', '3c3f786d'];
 
 const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
   setJsonFile, setShowMap }) => {
@@ -21,15 +21,14 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
     fileread.onload = function (e) {
       const content = e.target.result;
       let intern;
-      // console.log(contDom, 'sho');
-      if (acceptedFiles[0].type === 'application/vnd.google-earth.kml+xml') {
+      if (acceptedFiles[0].codeType === '3c3f786d') {
         const dom = new DOMParser().parseFromString(content, 'text/xml');
         const geo = togeojson.kml(dom);
         intern = geo; // Array of Objects.
       } else intern = JSON.parse(content); // Array of Objects.
-
+      const newDataInter = intern.features.find((el) => el.geometry.type === 'Polygon');
       setMyFiles([...acceptedFiles]);
-      setGeoJson([intern.features.find((el) => el.geometry.type === 'Polygon')]);
+      if (newDataInter) setGeoJson([newDataInter]);
     };
     fileread.readAsText(acceptedFiles[0]);
   }, []);
@@ -67,14 +66,23 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
   }, [geoJson]);
 
   const checkAcceptTypes = (file) => {
-    const pathAsArray = file.path.split('.');
-    if (acceptType.includes(pathAsArray[pathAsArray.length - 1])) {
-      return null;
-    }
-    return {
-      code: 'unsuitable file type',
-      message: '.geojson, .kml, .shp (files accepted) ',
+    const fileReader = new FileReader();
+    fileReader.onload = function (e) {
+      const arr = (new Uint8Array(e.target.result)).subarray(0, 4);
+      let header = '';
+      for (let i = 0; i < arr.length; i++) {
+        header += arr[i].toString(16);
+      }
+      file.codeType = header;
+      if (acceptType.includes(header)) {
+        return null;
+      }
+      return {
+        code: 'unsuitable file type',
+        message: '.geojson, .kml',
+      };
     };
+    fileReader.readAsArrayBuffer(file);
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: 1, multiple: false, maxSize: 1e+7, validator: checkAcceptTypes });

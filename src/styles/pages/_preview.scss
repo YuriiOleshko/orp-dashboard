@@ -71,7 +71,7 @@
   &__wrapper-element{
     flex-basis: 47%;
     &.cost{
-      flex-basis: 48%;
+      flex-basis: 49%;
     }
 
 
@@ -132,7 +132,6 @@
     &::-webkit-scrollbar { width: 2px; height: 2px;}
     &::-webkit-scrollbar-button {  display: none}
     &::-webkit-scrollbar-thumb { height: 10px; background-color: $lightGreen; border-radius: 3px;}
-
   }
 
 
