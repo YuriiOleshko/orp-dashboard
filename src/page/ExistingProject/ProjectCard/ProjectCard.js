@@ -6,7 +6,7 @@ import { formattedDate } from '../../../utils/convert-utils';
 
 const ProjectCard = ({ data }) => {
   const history = useHistory();
-  const { cid, item } = data;
+  const { id, item } = data;
   const { name, region, square, startTimeProject, finishTimeProject } = item;
   const noData = '---';
 
@@ -18,11 +18,11 @@ const ProjectCard = ({ data }) => {
   }
 
   return (
-    <div className="dashboard__item" key={`${cid}Project`}>
+    <div className="dashboard__item" key={`${id}Project`}>
       <div className="dashboard__item-wrapper">
         <div className="dashboard__calling">
           <i className="icon-galka" />
-          <span onClick={() => history.push({ pathname: `/project/${cid}`, state: item })}>
+          <span onClick={() => history.push({ pathname: `/project/${id}`, state: item })}>
             {name ? name : 'No name project'}
           </span>
         </div>

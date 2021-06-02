@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useContext,
   useEffect,
@@ -28,13 +29,16 @@ const ExistingProject = () => {
   const [err, setErr] = useState(false);
 
   const loadTokens = async () => {
+
     const ipfs = await initIPFS();
     const nftContract = getNftContract(account, nftContractMethods);
     let tokenIds = [];
 
     try {
-      tokenIds = await nftContract.get_account({
+      tokenIds = await nftContract.nft_tokens_for_owner({
         account_id: account.accountId,
+        from_index: '0',
+				limit: '50'
       });
       if (tokenIds.length === 0) {
         setLoading(false);
@@ -42,28 +46,17 @@ const ExistingProject = () => {
       }
       setLoading(true);
 
-      // Get nft tokens from near network
-      const data = await Promise.all(
-        tokenIds.map(async (id) => {
-          const item = await nftContract.nft_token({ token_id: id });
-          return {
-            id,
-            ...item,
-          };
-        }),
-      );
-
       // Get all files saved to ipfs for each nft token
-      const allTokens = await Promise.all(
-        data.map(async (token) => {
-          const item = await getJSONFileFromIpfs(ipfs, token.metadata);
+      const data = await Promise.all(
+        tokenIds.map(async (token) => {
+          const item = await getJSONFileFromIpfs(ipfs, token.metadata.media);
           return {
-            cid: token.metadata,
+            id: token.token_id,
             item,
           };
         }),
       );
-      update('app.nftTokens', allTokens);
+      update('app.nftTokens', data);
     } catch (e) {
       setErr(true);
     }
@@ -115,7 +108,7 @@ const ExistingProject = () => {
             <div className="dashboard__list">
               {app.nftTokens.map((data, index) => (
                 /* eslint-disable-next-line react/no-array-index-key */
-                <ProjectCard data={data} key={`${index} - ${data.cid}`} />
+                <ProjectCard data={data} key={`${index} - ${data.id}`} />
               ))}
             </div>
           ) : <div className="dashboard__loader"><Loader /></div>

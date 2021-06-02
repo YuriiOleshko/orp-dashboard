@@ -73,13 +73,16 @@ const step4Preview = { id: 'wizard.step4.preview', defaultMessage: 'Preview' };
 const ste4Month = { id: 'wizard.step4.month', defaultMessage: 'Months' };
 const previewFiles = { id: 'wizard.preview.files', defaultMessage: 'Uploaded Files' };
 const ste4Create = { id: 'wizard.step4.create', defaultMessage: 'Create Project' };
+const editTitleCost = { id: 'wizard.edit.cost', defaultMessage: 'Current Project Costs' };
+const editLabelBtn = { id: 'wizard.edit.label-btn', defaultMessage: 'Recalculate Project Costs' };
+const editBtnUpdt = { id: 'wizard.edit.btn.update', defaultMessage: 'Update Project' };
 const wizardPopupTitle = { id: 'wizard.popup.title', defaultMessage: 'Success!' };
 const wizardPopupDesc = { id: 'wizard.popup.desc', defaultMessage: 'Congratulations! Your project has been created successfully.' };
 const wizardPopupBtn = { id: 'wizard.popup.btn-label', defaultMessage: 'Continue' };
 export { title, titlePreview, btnLabel, step1, step2, step3, step4, step1Input0, DropzoneBtn, DropzoneReplace, DropzoneDelete, step2GeoBtn,
   wizardFiles, step1Input1, step1Input1Place, step1Input2, step1Input2Place, step1Input3, step3Option1, step3Option2, step3Option3, previewFiles,
   step1Input4, step1Input4Place, step1Input5, step1Input5Place, step1Input6, step4Tooltip1, step4Tooltip2, step4Tooltip3, step4Tooltip4, step2List,
-  step1Input7, step1Creator, step1CreatorLabel, wizardBtnNext, wizardBtnBack, wizardPopupTitle, wizardPopupDesc, wizardPopupBtn, backPreview,
-  step2Input1, step2Input1Place1, step2Input1Place2, step2Input2, step2CodePlus, step2BtnLabel, step4Preview, step1Input5Info, prevTitle, prevDesc,
-  step3Input1, step3Input2, step3Input3, step2Types, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step2BtnReset, step3Public, step3Private,
+  step1Input7, step1Creator, step1CreatorLabel, wizardBtnNext, wizardBtnBack, wizardPopupTitle, wizardPopupDesc, wizardPopupBtn, backPreview, editTitleCost,
+  step2Input1, step2Input1Place1, step2Input1Place2, step2Input2, step2CodePlus, step2BtnLabel, step4Preview, step1Input5Info, prevTitle, prevDesc, editLabelBtn,
+  step3Input1, step3Input2, step3Input3, step2Types, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step2BtnReset, step3Public, step3Private, editBtnUpdt,
   step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, step2GeoLabel, ste4Create, step3TooltipTextArea, step3TooltipFiles };

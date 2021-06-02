@@ -25,6 +25,7 @@ import ProjectInit from './Steps/ProjectInit';
 import Preview from './Steps/PreviewProject';
 import { setting } from '../Layout/LangLayot';
 import PopupSuccess from './Steps/AnotherComponents/PopupSuccess';
+import LoaderIpfs from '../LoaderIpfs.js';
 
 const WizardForm = () => {
   const intl = useIntl();
@@ -39,6 +40,7 @@ const WizardForm = () => {
   const [defaultState, setDefaultState] = useState({ developer: intl.formatMessage(setting) });
   const [nftTxHash, setNftTxHash] = useState('');
   const [loadProfile, setProfile] = useState(false);
+
   useEffect(() => {
     const params = (new URL(document.location)).searchParams;
     const hash = params.get('transactionHashes');
@@ -73,9 +75,15 @@ const WizardForm = () => {
       const deposit = parseNearAmount('1');
       const contract = getNftContract(account, nftContractMethods);
 
+      const tokenMetadata = {
+        media: `/ipfs/${path}`,
+        issued_at: `${Date.now()}`,
+        updated_at: `${Date.now()}`,
+      };
+
       await contract.nft_mint({
         token_id: `id-${Date.now()}`,
-        metadata: path,
+        metadata: tokenMetadata,
       }, GAS, deposit);
     }
   };
@@ -108,10 +116,7 @@ const WizardForm = () => {
             {loadProfile && (
               <div className="wizard__gen-wrapper">
                 {state.loading && (
-                <p className="wizard__loading">
-                  <i className="icon-shield" />
-                  Sending data to IPFS...
-                </p>
+                  <LoaderIpfs customClass="" />
                 ) }
                 <GenInformation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} />
                 <ProjectLocation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />

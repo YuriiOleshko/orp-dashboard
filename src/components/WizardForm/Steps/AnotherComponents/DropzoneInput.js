@@ -9,8 +9,9 @@ import {
 } from '../../LangWizardForm';
 import { initIPFS } from '../../../../state/ipfs';
 import { appStore } from '../../../../state/app';
+import { ipfsURL } from '../../../../state/near';
 
-const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, filesSave, setFilesSave, myFiles, setMyFiles, previewImg, setPreviewImg }) => {
+const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, filesSave, setFilesSave, myFiles, setMyFiles, previewImg, setPreviewImg, edit = false, convertFiles, setConvertFiles }) => {
   // const [previewImg, setPreviewImg] = useState('');
   const { update } = useContext(appStore);
 
@@ -43,21 +44,28 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
       };
       const ipfs = await initIPFS();
 
-      if (index === (arr.length - 1)) {
+      if (index === (arr.length - 1) && !edit) {
         let count = 0;
         update('loading', true);
         const resultArray = [];
         for await (const result of ipfs.addAll(newArray, addOptions)) {
           if (!result.path) {
-            if (multi) change({ filesCidDir: result.cid.string });
-            else change({ iconCidDir: result.cid.string });
-          } else resultArray.push({ idCid: result.cid.string, private: false, path: result.path });
+            if (multi) change({ filesCidDir: `/ipfs/${result.cid.string}` });
+            else change({ iconCidDir: `/ipfs/${result.cid.string}` });
+          } else resultArray.push({ private: false, path: result.path });
           // eslint-disable-next-line no-unused-vars
           count++;
         }
         if (multi) setFilesSave([...filesSave, ...resultArray]);
 
         update('loading', false);
+      } else if (edit) {
+        if (multi) {
+          const resultArray = [];
+          setConvertFiles([...convertFiles, ...newArray]);
+          newArray.forEach((el) => resultArray.push({ private: false, path: el.path }));
+          setFilesSave([...filesSave, ...resultArray]);
+        }
       }
     };
 
@@ -79,6 +87,7 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
     setMyFiles(newFiles);
     if (!multi) {
       setPreviewImg('');
+      change({ iconCidDir: '' });
     }
   };
 
@@ -150,7 +159,7 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
       let count = 0;
       for await (const file of ipfs.get(state.iconCidDir)) {
         if (count === 1) {
-          const path = `https://gateway.ipfs.io/ipfs/${file.path}`;
+          const path = `${ipfsURL}${file.path}`;
           setPreviewImg(path);
         }
         count++;

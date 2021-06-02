@@ -4,7 +4,7 @@ import * as nearAPI from 'near-api-js';
 import { getWallet, getContract } from '../utils/near-utils';
 
 export const {
-	networkId, nodeUrl, contractName, contractMethods, GAS
+	networkId, nodeUrl, contractName, contractMethods, GAS, ipfsURL
 } = getConfig();
 
 export const {

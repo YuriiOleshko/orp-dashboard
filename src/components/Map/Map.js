@@ -44,7 +44,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev }) => {
       canvas.toBlob(async (blob) => {
         const ipfs = await initIPFS();
         const res = await ipfs.add(blob);
-        const updDatePolygon = { ...datePolygon, cidScreenShot: res.path };
+        const updDatePolygon = { ...datePolygon, cidScreenShot: `/ipfs/${res.path}` };
         setDataPolygon(updDatePolygon);
         setLoadingIPfs(true);
         setLoadingMap(false);

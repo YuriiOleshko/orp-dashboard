@@ -4,9 +4,9 @@ import {
   ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
-const Chart = ({ data }) => (
+const Chart = ({ data, width = 800 }) => (
   <ComposedChart
-    width={800}
+    width={width}
     height={300}
     data={data}
     className="chart"

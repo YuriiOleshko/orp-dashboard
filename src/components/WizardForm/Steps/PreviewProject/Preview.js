@@ -7,6 +7,7 @@ import {
 } from '../../LangWizardForm';
 import CustomBtn from '../../../CustomBtn';
 import { initIPFS, getFilesFromDirectory } from '../../../../state/ipfs';
+import { ipfsURL } from '../../../../state/near';
 import WrapperScaleImg from '../AnotherComponents/WrapperScaleImg';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
@@ -151,7 +152,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
             <div className="preview__wrapper-element">
               <span className="preview__label">{intl.formatMessage(step1Input4)}</span>
               <p className="preview__field">
-                {<NumberFormat value={state.budjet} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" /> || ''}
+                {<NumberFormat value={state.budget} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" /> || ''}
               </p>
             </div>
 
@@ -186,7 +187,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
               )
                 : (
                   <div className="preview__icon">
-                    <img src={`https://gateway.ipfs.io/ipfs/${iconHash}`} alt="img" />
+                    <img src={`${ipfsURL}${iconHash}`} alt="img" />
                   </div>
                 )}
             </div>

@@ -16,7 +16,6 @@ const CustomChart = ({ data }) => {
   const [colors, setColors] = useState([]);
   const [updFunders, setUpdFunders] = useState([]);
   const intl = useIntl();
-
   const getAllColors = (funders) => {
     const res = [];
     for (let i = 1; i <= funders.length; i++) {
@@ -26,20 +25,34 @@ const CustomChart = ({ data }) => {
   };
 
   const getAllPartsWithFree = (funders) => {
-    const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
-    const sumOfParts = parts.reduce((sum, curr) => sum + curr, 0);
-    if (sumOfParts < 100) {
-      const freePart = 100 - sumOfParts;
-      const freePartObj = {
-        desc: intl.formatMessage(freeToGet),
-        name: intl.formatMessage(free),
-        part: freePart,
-      };
-      if (sumOfParts === 0) return [freePartObj];
-      const newFunders = [...funders, freePartObj];
-      return newFunders;
+    const hasPart = data.find((item) => item.part);
+
+    if (hasPart) {
+      // Transform part key from string to number
+      const numFunders = funders.map((item) => ({ ...item, part: +Object.values(item)[Object.values(item).length - 1] }));
+      const parts = numFunders.map((item) => Object.values(item)[Object.values(item).length - 1]);
+      const sumOfParts = parts.reduce((sum, curr) => sum + curr, 0);
+      if (sumOfParts < 100) {
+        const freePart = 100 - sumOfParts;
+        const freePartObj = {
+          desc: intl.formatMessage(freeToGet),
+          name: intl.formatMessage(free),
+          part: freePart,
+        };
+        if (sumOfParts === 0) return [freePartObj];
+        const newFunders = [...numFunders, freePartObj];
+        return newFunders;
+      }
+      return numFunders;
     }
-    return data;
+
+    const freePartObj = {
+      desc: intl.formatMessage(freeToGet),
+      name: intl.formatMessage(free),
+      part: 100,
+    };
+    const newFunders = [freePartObj];
+    return newFunders;
   };
 
   if (!updFunders.length && !colors.length) {

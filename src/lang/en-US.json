@@ -112,8 +112,9 @@
   "wizard.popup.title" : "Success!",
   "wizard.popup.desc" : "Congratulations! Your project has been created successfully.",
   "wizard.popup.btn-label" : "Continue",
-
-
+  "wizard.edit.cost": "Current Project Costs",
+  "wizard.edit.label-btn": "Recalculate Project Costs",
+  "wizard.edit.btn.update": "Update Project",
 
   "menu.item1": "Existing Projects",
   "menu.item2": "Сollateral Status",

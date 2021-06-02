@@ -9,8 +9,10 @@ import Layout from './components/Layout';
 import LaunchProject from './page/LaunchProject';
 import CollateralStatus from './page/CollateralStatus';
 import ExistingProject from './page/ExistingProject';
+import Mfs from './page/Mfs';
 import LayoutDash from './components/LayoutDash/LayoutDash';
 import ProjectPage from './page/ProjectPage';
+import EditPage from './page/EditPage';
 
 const routes = [
   { path: '/login', key: 'ROOT', exact: true, component: () => <Login /> },
@@ -37,13 +39,31 @@ const routes = [
         ),
       },
       {
-        path: '/project/:name',
+        path: '/mfs',
+        key: 'MFS',
+        exact: true,
+        component: () => (
+          <LayoutDash>
+            <Mfs />
+          </LayoutDash>
+        ),
+      },
+      {
+        path: '/project/:nameId',
         key: 'PROJECT',
         exact: true,
         component: () => (
           <LayoutDash>
             <ProjectPage />
           </LayoutDash>
+        ),
+      },
+      {
+        path: '/edit/:nameId',
+        key: 'PROJECT',
+        exact: true,
+        component: () => (
+          <EditPage />
         ),
       },
       {

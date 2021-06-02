@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ipfsURL } from '../../../../state/near';
 
 const WrapperScaleImg = ({ cid }) => {
   const [activeScale, setActiveScale] = useState(false);
@@ -12,7 +13,7 @@ const WrapperScaleImg = ({ cid }) => {
     <div className={cssClass}>
       <div className="scaler__wrapper">
         <div className="scaler__prev">
-          <img src={`https://gateway.ipfs.io/ipfs/${cid}`} alt="" />
+          <img src={`${ipfsURL}${cid}`} alt="" />
           <div className="scaler__icon">
             <i className="icon-loop" onClick={togglePopup} />
           </div>
@@ -22,7 +23,7 @@ const WrapperScaleImg = ({ cid }) => {
             <i className="icon-close" onClick={togglePopup} />
           </div>
           <div className="scaler__img">
-            <img src={`https://gateway.ipfs.io/ipfs/${cid}`} alt="" />
+            <img src={`${ipfsURL}${cid}`} alt="" />
           </div>
           <div className="scaler__bg" onClick={togglePopup} />
         </div>

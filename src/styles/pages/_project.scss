@@ -358,6 +358,18 @@
       }
     }
   }
+  &__loader-full {
+    position: fixed;
+    display: flex;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: #EBEBEB;
+    width: 100vw;
+    height: 100vh;
+  }
 }
 
 @media (max-width: 1400px) {

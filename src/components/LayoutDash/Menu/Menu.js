@@ -24,7 +24,7 @@ const Menu = () => {
               <i className="icon-charning" />
               {intl.formatMessage(item1)}
             </NavLink>
-            <Link activeClassName="active" className="menu__item" to="#">
+            <Link className="menu__item" to="#">
               <i className="icon-shield" />
               {intl.formatMessage(item2)}
             </Link>

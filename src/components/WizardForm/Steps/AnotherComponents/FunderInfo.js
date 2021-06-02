@@ -15,7 +15,7 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
               type="text"
               placeholder={intl.formatMessage(step1Input1Place)}
               register={registerName}
-              value={inputsArray[count][`FunderName${count}`]}
+              value={inputsArray[count].name}
               name={`funders.${count}.name`}
               change={(ev) => change(ev, `FunderName${count}`, count)}
             />
@@ -26,14 +26,14 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
               type="text"
               placeholder={intl.formatMessage(step1Input5Place)}
               register={registerInfo}
-              value={inputsArray[count][`FunderInfo${count}`]}
+              value={inputsArray[count].desc}
               name={`funders.${count}.desc`}
               change={(ev) => change(ev, `FunderInfo${count}`, count)}
             />
             <CustomInput
               control={control}
               placeholder="%"
-              value={inputsArray[count][`FunderPart${count}`]}
+              value={inputsArray[count].part}
               name={`funders.${count}.part`}
               usdMask
               suffix="%"
@@ -51,7 +51,7 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
             label={intl.formatMessage(step1CreatorLabel)}
             placeholder={intl.formatMessage(step1Input1Place)}
             register={registerName}
-            value={inputsArray[0].FunderName}
+            value={inputsArray[0].name}
             name="funders.0.name"
             change={(ev) => change(ev, 'FunderName', count)}
           />
@@ -61,18 +61,18 @@ const FunderInfo = ({ inputsArray, change, registerName, registerInfo, registerP
               type="text"
               placeholder={intl.formatMessage(step1Input5Place)}
               register={registerInfo}
-              value={inputsArray[0].FunderInfo}
+              value={inputsArray[0].desc}
               name="funders.0.desc"
               change={(ev) => change(ev, 'FunderInfo', count)}
             />
             <CustomInput
               control={control}
               placeholder="%"
-              value={inputsArray[count][`FunderPart${count}`]}
+              value={inputsArray[0].part}
               name="funders.0.part"
               usdMask
               suffix="%"
-              change={(ev) => change(ev, `FunderPart${count}`, count, true)}
+              change={(ev) => change(ev, 'FunderPart', count, true)}
               click={(ev) => setInputElement(ev.target)}
             />
           </div>

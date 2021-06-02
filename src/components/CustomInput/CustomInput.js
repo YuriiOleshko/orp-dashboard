@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import NumberFormat from 'react-number-format';
 
 const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change, onlyNumber, usdMask, control, prefix, suffix, rules, decimal, click }) => {
+  // eslint-disable-next-line
+  const defaultValue = value ? value : '';
   const inputType = type || 'text';
+  const [upd, setUpd] = useState(false);
   const changeError = (typeError) => {
     if (typeError === 'required') {
       return 'This field is required';
@@ -43,8 +46,11 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
           suffix={suffix}
           placeholder={placeholder}
           className={classInput}
-          defaultValue={value}
-          onValueChange={change}
+          defaultValue={defaultValue}
+          onValueChange={change && ((v) => {
+            change(v);
+            setUpd(!upd);
+          })}
           onClick={click}
         />
       ) : (
@@ -52,7 +58,7 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
           type={inputType}
           placeholder={placeholder}
           name={name}
-          defaultValue={value}
+          defaultValue={defaultValue}
           ref={register}
           className={classInput}
           onKeyPress={onlyNumber ? onNumberOnlyChange : () => {}}

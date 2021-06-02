@@ -16,15 +16,15 @@ import buble from '../../../../assets/image/wizard/buble.svg';
 
 const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
-  const privateArray = state.privateFiles || [];
+  // const privateArray = state.privateFiles || [];
   // eslint-disable-next-line no-unused-vars
   const { register, handleSubmit, errors, control } = useForm();
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState({});
   const [avgTrees, setAvgTrees] = useState({ avgTrees: state.avgTrees || '' });
   // eslint-disable-next-line no-unused-vars
   const [additional, setAdditional] = useState({});
   const [benefits, setBenefits] = useState({});
-  const [filesSave, setFilesSave] = useState(privateArray);
+  const [filesSave, setFilesSave] = useState([]);
   const [myFiles, setMyFiles] = useState([]);
 
   const intl = useIntl();
@@ -38,7 +38,6 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
     setState({ ...state, ...updData, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles });
     nextPage();
   };
-
   const changeAvgTrees = (ev) => {
     // here ev is object: {formattedValue, value, floatValue} ==> follow NumberFormat doc
     if (ev.value) setAvgTrees({ avgTrees: Math.floor((+ev.value) / state.square) });

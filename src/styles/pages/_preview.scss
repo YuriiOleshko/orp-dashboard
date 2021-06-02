@@ -1,6 +1,45 @@
 .preview{
   padding: 40px 60px 0;
   min-height: 100vh;
+  & .input {
+    flex-basis: 47%;
+    margin-bottom: 25px;
+
+    .input__error {
+      bottom: -18px;
+    }
+
+    & label {
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    & input {
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+
+      &[type="number"] {
+        -moz-appearance: textfield;
+        overflow: hidden;
+      }
+
+      &[type="number"]:hover,
+      &[type="number"]:focus {
+        overflow: hidden;
+        -moz-appearance: number-input;
+      }
+    }
+
+    & input, select {
+      @include theme-aware('background', 'color-bg-input');
+      padding: 18px 20px;
+      border-radius: 6px;
+      @include theme-aware('color', 'body-color-font');
+      outline: none;
+    }
+  }
     & .wizard__title{
       text-align: center;
     }
@@ -37,6 +76,9 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    &.center{
+      justify-content: center;
+    }
     & .btn{
       flex-basis: 47%;
     }
@@ -48,6 +90,11 @@
       line-height: 14px;
       padding: 5px 0;
       display: flex;
+      align-items: center;
+
+      i{
+        font-size: 18px;
+      }
     }
   }
 
@@ -75,6 +122,8 @@
     }
 
 
+
+
     overflow-x: hidden;
     &::-webkit-scrollbar {
       display: none;
@@ -82,6 +131,28 @@
     &.big{
       flex-basis: 100%;
       overflow-x: visible;
+    }
+    &.textarea{
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      & label {
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+
+      & textarea {
+        @include theme-aware('background', 'color-bg-input');
+        padding: 18px 20px;
+        border-radius: 6px;
+        border: none;
+        outline: none;
+        height: 140px;
+        resize: none;
+        resize: none;
+        @include theme-aware('color', 'body-color-font');
+        font-family: $common-font;
+      }
     }
   }
 
@@ -138,6 +209,15 @@
   &__wrapper-element{
     margin-bottom: 30px;
     flex-basis: 47%;
+    &.no-margin{
+      .input{
+        margin-bottom: 0;
+        input {
+          min-height: 60px;
+
+        }
+      }
+    }
   }
 
   &__step1-wrapper{

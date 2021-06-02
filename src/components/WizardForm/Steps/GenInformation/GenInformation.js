@@ -26,7 +26,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [countStep, setCountStep] = useState(0);
   const [details, setDetails] = useState({});
   const [fileIcon, setFileIcon] = useState({});
-  const [inputsArray, setInputArray] = useState([{ FunderName: '', FunderInfo: '', FunderPart: '' }]);
+  const [inputsArray, setInputArray] = useState([{ name: '', desc: '', part: '' }]);
   const [myFiles, setMyFiles] = useState([]);
   const [previewImg, setPreviewImg] = useState('');
   const [inputElement, setInputElement] = useState();
@@ -52,7 +52,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
       // here ev is object: {formattedValue, value, floatValue} ==> follow NumberFormat doc
       if ((+ev.value) >= 100) {
         updArray[count][type] = 100;
-        inputElement.value = '100%';
+        inputElement.value = '100';
       } else {
         updArray[count][type] = ev.value;
       }
@@ -81,10 +81,10 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const intl = useIntl();
   const onSubmit = (data) => {
     const copyData = { ...data };
-    const { budjet, funders } = copyData;
-    const updBudjet = budjet.replace(/(\$|,|\.00)/g, '');
+    const { budget, funders } = copyData;
+    const updBudjet = budget.replace(/(\$|,|\.00)/g, '');
     const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: +((`${item.part}`).replace(/\D/g, '')) }));
-    const updData = { ...copyData, budjet: updBudjet, funders: updFunders };
+    const updData = { ...copyData, budget: updBudjet, funders: updFunders };
     const fromDate = {
       startTimeProject: Date.parse(startDate),
     };
@@ -167,9 +167,9 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           label={intl.formatMessage(step1Input4)}
           placeholder={intl.formatMessage(step1Input4Place)}
           required
-          error={errors.budjet}
-          value={state.budjet}
-          name="budjet"
+          error={errors.budget}
+          value={state.budget}
+          name="budget"
           usdMask
           prefix="$"
           decimal

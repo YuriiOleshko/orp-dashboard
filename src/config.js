@@ -1,8 +1,10 @@
-const contractName = process.env.REACT_APP_CONTRACT_NAME || 'dev-1615976860844-4430258';
-const nftContractName = process.env.REACT_APP_CONTRACT_NAME || 'nft.dev-1615976860844-4430258';
+const contractName = process.env.REACT_APP_CONTRACT_NAME || 'dev_orp_2.testnet';
+const nftContractName = process.env.REACT_APP_CONTRACT_NAME || 'nft.dev_orp_1.testnet';
+const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://gateway.ipfs.io';
 
 export default function getConfig() {
   let config = {
+    ipfsURL: IPFS_URL,
     networkId: 'default',
     nodeUrl: 'https://rpc.testnet.near.org',
     walletUrl: 'https://wallet.testnet.near.org',
@@ -17,10 +19,10 @@ export default function getConfig() {
     nftContractName,
     nftContractMethods: {
       changeMethods: [
-        'new', 'nft_mint', 'nft_transfer', 'add_guest', 'remove_guest', 'nft_approve_account_id',
+        'new', 'nft_mint', 'nft_update_token_metadata', 'nft_transfer', 'add_guest', 'remove_guest', 'nft_approve_account_id',
         'nft_mint_guest', 'nft_add_sale_guest', 'nft_remove_sale_guest', 'upgrade_guest',
       ],
-      viewMethods: ['get_guest', 'get_token_ids', 'nft_token', 'get_sale', 'get_account'],
+      viewMethods: ['get_guest', 'get_token_ids', 'nft_token', 'get_sale', 'get_account', 'nft_tokens_for_owner'],
     },
   };
 
