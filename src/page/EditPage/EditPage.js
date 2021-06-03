@@ -298,7 +298,7 @@ const EditPage = () => {
       update('loading', false);
       return true;
     }else {
-      if (updatedFiles.files.length <= 0) {
+      if (updatedFiles.files && updatedFiles.files.length <= 0) {
         setUpdtCidFiles({ filesCidDir: '' });
         return true;
       }
