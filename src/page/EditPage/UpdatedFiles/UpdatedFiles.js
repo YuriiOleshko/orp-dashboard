@@ -23,6 +23,7 @@ const UpdatedFiles = ({ state, loadingData, updatedFiles, setUpdatedFiles, priva
     setFiles(newFiles);
     setPrivateFiles(newPrivetFiles);
     setUpdatedFiles({ private: newPrivetFiles, files: newFiles });
+    if (newFiles.length === 0) setPrivateFiles([]);
   };
   useEffect(async () => {
     if (!loadingData) {

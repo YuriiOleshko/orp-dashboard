@@ -106,7 +106,6 @@ const EditPage = () => {
     },
   ];
   // this states for edit inputs and fields
-  const privateArray = data?.privateFiles || [];
   const [avgTrees, setAvgTrees] = useState({ avgTrees: data?.avgTrees || '' });
   const [initState, setInitState] = useState({});
   const { errors, register, control, handleSubmit } = useForm();
@@ -126,7 +125,7 @@ const EditPage = () => {
   const [updtCidFiles, setUpdtCidFiles] = useState('');
   const [additional, setAdditional] = useState({});
   const [benefits, setBenefits] = useState({});
-  const [filesSave, setFilesSave] = useState(privateArray);
+  const [filesSave, setFilesSave] = useState([]);
   const [newFilesSave, setNewFilesSave] = useState([]);
 
   const [isDisabledBtn, setIsDisabledBtn] = useState(false);
@@ -258,7 +257,6 @@ const EditPage = () => {
 
   const updateInitState = async (newData, isFiles = false) => {
     const copyData = { ...newData };
-
     const { budget, funders } = copyData;
     const updBudjet = budget.replace(/(\$|,|\.00)/g, '');
     const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: +((`${item.part}`).replace(/\D/g, '')) }));
@@ -293,14 +291,14 @@ const EditPage = () => {
         if (!result.path) {
           updateInitState(updtData, true);
           setUpdtCidFiles({ filesCidDir: `/ipfs/${result.cid.string}` });
-        }
+          }
       }
       update('loading', false);
       return true;
     }else {
       if (updatedFiles.files && updatedFiles.files.length <= 0) {
         setUpdtCidFiles({ filesCidDir: '' });
-        return true;
+        // return true;
       }
     }
     updateInitState(updtData);
@@ -312,6 +310,7 @@ const EditPage = () => {
       await handleMintUpdate({ ...initState, ...updtCidFiles });
     }
   }, [updtCidFiles]);
+
   return (
     <div className="preview">
       { nftTxHash && <PopupSuccess close={togglePopup} hash={nftTxHash} />}
