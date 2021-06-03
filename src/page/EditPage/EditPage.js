@@ -27,6 +27,7 @@ import Loader from '../../components/Loader';
 import Chart from '../../components/WizardForm/Steps/AnotherComponents/Chart';
 import { getJSONFileFromIpfs, initIPFS } from '../../state/ipfs';
 import UpdatedFiles from './UpdatedFiles';
+import { noDublicateElements } from '../../utils/convert-utils';
 import {
   GAS, ipfsURL, parseNearAmount,
 } from '../../state/near';
@@ -269,7 +270,7 @@ const EditPage = () => {
     };
     const updAmountTrees = copyData.amountTrees.replace(/\D/g, '');
     const updDataTrees = { amountTrees: updAmountTrees };
-    const privateFiles = { privateFiles: [...filesSave, ...newFilesSave] };
+    const privateFiles = { privateFiles: noDublicateElements(filesSave, newFilesSave, 'path') };
     const newInitState = { ...initState, ...updData, ...updDataTrees, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles, ...fromDate, ...toDate, ...details, ...fileIcon };
     setInitState({ ...newInitState });
     if (!isFiles)handleMintUpdate(newInitState);
@@ -278,9 +279,8 @@ const EditPage = () => {
   const onSubmit = async (updtData) => {
     if (convertFiles.length > 0) {
       let currentlyFiles;
-      if (updatedFiles.files) currentlyFiles = [...updatedFiles.files, ...convertFiles];
+      if (updatedFiles.files) currentlyFiles = noDublicateElements(updatedFiles.files, convertFiles, 'content');
       else currentlyFiles = [...convertFiles];
-
       const ipfs = await initIPFS();
       const addOptions = {
         pin: true,

@@ -40,3 +40,17 @@ export const randomHexColor = () => {
   }
   return `#${color}`;
 };
+
+export const noDublicateElements = (arr1, arr2, arrg = 'path') => {
+  const awesomeArr = arr1.concat(arr2);
+  const arrayIndexs = [];
+  const currentlyArray = [];
+  awesomeArr.map((el) => el[arrg]).forEach((elem, index) => {
+    if (arrayIndexs.indexOf(JSON.stringify(elem)) === -1) {
+      arrayIndexs.push(JSON.stringify(elem));
+      currentlyArray.push(awesomeArr[index]);
+    }
+  });
+
+  return currentlyArray;
+};

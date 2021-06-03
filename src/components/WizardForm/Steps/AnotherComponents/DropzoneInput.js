@@ -81,10 +81,18 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
   };
   const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: amountFiles, multiple: multi, validator: validFile });
 
-  const removeFile = (file) => {
+  const removeFile = (file, index) => {
     const newFiles = [...myFiles];
     newFiles.splice(newFiles.indexOf(file), 1);
+    const newSave = [...filesSave];
+    newSave.splice(index, 1);
     setMyFiles(newFiles);
+    setFilesSave(newSave);
+    if (edit) {
+      const newConvert = [...convertFiles];
+      newConvert.splice(index, 1);
+      setConvertFiles(newConvert);
+    }
     if (!multi) {
       setPreviewImg('');
       change({ iconCidDir: '' });
@@ -113,7 +121,7 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
       {' '}
       {file.path}
       {' '}
-      <i className="icon-trash" onClick={() => removeFile(file)} />
+      <i className="icon-trash" onClick={() => removeFile(file, index)} />
       {multi && filesSave.length > 0
           && (
           <div onClick={() => changeTypeFiles(file.path)}>
