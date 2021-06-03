@@ -91,7 +91,7 @@ const UpdatedFiles = ({ state, loadingData, updatedFiles, setUpdatedFiles, priva
             ))}
           </ul>
         )
-        : <p className="wizard__no-files">Not have Files</p>}
+        : <p className="wizard__no-files">No Files</p>}
     </div>
 
   );
