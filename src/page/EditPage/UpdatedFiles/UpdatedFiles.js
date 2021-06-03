@@ -15,11 +15,11 @@ const UpdatedFiles = ({ state, loadingData, updatedFiles, setUpdatedFiles, priva
     if (privateType) return privateType.private;
     return false;
   };
-  const removeFile = (file) => {
+  const removeFile = (file, index) => {
     const newFiles = [...files];
     const newPrivetFiles = [...privateFiles];
     newFiles.splice(newFiles.indexOf(file), 1);
-    newPrivetFiles.splice(newFiles.indexOf(file), 1);
+    newPrivetFiles.splice(index, 1);
     setFiles(newFiles);
     setPrivateFiles(newPrivetFiles);
     setUpdatedFiles({ private: newPrivetFiles, files: newFiles });

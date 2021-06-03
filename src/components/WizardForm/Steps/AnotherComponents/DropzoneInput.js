@@ -84,10 +84,7 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
   const removeFile = (file, index) => {
     const newFiles = [...myFiles];
     newFiles.splice(newFiles.indexOf(file), 1);
-    const newSave = [...filesSave];
-    newSave.splice(index, 1);
     setMyFiles(newFiles);
-    setFilesSave(newSave);
     if (edit) {
       const newConvert = [...convertFiles];
       newConvert.splice(index, 1);
@@ -96,6 +93,10 @@ const DropzoneInput = ({ classCustom, change, multi, amountFiles = 1, state, fil
     if (!multi) {
       setPreviewImg('');
       change({ iconCidDir: '' });
+    } else {
+      const newSave = [...filesSave];
+      newSave.splice(index, 1);
+      setFilesSave(newSave);
     }
   };
 

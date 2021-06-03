@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useContext, useEffect, useState,
 } from 'react';
@@ -273,7 +274,7 @@ const EditPage = () => {
     const privateFiles = { privateFiles: noDublicateElements(filesSave, newFilesSave, 'path') };
     const newInitState = { ...initState, ...updData, ...updDataTrees, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles, ...fromDate, ...toDate, ...details, ...fileIcon };
     setInitState({ ...newInitState });
-    if (!isFiles)handleMintUpdate(newInitState);
+    if (!isFiles) handleMintUpdate(newInitState);
   };
 
   const onSubmit = async (updtData) => {
@@ -296,6 +297,11 @@ const EditPage = () => {
       }
       update('loading', false);
       return true;
+    }else {
+      if (updatedFiles.files.length <= 0) {
+        setUpdtCidFiles({ filesCidDir: '' });
+        return true;
+      }
     }
     updateInitState(updtData);
   };
