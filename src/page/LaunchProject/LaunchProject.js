@@ -1,6 +1,6 @@
 import React from 'react';
-import Footer from '../../components/Layout/Footer';
-import WizardForm from '../../components/WizardForm';
+import WizardForm from 'src/components/WizardForm';
+import Footer from '../../Layouts/Layout/Footer';
 
 const LaunchProject = () => (
   <>

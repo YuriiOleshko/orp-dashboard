@@ -1,0 +1,93 @@
+.field-agents {
+  &_wrap {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+    & .icon-galka::before {
+      font-size: 75px;
+    }
+  }
+  &_modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0 50px 0;
+    width: 640px;
+
+    background: $white;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    &_header {
+      width: 330px;
+      height: 61px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      &.sucsses {
+        margin-top: 22px;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 34px;
+
+        color: $color-font;
+      }
+      &.deassign {
+        width: 318px;
+        height: 44px;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 34px;
+      }
+    }
+    &_text {
+      width: 330px;
+      height: 53px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      margin-top: 12px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: $color-font;
+
+      opacity: 0.6;
+    }
+    &_button {
+      margin-top: 25px;
+      width: 260px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      & span {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 22px;
+      }
+    }
+    &_btn-wrap {
+      display: flex;
+      width: 380px;
+      justify-content: space-between;
+      & button {
+        width: 180px;
+        height: 44px;
+      }
+    }
+  }
+}

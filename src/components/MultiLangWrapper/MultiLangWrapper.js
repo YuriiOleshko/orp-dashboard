@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IntlProvider } from 'react-intl';
-import English from '../../lang/en-US.json';
-import Russian from '../../lang/ru.json';
+import English from 'src/lang/en-US.json';
+import Russian from 'src/lang/ru.json';
 
 export const Context = React.createContext();
 const local = navigator.language;

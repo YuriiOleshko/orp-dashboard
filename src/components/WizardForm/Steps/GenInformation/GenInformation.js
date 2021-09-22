@@ -12,11 +12,11 @@ import {
   step1Input3, step1Input4, step1Input4Place, step1Input6,
   step1Input7, step1Creator, wizardBtnNext,
 } from '../../LangWizardForm';
-import CustomInput from '../../../CustomInput';
-import FunderInfo from '../AnotherComponents/FunderInfo';
-import CustomBtn from '../../../CustomBtn';
-import DropzoneInput from '../AnotherComponents/DropzoneInput';
-import CustomSelect from '../../../CustomSelect';
+import CustomInput from '../../../../generic/CustomInput';
+import FunderInfo from '../../../FunderInfo/FunderInfo';
+import CustomBtn from '../../../../generic/CustomBtn';
+import DropzoneInput from '../../../Dropzone/DropzoneInput';
+import CustomSelect from '../../../../generic/CustomSelect';
 
 const options = [{ label: 'Trees', value: 'Trees' }, { label: 'Reserves', value: 'Reserves' }, { label: 'Forest', value: 'Forest' }];
 const GenInformation = ({ step, nextPage, state, setState }) => {
@@ -31,6 +31,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [previewImg, setPreviewImg] = useState('');
   const [inputElement, setInputElement] = useState();
   const [isActiveWarning, setIsActiveWarning] = useState(false);
+  const [dateWarning, setDateWarning] = useState(false);
   const [isDisabledBtn, setIsDisabledBtn] = useState(false);
 
   const countSumOfParts = (funders) => {
@@ -91,8 +92,14 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
     const toDate = {
       finishTimeProject: Date.parse(endDate),
     };
-    setState({ ...state, ...updData, ...fromDate, ...toDate, ...details, ...fileIcon });
-    nextPage();
+    const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+    if (toDate.finishTimeProject - fromDate.startTimeProject >= twoYears) {
+      setDateWarning(false);
+      setState({ ...state, ...updData, ...fromDate, ...toDate, ...details, ...fileIcon });
+      nextPage();
+    } else {
+      setDateWarning(true);
+    }
   };
 
   if (step !== 0) {
@@ -127,7 +134,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             placeholder={intl.formatMessage(step1Input1Place)}
             register={register({ required: 'This is required', maxLength: 100 })}
             required
-            change={() => {}}
+            change={() => { }}
             error={errors.name}
             value={state.name}
             name="name"
@@ -138,7 +145,19 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           <div className="wizard__wrapper-input">
             <DatePicker
               selected={startDate}
-              onChange={(date) => setStartDate(date)}
+              onChange={(date) => {
+                setStartDate(date);
+                if (endDate) {
+                  const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+                  const start = Date.parse(date);
+                  const end = Date.parse(endDate);
+                  if (end - start >= twoYears) {
+                    setDateWarning(false);
+                  } else {
+                    setDateWarning(true);
+                  }
+                }
+              }}
               selectsStart
               peekNextMonth
               showMonthDropdown
@@ -149,7 +168,19 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             />
             <DatePicker
               selected={endDate}
-              onChange={(date) => setEndDate(date)}
+              onChange={(date) => {
+                setEndDate(date);
+                if (startDate) {
+                  const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+                  const start = Date.parse(startDate);
+                  const end = Date.parse(date);
+                  if (end - start >= twoYears) {
+                    setDateWarning(false);
+                  } else {
+                    setDateWarning(true);
+                  }
+                }
+              }}
               peekNextMonth
               showMonthDropdown
               showYearDropdown
@@ -159,6 +190,11 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               minDate={startDate}
               className="date-picker"
             />
+            {dateWarning && (
+              <div className="wizard__date-warning">
+                <span className="wizard__date-warning-text">Project duration must be at least 2 years.</span>
+              </div>
+            )}
           </div>
         </div>
         <CustomInput
@@ -183,7 +219,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
         <div className="wizard__funders-data">
           {inputsArray.length > 0 && inputsArray.map((el, index) => (
             <FunderInfo
-            // eslint-disable-next-line react/no-array-index-key
+              // eslint-disable-next-line react/no-array-index-key
               key={`${index}FundersName${index}`}
               inputsArray={inputsArray}
               intl={intl}
@@ -196,6 +232,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               control={control}
               setInputElement={setInputElement}
               warning={isActiveWarning}
+              disableBtn={setIsDisabledBtn}
             />
           ))}
           {isActiveWarning && (
@@ -214,7 +251,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           <textarea name="GenInfo" placeholder={intl.formatMessage(step1Input2Place)} onChange={(ev) => setDetails({ details: ev.target.value })} />
         </div>
         <div className="wizard__wrapper-btn-next">
-          <CustomBtn disabled={isDisabledBtn} label={intl.formatMessage(wizardBtnNext)} type="submit" handleClick={() => {}} customClass={`btn__next ${isDisabledBtn ? 'btn__next-disabled' : ''}`} />
+          <CustomBtn disabled={isDisabledBtn} label={intl.formatMessage(wizardBtnNext)} type="submit" handleClick={() => { }} customClass={`btn__next ${isDisabledBtn ? 'btn__next-disabled' : ''}`} />
         </div>
       </form>
     </div>

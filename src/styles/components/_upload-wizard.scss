@@ -1,0 +1,186 @@
+.data-upload {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  &__loader {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: $white;
+  }
+}
+
+.upload-wizard {
+  padding: 50px 60px 0;
+
+  &__ipfs {
+    position: fixed;
+    z-index: 15;
+    top: 0;
+    max-width: 880px;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  &__title {
+    max-width: 880px;
+    width: 100%;
+    font-weight: 700;
+    text-align: center;
+
+    &.center {
+      text-align: center;
+    }
+  }
+
+  &__cancel {
+    max-width: 118px;
+    width: 100%;
+  }
+
+  &__body {
+    position: relative;
+    max-width: 880px;
+    margin: auto;
+  }
+
+  &__monitoring {
+    // margin-top: 48px;
+    padding: 40px;
+    background: $white;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  &__subzone-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__draw {
+    max-width: 380px;
+  }
+
+  &__upload {
+    max-width: 256px;
+  }
+
+  &__reset {
+    max-width: 104px;
+    padding: 10px;
+
+    i {
+      font-size: 20px;
+    }
+    span {
+      vertical-align: top;
+      margin-left: 14px;
+    }
+  }
+
+  &__map {
+    margin-bottom: 40px;
+  }
+  &__preview-map {
+    margin-top: 40px;
+  }
+  &__preview-map img {
+    margin: 20px 0 20px 0;
+  }
+  &__preview-link {
+    font-weight: bold;
+    color: $lightBlue;
+  }
+
+  &__area-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__area,
+  &__num-zones {
+    flex-basis: 47%;
+    span {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+
+  &__input-value {
+    margin-top: 20px;
+    padding: 18px 51px 18px 20px;
+    background: $color-bg-input;
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  &__sz {
+    margin-top: 40px;
+  }
+
+  &__sz-title {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  &__sz-download {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 16px;
+    color: $lightBlue;
+    margin-top: 20px;
+  }
+
+  &__panel {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    width: 100%;
+
+    & button {
+      flex-basis: 47%;
+      padding: 10px;
+    }
+  }
+
+  &__panel-document {
+    & button {
+      flex-basis: 31%;
+    }
+  }
+
+  & .wizard__steps {
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+
+  & .wizard__step {
+    width: 210px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__sz-list {
+    margin-top: 40px;
+  }
+}

@@ -1,5 +1,8 @@
-const contractName = process.env.REACT_APP_CONTRACT_NAME || 'dev_orp_2.testnet';
-const nftContractName = process.env.REACT_APP_CONTRACT_NAME || 'nft.dev_orp_1.testnet';
+const contractName = process.env.REACT_APP_CONTRACT_NAME || [
+  'core.ofp.testnet',
+  'dai.ofp.testnet',
+  'opn.ofp.testnet',
+];
 const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://gateway.ipfs.io';
 
 export default function getConfig() {
@@ -12,17 +15,30 @@ export default function getConfig() {
     contractName,
     GAS: '200000000000000',
     DEFAULT_NEW_ACCOUNT_AMOUNT: '5',
+    // contractMethods: {
+    //   changeMethods: ['add_profile', 'update_profile', 'add_project', 'update_project'],
+    //   viewMethods: ['get_profile', 'get_project', 'get_projects_per_account',
+    //     'get_current_project_stage', 'get_stages_per_project', 'calculate_project_stages'],
+    // },
     contractMethods: {
-      changeMethods: ['insert_data'],
-      viewMethods: ['get_data'],
-    },
-    nftContractName,
-    nftContractMethods: {
       changeMethods: [
-        'new', 'nft_mint', 'nft_update_token_metadata', 'nft_transfer', 'add_guest', 'remove_guest', 'nft_approve_account_id',
-        'nft_mint_guest', 'nft_add_sale_guest', 'nft_remove_sale_guest', 'upgrade_guest',
+        'add_profile',
+        'update_profile',
+
+        'add_project',
+        'update_project_info',
       ],
-      viewMethods: ['get_guest', 'get_token_ids', 'nft_token', 'get_sale', 'get_account', 'nft_tokens_for_owner'],
+      viewMethods: [
+        'get_profile',
+
+        'get_project',
+        'get_account_projects',
+        'calculate_sample_zones',
+
+        'get_project_stages',
+        'get_current_project_stage',
+        'calculate_stages',
+      ],
     },
   };
 

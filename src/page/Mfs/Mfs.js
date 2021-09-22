@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import DropzoneInput from '../../components/WizardForm/Steps/AnotherComponents/DropzoneInput';
+import DropzoneInput from 'src/components/Dropzone';
 import { initIPFS, getJSONFileFromIpfs, getFilesFromDirWithContent, addAllFiles } from '../../state/ipfs';
 
 const Mfs = () => {

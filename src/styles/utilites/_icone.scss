@@ -1,93 +1,113 @@
 .icon-eye:before {
-  content: "\e915";
+  content: "\e917";
   color: #2ec3e9;
 }
 .icon-without-eye:before {
-  content: "\e916";
+  content: "\e918";
   color: #cecece;
 }
+.icon-checked:before {
+  content: "\e919";
+  color: #2ec3e9;
+}
+.icon-loop-arrow:before {
+  content: "\e91a";
+  color: #fff;
+}
+.icon-rect-plus:before {
+  content: "\e91b";
+  color: #fff;
+}
+.icon-search:before {
+  content: "\e91c";
+  color: #cecece;
+}
+.icon-people:before {
+  content: "\e91d";
+  color: #2ec3e9;
+}
 .icon-account:before {
-  content: "\e900";
+  content: "\e902";
   color: #fff;
 }
 .icon-charning:before {
-  content: "\e901";
+  content: "\e903";
   color: #2ec3e9;
 }
 .icon-clock:before {
-  content: "\e902";
+  content: "\e904";
   color: #cecece;
 }
 .icon-close:before {
-  content: "\e903";
+  content: "\e905";
   color: #fff;
 }
 .icon-earphons:before {
-  content: "\e904";
+  content: "\e906";
   color: #2ec3e9;
 }
 .icon-galka:before {
-  content: "\e905";
+  content: "\e907";
   color: #2ec3e9;
 }
 .icon-iconfile:before {
-  content: "\e906";
+  content: "\e908";
   color: #cecece;
 }
 .icon-loop:before {
-  content: "\e907";
+  content: "\e909";
   color: #fff;
 }
 .icon-marker:before {
-  content: "\e908";
+  content: "\e90a";
   color: #fff;
 }
 .icon-plus-cir:before {
-  content: "\e909";
+  content: "\e90b";
   color: #2ec3e9;
 }
 .icon-replace:before {
-  content: "\e90a";
+  content: "\e90c";
   color: #2ec3e9;
 }
 .icon-schems:before {
-  content: "\e90b";
+  content: "\e90d";
   color: #cecece;
 }
 .icon-setting:before {
-  content: "\e90c";
-  color: #cecece;
-}
-.icon-shield:before {
-  content: "\e90d";
-  color: #ffae4f;
-}
-.icon-shield-gal:before {
   content: "\e90e";
   color: #cecece;
 }
-.icon-trash:before {
+.icon-shield:before {
   content: "\e90f";
+  color: #ffae4f;
+}
+.icon-shield-gal:before {
+  content: "\e910";
   color: #cecece;
 }
-.icon-tree:before {
-  content: "\e910";
-  color: #fff;
-}
-.icon-users:before {
+.icon-trash:before {
   content: "\e911";
   color: #cecece;
 }
-.icon-vilka:before {
+.icon-tree:before {
   content: "\e912";
+  color: #fff;
+}
+.icon-users:before {
+  content: "\e913";
+  color: #cecece;
+}
+.icon-vilka:before {
+  content: "\e914";
   color: #cecece;
 }
 .icon-warning:before {
-  content: "\e913";
+  content: "\e915";
   color: #ff6c58;
 }
 .icon-pencil:before {
-  content: "\e914";
+  content: "\e916";
   color: #ffffff;
 }
 .icon-play:before {
@@ -97,4 +117,12 @@
 .icon-arrow:before {
   content: "\ea40";
   color: #4d4d4d;
+}
+.icon-collapse-arrow:before {
+  content: "\e900";
+  color: #4d4d4d;
+}
+.icon-exclamation:before {
+  content: "\e901";
+  color: #ff586c;
 }

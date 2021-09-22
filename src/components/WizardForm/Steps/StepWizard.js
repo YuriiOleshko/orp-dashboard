@@ -1,12 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useIntl } from 'react-intl';
-import {
-  // eslint-disable-next-line import/named
-  step1, step2, step3, step4,
-} from '../LangWizardForm';
 
-const stepForm = [step1, step2, step3, step4];
-const StepWizard = ({ step }) => {
+const StepWizard = ({ step, stepForm }) => {
   const intl = useIntl();
   return (
     <>

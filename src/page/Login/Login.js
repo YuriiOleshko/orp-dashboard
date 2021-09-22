@@ -2,9 +2,9 @@
 import React, { useContext, useEffect } from 'react';
 import { useIntl, FormattedDate } from 'react-intl';
 import { Redirect } from 'react-router-dom';
-import { appStore } from '../../state/app';
-import CustomBtn from '../../components/CustomBtn';
-import IntroPage from '../../components/IntroPage';
+import { appStore } from 'src/state/app';
+import CustomBtn from 'src/generic/CustomBtn';
+import IntroPage from 'src/components/IntroPage';
 import {
   title,
   btnLabel,
@@ -14,7 +14,7 @@ import {
 } from './LangLogin';
 import ReactTooltip from 'react-tooltip';
 import { ReactSVG } from 'react-svg';
-import buble from '../../assets/image/wizard/buble.svg';
+import buble from 'src/assets/image/wizard/buble.svg';
 
 const Login = () => {
   const intl = useIntl();

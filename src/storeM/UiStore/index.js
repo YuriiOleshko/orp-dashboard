@@ -1,4 +1,3 @@
-// @flow
 import {
   makeAutoObservable,
   observable,

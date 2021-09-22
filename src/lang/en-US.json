@@ -25,7 +25,7 @@
 
 
   "launch.title" : "Launch Your First Project",
-  "launch.desc" : "ORP provides the digital infrastructure for collecting, uploading, confirming, and visualizing reforestation data. ORP is an open-source and secure protocol for reforestation projects to transparently measure, report, and verify (MRV) the entire life cycle of their trees. Let’s get started saving the planet!",
+  "launch.desc" : "OPP provides the digital infrastructure for collecting, uploading, confirming, and visualizing reforestation data. OPP is an open-source and secure protocol for reforestation projects to transparently measure, report, and verify (MRV) the entire life cycle of their trees. Let’s get started saving the planet!",
   "launch.label-btn": "Launch a Project",
 
   "wizard.title" : "Launch a New Project",
@@ -121,6 +121,7 @@
   "menu.item3": "Validation Status",
   "menu.item4": "Ecosystem",
   "menu.item5": "Technology Integration",
+  "menu.item6": "My Field Agents",
   "menu.btn-label": "Launch a New Project",
 
   "existing.title": "Existing Projects",
@@ -165,5 +166,8 @@
   "projectPage.documentation": "Project Documentation",
   "projectPage.documentation.public": "Public",
   "projectPage.documentation.private": "Private",
-  "projectPage.location": "Project Location"
+  "projectPage.location": "Project Location",
+
+  "uploadWizard.sampleData": "Sample Data",
+  "uploadWizard.documents": "Documents"
 }

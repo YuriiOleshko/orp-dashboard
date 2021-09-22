@@ -2,8 +2,8 @@ import React from 'react';
 import { ReactSVG } from 'react-svg';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
-import CustomBtn from '../../components/CustomBtn';
-import logo from '../../assets/image/launch/min-logo.svg';
+import CustomBtn from 'src/generic/CustomBtn';
+import logo from 'src/assets/image/launch/min-logo.svg';
 import {
   title, desc, btnLabel,
 } from './LangLaunchCreate';

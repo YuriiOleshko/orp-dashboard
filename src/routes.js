@@ -5,14 +5,16 @@ import CreateAcc from './page/CreateAcc/CreateAcc';
 import Login from './page/Login';
 import RenderRoutes from './components/RenderRoutes';
 import LaunchCreate from './page/LaunchCreate';
-import Layout from './components/Layout';
+import Layout from './Layouts/Layout';
 import LaunchProject from './page/LaunchProject';
 import CollateralStatus from './page/CollateralStatus';
 import ExistingProject from './page/ExistingProject';
 import Mfs from './page/Mfs';
-import LayoutDash from './components/LayoutDash/LayoutDash';
+import LayoutDash from './Layouts/LayoutDash/LayoutDash';
 import ProjectPage from './page/ProjectPage';
 import EditPage from './page/EditPage';
+import DataUpload from './page/DataUpload/DataUpload';
+import FieldAgents from './page/FieldAgents/FieldAgents';
 
 const routes = [
   { path: '/login', key: 'ROOT', exact: true, component: () => <Login /> },
@@ -39,7 +41,7 @@ const routes = [
         ),
       },
       {
-        path: '/mfs',
+        path: '/page/mfs',
         key: 'MFS',
         exact: true,
         component: () => (
@@ -83,6 +85,18 @@ const routes = [
         key: 'CREATE_PROJECT',
         exact: true,
         component: () => <LaunchProject />,
+      },
+      {
+        path: '/data-upload/:nameId',
+        key: 'DATA_UPLOAD',
+        exact: true,
+        component: () => <DataUpload />,
+      },
+      {
+        path: '/field-agents',
+        key: 'FIELD_AGENTS',
+        exact: true,
+        component: () => <LayoutDash><FieldAgents /></LayoutDash>,
       },
       {
         path: '/settings',

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { appStore } from '../../state/app';
+import { appStore } from 'src/state/app';
 
 const ThemeSwitcher = () => {
   const { state, update } = useContext(appStore);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router';
 import { Redirect } from 'react-router-dom';
-import storage from '../../helpers/storage';
+import storage from 'src/helpers/storage';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route

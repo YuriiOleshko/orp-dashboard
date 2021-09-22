@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable no-unused-vars */
 import React, {
   useEffect,
   useState,
@@ -11,16 +12,16 @@ import {
 import { useIntl } from 'react-intl';
 // import axios from 'axios';
 
-import { getNftContract, nftContractMethods } from '../../utils/near-utils';
+import { getContract, contractMethods } from '../../utils/near-utils';
 import { appStore } from '../../state/app';
 import { initIPFS, getJSONFileFromIpfs } from '../../state/ipfs';
 
-import CustomBtn from '../../components/CustomBtn';
-import CustomChart from '../../components/CustomChart';
-import ProjectInfo from '../../components/ProjectInfo';
-import ProjectBenefits from '../../components/ProjectBenefits';
-import StageTimeline from '../../components/StageTimeline';
-import WrapperScaleImg from '../../components/WizardForm/Steps/AnotherComponents/WrapperScaleImg';
+import CustomBtn from '../../generic/CustomBtn';
+import CustomChart from './CustomChart';
+import ProjectInfo from './ProjectInfo';
+import ProjectBenefits from './ProjectBenefits';
+import StageTimeline from './StageTimeline';
+import WrapperScaleImg from '../../components/WrapperScaleImg/WrapperScaleImg';
 
 import {
   title,
@@ -39,12 +40,11 @@ const ProjectPage = () => {
   const intl = useIntl();
   const { nameId } = useParams();
   const [data, setData] = useState({});
+  const [stageData, setStageData] = useState([]);
   const [loadingData, setLoading] = useState(true);
   const { state } = useContext(appStore);
   const { account } = state;
 
-  // const data = location.state;
-  // const { name, benefits, details, region, cidScreenShot, privateFiles, funders } = data;
   let filesCounter = 0;
   let hasPublic;
 
@@ -52,16 +52,42 @@ const ProjectPage = () => {
     hasPublic = data.privateFiles.find((item) => !item.private);
   }
 
+  const setStageStatus = (stages) => {
+    const copyStages = [...stages];
+    const updStages = copyStages.map((item) => {
+      const current = Date.now();
+      const oneMillion = 1e6;
+      const startMilisec = item.starts_at / oneMillion;
+      const endMilisec = item.ends_at / oneMillion;
+
+      const dataUpload = current >= endMilisec;
+      const pastTerm = current >= startMilisec;
+
+      const status = ['ok', 'lost', 'future'];
+      const randomStatus = status[Math.round(Math.random() * 1)];
+      const collateral = dataUpload ? randomStatus : status[2];
+      return { ...item, dataUpload, pastTerm, collateral, starts_at: startMilisec, ends_at: endMilisec };
+    });
+    setStageData(updStages);
+  };
+
   useEffect(async () => {
-    if (location.state) {
-      setData(location.state);
-      setLoading(false);
+    if (location.state && account) {
+      const contract = getContract(account, contractMethods, 0);
+      const stages = await contract.get_project_stages({ project_id: nameId });
+      if (stages.length) {
+        setStageStatus(stages);
+        setData(location.state);
+        setLoading(false);
+      }
     } else if (account) {
       const ipfs = await initIPFS();
-      const contract = getNftContract(account, nftContractMethods);
-      const token = await contract.nft_token({ token_id: nameId });
-      if (token) {
-        const file = await getJSONFileFromIpfs(ipfs, token.metadata.media);
+      const contract = getContract(account, contractMethods, 0);
+      const token = await contract.get_project({ project_id: nameId });
+      const stages = await contract.get_project_stages({ project_id: nameId });
+      if (token && stages.length) {
+        const file = await getJSONFileFromIpfs(ipfs, token.info.cid);
+        setStageStatus(stages);
         setData(file);
         setLoading(false);
         return;
@@ -69,72 +95,6 @@ const ProjectPage = () => {
       history.push('/404');
     }
   }, [account]);
-
-  const stateData = [
-    {
-      dataUpload: true,
-      collateral: true,
-      pastTerm: true,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: true,
-      collateral: true,
-      pastTerm: true,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: true,
-      collateral: false,
-      pastTerm: true,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: false,
-      collateral: undefined,
-      pastTerm: false,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: false,
-      collateral: undefined,
-      pastTerm: false,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: false,
-      collateral: undefined,
-      pastTerm: false,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: false,
-      collateral: undefined,
-      pastTerm: false,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: false,
-      collateral: undefined,
-      pastTerm: false,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-    {
-      dataUpload: false,
-      collateral: undefined,
-      pastTerm: false,
-      start: '14/05/21',
-      end: '16/11/21',
-    },
-  ];
 
   return (
     <div className="project__item">
@@ -147,9 +107,9 @@ const ProjectPage = () => {
               <CustomBtn label={intl.formatMessage(edit)} customClass="btn__edit-grey" iconClass="icon-pencil" type="button" handleClick={() => history.push({ pathname: `/edit/${nameId}`, state: data })} />
             </div>
             <div className="project__stage">
-              <StageTimeline data={stateData} />
+              <StageTimeline data={stageData} />
             </div>
-            {!!(data.funders && data.funders.length) && (
+            {!!(data.funders) && (
             <div className="project__funders">
               <span className="funders-title">{intl.formatMessage(fundersTitle)}</span>
               <CustomChart data={data.funders} />

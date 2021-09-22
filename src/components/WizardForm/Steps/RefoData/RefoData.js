@@ -4,15 +4,15 @@ import { useIntl } from 'react-intl';
 import ReactTooltip from 'react-tooltip';
 import { ReactSVG } from 'react-svg';
 import NumberFormat from 'react-number-format';
+import CustomBtn from 'src/generic/CustomBtn';
+import CustomInput from 'src/generic/CustomInput';
+import DropzoneInput from 'src/components/Dropzone';
+import Benefits from 'src/components/Benefits';
+
+import bubble from 'src/assets/image/wizard/buble.svg';
 import {
-  // eslint-disable-next-line no-unused-vars
-  wizardBtnBack, wizardBtnNext, step3Input1, step3Input2, step3Input3, step3Input4, step3Ben, step3Input5, step3Area, step3AreaPlace, step3Option1, step3Option2, step3Option3, step3TooltipTextArea, step3TooltipFiles,
+  wizardBtnBack, wizardBtnNext, step3Input1, step3Input2, step3Input3, step3Ben, step3Input5, step3Area, step3AreaPlace, step3TooltipTextArea, step3TooltipFiles,
 } from '../../LangWizardForm';
-import CustomBtn from '../../../CustomBtn';
-import CustomInput from '../../../CustomInput';
-import DropzoneInput from '../AnotherComponents/DropzoneInput';
-import Benefits from '../AnotherComponents/Benefits';
-import buble from '../../../../assets/image/wizard/buble.svg';
 
 const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
@@ -86,7 +86,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           <div className="wizard__wrapper-tooltip">
             {' '}
             <div className="wizard__tooltip-point" data-tip data-for="step3-tooltip-files">
-              <ReactSVG src={buble} />
+              <ReactSVG src={bubble} />
             </div>
             <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step3-tooltip-files" effect="float">
               {intl.formatMessage(step3TooltipFiles)}
@@ -100,7 +100,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
           <label className="input__label ">{intl.formatMessage(step3Area)}</label>
           <textarea name="GenInfo" placeholder={intl.formatMessage(step3AreaPlace)} onChange={(ev) => setAdditional({ additional: ev.target.value })} />
           <div className="wizard__tooltip-point refo" data-tip data-for="step3-tooltip-area">
-            <ReactSVG src={buble} />
+            <ReactSVG src={bubble} />
           </div>
           <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step3-tooltip-area" effect="float">
             {intl.formatMessage(step3TooltipTextArea)}

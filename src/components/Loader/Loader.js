@@ -1,8 +1,8 @@
 /* eslint-disable linebreak-style */
 import React from 'react';
 
-const Loader = () => (
-  <div className="lds-ring">
+const Loader = ({ customClass }) => (
+  <div className={`lds-ring ${customClass}`}>
     <div />
     <div />
     <div />

@@ -19,7 +19,7 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	const { near, wallet, contractAccount } = await getWallet();
 
 	wallet.signIn = () => {
-		wallet.requestSignIn(contractName, 'Blah Blah');
+		wallet.requestSignIn(contractName[0], 'Blah Blah');
 	};
 	const signOut = wallet.signOut;
 	wallet.signOut = () => {
@@ -36,9 +36,9 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	if (wallet.signedIn) {
 		account = wallet.account();
 		wallet.balance = formatNearAmount((await wallet.account().getAccountBalance()).available, 2);
-		const contract = getContract(account, contractMethods);
-		const userProfile = await contract.get_data({account_id: account.accountId});
-		await update('app', {profile: JSON.parse(userProfile)});
+		const contract = getContract(account, contractMethods, 0);
+		const userProfile = await contract.get_profile({account_id: account.accountId});
+		await update('app', {profile: userProfile});
 		await update('', { near, wallet, contractAccount, account });
 	}
 

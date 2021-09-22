@@ -1,7 +1,8 @@
 import React from 'react';
 import { ReactSVG } from 'react-svg';
-import planetImg from '../../../../../assets/image/wizard/planet.svg';
-import CustomBtn from '../../../../CustomBtn';
+// eslint-disable-next-line import/no-unresolved
+import CustomBtn from 'src/generic/CustomBtn';
+import planetImg from 'src/assets/image/wizard/planet.svg';
 import {
   prevTitle,
   step2BtnLabel, wizardBtnBack, wizardBtnNext, prevDesc,

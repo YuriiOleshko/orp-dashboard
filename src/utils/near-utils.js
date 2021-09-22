@@ -3,7 +3,7 @@ import * as nearAPI from 'near-api-js';
 import getConfig from '../config';
 
 export const {
-  networkId, nodeUrl, walletUrl, contractName, contractMethods, marketDeposit, nftContractName, nftContractMethods,
+  networkId, nodeUrl, walletUrl, contractName, contractMethods, marketDeposit,
 } = getConfig();
 
 const {
@@ -18,12 +18,8 @@ export const formatAccountId = (accountId, len = 16) => {
   return accountId;
 };
 
-export const getContract = (account, methods = contractMethods) => {
-  return new nearAPI.Contract(account, contractName, { ...methods, sender: account.accountId });
-};
-
-export const getNftContract = (account, methods = nftContractMethods) => {
-  return new nearAPI.Contract(account, nftContractName, { ...methods, sender: account.accountId });
+export const getContract = (account, methods = contractMethods, contractId) => {
+  return new nearAPI.Contract(account, contractName[contractId], { ...methods, sender: account.accountId });
 };
 
 export const getWallet = async () => {
@@ -31,7 +27,7 @@ export const getWallet = async () => {
     networkId, nodeUrl, walletUrl, deps: { keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore() },
   });
   const wallet = new nearAPI.WalletAccount(near);
-  const contractAccount = new Account(near.connection, contractName);
+  const contractAccount = new Account(near.connection, contractName[0]);
   return { near, wallet, contractAccount };
 };
 

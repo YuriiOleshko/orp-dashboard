@@ -10,6 +10,14 @@
     "jsx-a11y",
     "eslint-plugin-jsx-a11y"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["./"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   "ignorePatterns": [".netx/", "node_modules/"],
   "rules": {
     "react/jsx-props-no-spreading": "off",

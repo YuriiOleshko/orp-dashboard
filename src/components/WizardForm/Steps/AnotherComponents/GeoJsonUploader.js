@@ -1,16 +1,17 @@
+/* eslint-disable no-unused-vars */
 import React, {
   useCallback, useEffect, useState,
 } from 'react';
 import { useIntl } from 'react-intl';
 import { useDropzone } from 'react-dropzone';
 import togeojson from '@mapbox/togeojson';
+import CustomBtn from 'src/generic/CustomBtn';
 import { step2GeoBtn, step2Types } from '../../LangWizardForm';
-import CustomBtn from '../../../CustomBtn';
 
 const acceptType = ['7b202274', '3c3f786d'];
 
 const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
-  setJsonFile, setShowMap }) => {
+  setJsonFile, setShowMap, currentStage, subZones, customClass }) => {
   const intl = useIntl();
   const [geoJson, setGeoJson] = useState([]);
   const [myFiles, setMyFiles] = useState([]);
@@ -55,9 +56,18 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
         latitude: coordinates[0][0][1],
         zoom: (coordinates[0][0][2] || 5),
       };
-      setCoordinate({ ...coordinate, polygon: geoJson, coordinate: objCoord });
-      setState({ ...state, geoJson: { file: myFiles, geo: geoJson } });
-      setJsonFile({ geoJson: { file: myFiles, geo: geoJson } });
+      if (subZones) {
+        const copySubZones = [...coordinate.subZonesPolygon];
+        if (!geoJson[0].id) geoJson[0].id = `${Date.now()}`;
+        copySubZones[currentStage] = { ...coordinate, polygon: geoJson, coordinate: objCoord, sampleZones: [], stage: currentStage };
+        setCoordinate({ ...coordinate, subZonesPolygon: copySubZones });
+        setState({ ...state, ...coordinate, subZonesPolygon: copySubZones });
+        setJsonFile({ geoJson: { file: myFiles, geo: geoJson } });
+      } else {
+        setCoordinate({ ...coordinate, polygon: geoJson, coordinate: objCoord });
+        setState({ ...state, geoJson: { file: myFiles, geo: geoJson } });
+        setJsonFile({ geoJson: { file: myFiles, geo: geoJson } });
+      }
       setShowMap(true);
     }
     // else {
@@ -91,7 +101,7 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
       <div {...getRootProps()}>
         <div className="wizard__geo-wrapper">
           <input {...getInputProps()} />
-          <CustomBtn label={intl.formatMessage(step2GeoBtn)} type="button" handleClick={() => {}} customClass="btn__map" />
+          <CustomBtn label={intl.formatMessage(step2GeoBtn)} type="button" handleClick={() => {}} customClass={`btn__map ${customClass}`} />
           <div className="wizard__types-file">
             {intl.formatMessage(step2Types)}
           </div>

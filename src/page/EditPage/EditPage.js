@@ -15,25 +15,25 @@ import {
   // eslint-disable-next-line no-unused-vars
   editBtnUpdt, btnLabel, ste4Create, editTitleCost, step1, step1Creator, step1Input0, step1Input1, step1Input1Place, step1Input2, step1Input2Place, step1Input3, step1Input4, step1Input4Place, step1Input5Info, step1Input6, step1Input7, step2, step2CodePlus, step2Input1, step2Input2, step2List, step3, step3Area, step3AreaPlace, step3Ben, step3Input1, step3Input2, step3Input3, step3Input5, step3Private, step3Public, step3TooltipFiles, step3TooltipTextArea, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, step4TitleCoast, step4TitleTime, step4Tooltip1, step4Tooltip2, step4Tooltip3, step4Tooltip4, ste4Phase, editLabelBtn, ste4Month,
 } from '../../components/WizardForm/LangWizardForm';
-import CustomInput from '../../components/CustomInput';
-import CustomSelect from '../../components/CustomSelect';
-import CustomBtn from '../../components/CustomBtn';
-import FunderInfo from '../../components/WizardForm/Steps/AnotherComponents/FunderInfo';
-import DropzoneInput from '../../components/WizardForm/Steps/AnotherComponents/DropzoneInput';
-import buble from '../../assets/image/wizard/buble.svg';
-import Benefits from '../../components/WizardForm/Steps/AnotherComponents/Benefits';
-import { appStore } from '../../state/app';
-import LoaderIpfs from '../../components/LoaderIpfs.js';
-import Loader from '../../components/Loader';
-import Chart from '../../components/WizardForm/Steps/AnotherComponents/Chart';
-import { getJSONFileFromIpfs, initIPFS } from '../../state/ipfs';
+import CustomInput from 'src/generic/CustomInput';
+import CustomSelect from 'src/generic/CustomSelect';
+import CustomBtn from 'src/generic/CustomBtn';
+import FunderInfo from 'src/components/FunderInfo/FunderInfo';
+import DropzoneInput from 'src/components/Dropzone/DropzoneInput';
+import buble from 'src/assets/image/wizard/buble.svg';
+import Benefits from 'src/components/Benefits/Benefits';
+import { appStore } from 'src/state/app';
+import LoaderIpfs from 'src/components/LoaderIpfs.js';
+import Loader from 'src/components/Loader';
+import Chart from 'src/components/Chart/Chart';
+import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
 import UpdatedFiles from './UpdatedFiles';
-import { noDublicateElements } from '../../utils/convert-utils';
+import { noDublicateElements } from 'src/utils/convert-utils';
 import {
   GAS, ipfsURL, parseNearAmount,
-} from '../../state/near';
-import { getNftContract, nftContractMethods } from '../../utils/near-utils';
-import PopupSuccess from '../../components/WizardForm/Steps/AnotherComponents/PopupSuccess';
+} from 'src/state/near';
+import { getContract, contractMethods } from 'src/utils/near-utils';
+import PopupSuccess from 'src/components/PopupSuccess/PopupSuccess';
 
 const options = [{ label: 'Trees', value: 'Trees' }, { label: 'Reserves', value: 'Reserves' }, { label: 'Forest', value: 'Forest' }];
 
@@ -134,7 +134,7 @@ const EditPage = () => {
   const [dataCost, setDataCost] = useState({ costs: [50, 150, 150, 1500], dataChart, widthChart: 800 });
   const [nftTxHash, setNftTxHash] = useState('');
 
-  const countSumOfParts = (funders) => {
+  const countSumOfParts = (funders, part) => {
     const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
     const sumOfParts = parts.reduce((sum, curr) => sum + curr, 0);
     if (sumOfParts > 100) {
@@ -159,7 +159,7 @@ const EditPage = () => {
       } else {
         updArray[count][type] = ev.value;
       }
-      countSumOfParts(updArray);
+      countSumOfParts(updArray, ev);
     } else updArray[count][type] = ev.target.value;
     setInputArray(updArray);
   };
@@ -191,7 +191,7 @@ const EditPage = () => {
   const changeData = (dataProject) => {
     setStartDate(dataProject.startTimeProject);
     setEndDate(dataProject.finishTimeProject);
-    if (dataProject.funders.length > 0)setInputArray(dataProject.funders);
+    if (dataProject.funders.length > 0) setInputArray(dataProject.funders);
   };
 
   useEffect(async () => {
@@ -206,11 +206,10 @@ const EditPage = () => {
       setInitState({ ...data });
     } else if (account) {
       const ipfs = await initIPFS();
-      const contract = getNftContract(account, nftContractMethods);
-      const token = await contract.nft_token({ token_id: nameId });
+      const contract = getContract(account, contractMethods, 0);
+      const token = await contract.get_project({ project_id: nameId });
       if (token) {
-        console.log(token);
-        const file = await getJSONFileFromIpfs(ipfs, token.metadata.media);
+        const file = await getJSONFileFromIpfs(ipfs, token.info.cid);
         changeData(file);
         setInitState(file);
         setLoading(false);
@@ -240,24 +239,34 @@ const EditPage = () => {
     const { path } = await ipfs.add(JSON.stringify(dataProject));
 
     if (typeof path === 'string') {
+      const oneMillion = 1e6;
       const deposit = parseNearAmount('1');
-      const contract = getNftContract(account, nftContractMethods);
+      const contract = getContract(account, contractMethods, 0);
+      const stake = (dataProject.budget * 1e2).toString();
+      const startNanoSec = dataProject.startTimeProject * oneMillion;
+      const endNanoSec = dataProject.finishTimeProject * oneMillion;
+      const area = (dataProject.square * oneMillion).toString();
 
-      const tokenMetadata = {
-        media: `/ipfs/${path}`,
-        updated_at: `${Date.now()}`,
-      };
+      // const tokenMetadata = {
+      //   media: `/ipfs/${path}`,
+      //   updated_at: `${Date.now()}`,
+      // };
 
-      await contract.nft_update_token_metadata({
-        token_id: nameId,
-        metadata: tokenMetadata,
+      await contract.update_project_info({
+        project_id: nameId,
+        starts_at: startNanoSec,
+        ends_at: endNanoSec,
+        area: area,
+        budget: stake,
+        cid: path,
       }, GAS, deposit);
     }
   };
 
   const updateInitState = async (newData, isFiles = false) => {
     const copyData = { ...newData };
-    const { budget, funders } = copyData;
+    const budget = initState.budget;
+    const { funders } = copyData;
     const updBudjet = budget.replace(/(\$|,|\.00)/g, '');
     const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: +((`${item.part}`).replace(/\D/g, '')) }));
     const updData = { ...copyData, budget: updBudjet, funders: updFunders };
@@ -291,11 +300,11 @@ const EditPage = () => {
         if (!result.path) {
           updateInitState(updtData, true);
           setUpdtCidFiles({ filesCidDir: `/ipfs/${result.cid.string}` });
-          }
+        }
       }
       update('loading', false);
       return true;
-    }else {
+    } else {
       if (updatedFiles.files && updatedFiles.files.length <= 0) {
         setUpdtCidFiles({ filesCidDir: '' });
         // return true;
@@ -313,12 +322,12 @@ const EditPage = () => {
 
   return (
     <div className="preview">
-      { nftTxHash && <PopupSuccess close={togglePopup} hash={nftTxHash} />}
+      {nftTxHash && <PopupSuccess close={togglePopup} hash={nftTxHash} />}
       {loadingData ? <div className="dashboard__loader"><Loader /></div>
         : (
           <form className="preview__gen" onSubmit={handleSubmit(onSubmit)}>
             {state.loading && (
-            <LoaderIpfs customClass="edit" />
+              <LoaderIpfs customClass="edit" />
             )}
             <div className="preview__block">
               <h3 className="preview__title">
@@ -356,14 +365,14 @@ const EditPage = () => {
                       placeholder={intl.formatMessage(step1Input1Place)}
                       register={register({ required: 'This is required', maxLength: 100 })}
                       required
-                      change={() => {}}
+                      change={() => { }}
                       error={errors.name}
                       value={initState.name}
                       name="name"
                     />
                   </div>
                 </div>
-                <div className="wizard__duration">
+                {/* <div className="wizard__duration">
                   <span className="preview__label">{intl.formatMessage(step1Input3)}</span>
                   <div className="wizard__wrapper-input">
                     <div className="preview__wrapper-element">
@@ -409,7 +418,7 @@ const EditPage = () => {
                     prefix="$"
                     decimal
                   />
-                </div>
+                </div> */}
 
                 <div className="wizard__funders-wrapper">
                   <div className="wizard__create" onClick={() => createInput(countStep + 1)}>
@@ -420,7 +429,7 @@ const EditPage = () => {
                 <div className="wizard__funders-data">
                   {inputsArray.length > 0 && inputsArray.map((el, index) => (
                     <FunderInfo
-                  // eslint-disable-next-line react/no-array-index-key
+                      // eslint-disable-next-line react/no-array-index-key
                       key={`${index}FundersName${index}`}
                       inputsArray={inputsArray}
                       intl={intl}
@@ -433,12 +442,13 @@ const EditPage = () => {
                       control={control}
                       setInputElement={setInputElement}
                       warning={isActiveWarning}
+                      disableBtn={setIsDisabledBtn}
                     />
                   ))}
                   {isActiveWarning && (
-                  <div className="wizard__funder-warning">
-                    <span className="wizard__funder-warning-text">Total sum of percents is more than 100%, please enter correct values.</span>
-                  </div>
+                    <div className="wizard__funder-warning">
+                      <span className="wizard__funder-warning-text">Total sum of percents is more than 100%, please enter correct values.</span>
+                    </div>
                   )}
                 </div>
                 <div className="preview__icon-file">
@@ -600,7 +610,7 @@ const EditPage = () => {
             </div>
             <div className="preview__btn-wrapper">
               <CustomBtn label={intl.formatMessage(btnLabel)} handleClick={() => history.push({ pathname: `/project/${nameId}`, state: initState })} type="button" customClass="btn__cancel" />
-              <CustomBtn disabled={isDisabledBtn} label={intl.formatMessage(editBtnUpdt)} type="submit" handleClick={() => {}} customClass={`btn__next ${isDisabledBtn ? 'btn__next-disabled' : ''}`} />
+              <CustomBtn disabled={isDisabledBtn} label={intl.formatMessage(editBtnUpdt)} type="submit" handleClick={() => { }} customClass={`btn__next ${isDisabledBtn ? 'btn__next-disabled' : ''}`} />
             </div>
           </form>
         )}

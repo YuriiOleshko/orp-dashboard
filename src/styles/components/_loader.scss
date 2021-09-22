@@ -33,3 +33,32 @@
     transform: rotate(360deg);
   }
 }
+
+.lds-ring__small {
+  display: inline-block;
+  position: relative;
+  width: 16px !important;
+  height: 40px;
+  z-index: 11;
+}
+.lds-ring__small div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 25px !important;
+  height: 25px;
+  margin: 8px;
+  border: 4px solid $lightBlue;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: $lightBlue transparent transparent transparent;
+}
+.lds-ring__small div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring__small div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring__small div:nth-child(3) {
+  animation-delay: -0.15s;
+}

@@ -1,4 +1,5 @@
-import { StateUtils } from '../utils/state-utils';
+// eslint-disable-next-line import/no-unresolved
+import { StateUtils } from 'src/utils/state-utils';
 import { initNear } from './near';
 
 const initialState = {
@@ -7,6 +8,7 @@ const initialState = {
     profile: null,
     profileProject: {},
     nftTokens: [],
+    currentProjectStage: [],
   },
   near: {
     initialized: false,

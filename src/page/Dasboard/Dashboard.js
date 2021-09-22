@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Route, Router, useHistory,
 } from 'react-router';
-import LayoutDash from '../../components/LayoutDash/LayoutDash';
+import LayoutDash from '../../Layouts/LayoutDash/LayoutDash';
 import CollateralStatus from '../CollateralStatus';
 import ExistingProject from '../ExistingProject';
 

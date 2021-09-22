@@ -3,13 +3,13 @@ import { useIntl } from 'react-intl';
 import ReactTooltip from 'react-tooltip';
 import { ReactSVG } from 'react-svg';
 import NumberFormat from 'react-number-format';
+import CustomBtn from 'src/generic/CustomBtn';
+import bubble from 'src/assets/image/wizard/buble.svg';
 import {
   step4TitleCoast, step4TitleTime, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4PointDai, step4PointSlope, ste4Phase, ste4Month, ste4Create, step4Tooltip1,
   step4Tooltip2, step4Tooltip3, step4Tooltip4, wizardBtnBack, step4Preview,
 } from '../../LangWizardForm';
-import Chart from '../AnotherComponents/Chart';
-import CustomBtn from '../../../CustomBtn';
-import buble from '../../../../assets/image/wizard/buble.svg';
+import Chart from '../../../Chart';
 
 const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview }) => {
   const intl = useIntl();
@@ -52,13 +52,13 @@ const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview }) =
     return null;
   }
   return (
-    <div className="wizard__wrapper-form">
+    <div className="wizard__wrapper-form project-initiation">
       <div className="wizard__cost">
         <h3 className="wizard__cost-title">{intl.formatMessage(step4TitleCoast)}</h3>
         <div className="wizard__cost-list">
           <div className="wizard__cost-item">
             <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-1">
-              <ReactSVG src={buble} />
+              <ReactSVG src={bubble} />
             </div>
             <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-1" effect="float">
               {intl.formatMessage(step4Tooltip1)}
@@ -70,7 +70,7 @@ const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview }) =
           </div>
           <div className="wizard__cost-item">
             <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-2">
-              <ReactSVG src={buble} />
+              <ReactSVG src={bubble} />
             </div>
             <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-2" effect="float">
               {intl.formatMessage(step4Tooltip2)}
@@ -82,7 +82,7 @@ const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview }) =
           </div>
           <div className="wizard__cost-item">
             <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-3">
-              <ReactSVG src={buble} />
+              <ReactSVG src={bubble} />
             </div>
             <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-3" effect="float">
               {intl.formatMessage(step4Tooltip3)}
@@ -110,7 +110,7 @@ const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview }) =
       <div className="wizard__total-block">
         <div className="wizard__cost-item">
           <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-4">
-            <ReactSVG src={buble} />
+            <ReactSVG src={bubble} />
           </div>
           <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="step4-tooltip-4" effect="float">
             {intl.formatMessage(step4Tooltip4)}

@@ -5,10 +5,10 @@ import NumberFormat from 'react-number-format';
 import {
   ste4Create, backPreview, previewFiles, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4TitleCoast, step3Public, step3Private, step2List,
 } from '../../LangWizardForm';
-import CustomBtn from '../../../CustomBtn';
+import CustomBtn from '../../../../generic/CustomBtn';
 import { initIPFS, getFilesFromDirectory } from '../../../../state/ipfs';
 import { ipfsURL } from '../../../../state/near';
-import WrapperScaleImg from '../AnotherComponents/WrapperScaleImg';
+import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 

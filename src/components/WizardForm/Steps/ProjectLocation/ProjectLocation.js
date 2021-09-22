@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useIntl } from 'react-intl';
 import { CSVLink } from 'react-csv';
+// eslint-disable-next-line import/no-unresolved
+import CustomInput from 'src/generic/CustomInput';
+// eslint-disable-next-line import/no-unresolved
+import CustomBtn from 'src/generic/CustomBtn';
 import {
   // eslint-disable-next-line no-unused-vars
   step2Input1, step2GeoLabel, step2Input1Place1, step2List, step2Input2, step2CodePlus, step2BtnLabel, wizardBtnNext, wizardBtnBack, step2BtnReset,
 } from '../../LangWizardForm';
-import CustomInput from '../../../CustomInput';
-import CustomBtn from '../../../CustomBtn';
-import Map from '../../../Map';
+import Map from './Map';
 import PrevScreenLocation from './PrevScreenLocation';
-import WrapperScaleImg from '../AnotherComponents/WrapperScaleImg';
+import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 
@@ -69,7 +71,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   const { polygonCoordinate } = coordinate;
   return (
     <div className="wizard__wrapper-form">
-      {showMap && <Map state={coordinate} globalSetState={setState} globalState={state} setState={setCoordinate} setShow={setShowMap} intl={intl} clear={clearErrors} setShowPrev={setShowPrev} />}
+      {showMap && <Map initZone state={coordinate} globalSetState={setState} globalState={state} setState={setCoordinate} setShow={setShowMap} intl={intl} clear={clearErrors} setShowPrev={setShowPrev} />}
       {showPrev && (
       <PrevScreenLocation
         coordinate={coordinate}
