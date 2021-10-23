@@ -10,6 +10,8 @@ import exclamation from '../../assets/image/exclamation.svg';
 import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
 import { contractMethods, getContract } from 'src/utils/near-utils';
 
+const AGENT_API = process.env.REACT_APP_AGENT_API;
+
 const FieldAgents = () => {
   const { state, update } = useContext(appStore);
   const { account, app } = state;
@@ -21,14 +23,14 @@ const FieldAgents = () => {
   const [err, setErr] = useState(false);
   const [modalData, setModalData] = useState();
 
-  const loadTokens = async () => {
-    if (app.nftTokens.length && app.currentProjectStage.length) return;
+  const loadTokens = async (fromIndex) => {
+    // if (app.nftTokens.length && app.currentProjectStage.length) return;
     const ipfs = await initIPFS();
     const contract = getContract(account, contractMethods, 0);
     let tokenIds = [];
 
     try {
-      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: 0, limit: 30 });
+      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: fromIndex, limit: 20 });
       if (tokenIds.length === 0) {
         update('loading', false);
         return;
@@ -50,8 +52,18 @@ const FieldAgents = () => {
           return currentStage ? currentStage.id : -1;
         }),
       );
-      update('app.nftTokens', data);
-      update('app.currentProjectStage', currentProjectStage);
+      if (!state.firstLoad) {
+        const updStages = [...app.currentProjectStage];
+        const updNft = [...app.nftTokens];
+        updStages.push(...currentProjectStage);
+        updNft.push(...data);
+        update('app.currentProjectStage', updStages);
+        update('app.nftTokens', updNft);
+      } else {
+        update('app.currentProjectStage', currentProjectStage);
+        update('firstLoad', false);
+        update('app.nftTokens', data);
+      }
     } catch (e) {
       setErr(true);
     }
@@ -59,27 +71,76 @@ const FieldAgents = () => {
 
   useEffect(async () => {
     update('loading', true);
-    if (account && account.accountId) {
-      const result = await Promise.all([
-        new Promise((resolve) =>
-          setTimeout(() => {
-            resolve([
-              // {
-              //   id: Date.now(),
-              //   projectOperator: account.accountId,
-              //   name: 'Peter',
-              //   email: 'peter@gmail.com',
-              //   projects: [{ id: Date.now(), projectName: 'Six', sampleZones: ['S1', 'S2'], stage: 0, projectId: 'id-1626877658416' }],
-              // },
-            ]);
-          }, 1000)
-        ),
-        loadTokens(),
-      ]);
-      setFieldAgents(result[0]);
-      update('loading', false);
+    if (account && account.accountId && !app.nftTokens.length) {
+      await loadTokens(0);
     }
   }, [account]);
+
+  useEffect(async () => {
+    update('loading', true);
+    if (app.nftTokens.length) {
+      await loadTokens(app.nftTokens.length);
+    }
+  }, [app.nftTokens.length, state.firstLoad]);
+
+  useEffect(async () => {
+    if (account && account.accountId && app.nftTokens.length) {
+      const result = await fetch(`${AGENT_API}/list`, {
+        headers: {
+          // "Accept": '*/*',
+          "Authorization": `Bearer ${account.accountId}`,
+        }
+      }).then((data) => data.json());
+      const parsedFieldAgent = result.map((fa) => {
+        const projectsWithId = Object.entries(fa.projects);
+        const parsedProjects = projectsWithId.map((project) => {
+          let id;
+          let stage;
+          let projectId;
+          let projectName;
+
+          const targetProject = app.nftTokens.find((item) => item.id === project[0]);
+          if (targetProject) {
+            projectName = targetProject.item.name;
+          }
+
+          const parsedSample = project[1].map((sample) => {
+            id = sample.projectId;
+            stage = sample.stageId;
+            projectId = sample.projectId
+            return { sName: sample.sampleZoneName, sId: sample.sampleZoneId };
+          });
+
+          return {
+            id,
+            projectName,
+            sampleZones: parsedSample,
+            stage,
+            projectId,
+          }
+        });
+        return { ...fa, projects: parsedProjects };
+      })
+      setFieldAgents(parsedFieldAgent);
+      // update('loading', false);
+    }
+  }, [account, app.nftTokens.length]);
+
+  // {
+  //   id: Date.now(),
+  //   projectOperator: account.accountId,
+  //   name: 'Peter',
+  //   email: 'peter@gmail.com',
+  //   projects: [
+  //      { 
+  //         id: Date.now(),
+  //         projectName: 'Six',
+  //         sampleZones: ['S1', 'S2'],
+  //         stage: 0,
+  //         projectId: 'id-1626877658416',
+  //      }
+  //   ],
+  // },
 
   if (state.loading) {
     return <div className="dashboard__loader"><Loader /></div>
@@ -142,6 +203,7 @@ const FieldAgents = () => {
           title="Assign Field Agent"
           buttonText="Send Invite"
           setModalActive={setAssignModalActive}
+          fieldAgents={fieldAgents}
           setFieldAgents={setFieldAgents}
           modalData={modalData}
           setModalData={setModalData}
@@ -154,6 +216,7 @@ const FieldAgents = () => {
           title="Edit Field Agent"
           buttonText="Save"
           setModalActive={setEditModalActive}
+          fieldAgents={fieldAgents}
           setFieldAgents={setFieldAgents}
           modalData={modalData}
           setModalData={setModalData}

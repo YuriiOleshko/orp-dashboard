@@ -22,7 +22,12 @@ const SampleZoneItem = ({ sampleName, coordinates, sampleTrees, setSampleZones, 
 
   const addTree = () => {
     const updSampleTrees = [...sampleTrees];
-    const lastTreeNameNumber = updSampleTrees[updSampleTrees.length - 1].treeName.split('T')[1];
+    let lastTreeNameNumber;
+    if (updSampleTrees.length) {
+      lastTreeNameNumber = updSampleTrees[updSampleTrees.length - 1].treeName.split('T')[1];
+    } else {
+      lastTreeNameNumber = 0;
+    }
     const structure = {
       id: Date.now(),
       treeName: `${sampleName}_T${+lastTreeNameNumber + 1}`,

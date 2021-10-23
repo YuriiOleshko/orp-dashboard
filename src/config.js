@@ -1,7 +1,7 @@
 const contractName = process.env.REACT_APP_CONTRACT_NAME || [
-  'core.ofp.testnet',
-  'dai.ofp.testnet',
-  'opn.ofp.testnet',
+  'c1.ofp.testnet',
+  'dt1.ofp.testnet',
+  'ot1.ofp.testnet',
 ];
 const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://gateway.ipfs.io';
 
@@ -27,6 +27,9 @@ export default function getConfig() {
 
         'add_project',
         'update_project_info',
+
+        'add_stage_voting',
+        'ft_transfer_call',
       ],
       viewMethods: [
         'get_profile',
@@ -34,6 +37,8 @@ export default function getConfig() {
         'get_project',
         'get_account_projects',
         'calculate_sample_zones',
+
+        'get_stage_voting',
 
         'get_project_stages',
         'get_current_project_stage',

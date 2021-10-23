@@ -12,6 +12,7 @@ import {
 import { useIntl } from 'react-intl';
 // import axios from 'axios';
 
+import { GAS, parseNearAmount } from 'src/state/near';
 import { getContract, contractMethods } from '../../utils/near-utils';
 import { appStore } from '../../state/app';
 import { initIPFS, getJSONFileFromIpfs } from '../../state/ipfs';
@@ -52,21 +53,70 @@ const ProjectPage = () => {
     hasPublic = data.privateFiles.find((item) => !item.private);
   }
 
-  const setStageStatus = (stages) => {
+  const createStageVoting = async (stageId) => {
+    if (account && account.accountId) {
+      const contract = getContract(account, contractMethods, 0);
+      const deposit = parseNearAmount('1');
+      await contract.add_stage_voting(
+        {
+          project_id: nameId,
+          stage_id: stageId,
+        },
+        GAS,
+        deposit,
+      );
+    }
+  };
+
+  const payStageVoting = async (amount, stageId) => {
+    if (account && account.accountId) {
+      const contract = getContract(account, contractMethods, 1);
+      const deposit = '1';
+      const stages = await contract.ft_transfer_call(
+        {
+          receiver_id: 'c1.ofp.testnet',
+          amount,
+          memo: null,
+          msg: JSON.stringify(
+            {
+              details: 0,
+              project_id: nameId,
+              stage_id: stageId,
+              period_id: 0,
+            },
+          ),
+        },
+        GAS,
+        deposit,
+      );
+    }
+  };
+
+  const setStageStatus = (stages, totalData, stageVotingArr) => {
     const copyStages = [...stages];
-    const updStages = copyStages.map((item) => {
+    const updStages = copyStages.map((item, id) => {
       const current = Date.now();
       const oneMillion = 1e6;
       const startMilisec = item.starts_at / oneMillion;
       const endMilisec = item.ends_at / oneMillion;
 
-      const dataUpload = current >= endMilisec;
+      const stageVoting = stageVotingArr[id];
+
+      const stageStatus = {
+        active: startMilisec <= current && current <= endMilisec,
+        status: stageVoting && stageVoting.approved,
+      };
+
+      const dataUploadFinished = (totalData.subZonesPolygon || []).find((i) => i?.stage === item.id);
+
+      const dataUpload = dataUploadFinished && dataUploadFinished.finished;
       const pastTerm = current >= startMilisec;
 
-      const status = ['ok', 'lost', 'future'];
-      const randomStatus = status[Math.round(Math.random() * 1)];
-      const collateral = dataUpload ? randomStatus : status[2];
-      return { ...item, dataUpload, pastTerm, collateral, starts_at: startMilisec, ends_at: endMilisec };
+      // const status = ['ok', 'lost', 'future'];
+      // const randomStatus = status[Math.round(Math.random() * 1)];
+      // const collateral = dataUpload ? randomStatus : status[2];
+      // return { ...item, dataUpload, pastTerm, collateral, starts_at: startMilisec, ends_at: endMilisec };
+      return { ...item, dataUpload, pastTerm, stageStatus, starts_at: startMilisec, ends_at: endMilisec };
     });
     setStageData(updStages);
   };
@@ -76,7 +126,13 @@ const ProjectPage = () => {
       const contract = getContract(account, contractMethods, 0);
       const stages = await contract.get_project_stages({ project_id: nameId });
       if (stages.length) {
-        setStageStatus(stages);
+        const stageVotingArr = await Promise.all(
+          stages.map(async (item) => {
+            const stageVoting = await contract.get_stage_voting({ project_id: nameId, stage_id: item.id });
+            return stageVoting;
+          }),
+        );
+        setStageStatus(stages, location.state, stageVotingArr);
         setData(location.state);
         setLoading(false);
       }
@@ -87,7 +143,13 @@ const ProjectPage = () => {
       const stages = await contract.get_project_stages({ project_id: nameId });
       if (token && stages.length) {
         const file = await getJSONFileFromIpfs(ipfs, token.info.cid);
-        setStageStatus(stages);
+        const stageVotingArr = await Promise.all(
+          stages.map(async (item) => {
+            const stageVoting = await contract.get_stage_voting({ project_id: nameId, stage_id: item.id });
+            return stageVoting;
+          }),
+        );
+        setStageStatus(stages, file, stageVotingArr);
         setData(file);
         setLoading(false);
         return;
@@ -107,7 +169,7 @@ const ProjectPage = () => {
               <CustomBtn label={intl.formatMessage(edit)} customClass="btn__edit-grey" iconClass="icon-pencil" type="button" handleClick={() => history.push({ pathname: `/edit/${nameId}`, state: data })} />
             </div>
             <div className="project__stage">
-              <StageTimeline data={stageData} />
+              <StageTimeline data={stageData} createStageVoting={createStageVoting} payStageVoting={payStageVoting} />
             </div>
             {!!(data.funders) && (
             <div className="project__funders">

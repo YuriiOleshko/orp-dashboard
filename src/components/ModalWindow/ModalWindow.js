@@ -2,7 +2,7 @@ import React from 'react';
 import CustomBtn from 'src/generic/CustomBtn/CustomBtn';
 
 const ModalWindow = (props) => {
-  const { displayModal, setDisplayModal } = props;
+  const { displayModal, setDisplayModal, confirmDataUpload } = props;
   return (
     <>
       <div className={`cover ${displayModal ? 'display' : 'hide'}`} />
@@ -13,7 +13,7 @@ const ModalWindow = (props) => {
           </div>
           <div className="modal_text">
             <span>
-              Stage 1 Upload Fee - 150 DAI.
+              Stage 1 Upload Fee.
             </span>
             <span>
               This action is non-revokable.
@@ -22,7 +22,7 @@ const ModalWindow = (props) => {
           </div>
           <div className="modal_btn">
             <CustomBtn label="Back" handleClick={() => { setDisplayModal(false); }} customClass="modal_btn_item back" />
-            <CustomBtn label="Confirm" handleClick={() => { setDisplayModal(false); }} customClass="modal_btn_item confirm" />
+            <CustomBtn label="Confirm" handleClick={() => confirmDataUpload()} customClass="modal_btn_item confirm" />
           </div>
         </div>
       </div>

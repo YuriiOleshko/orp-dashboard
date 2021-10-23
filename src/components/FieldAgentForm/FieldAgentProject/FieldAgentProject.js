@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 
@@ -22,7 +22,7 @@ const FieldAgentProject = ({ fieldAgentData,
 
   let selectRef = null;
   const defaultValueProj = projectItem.projectName && { label: projectItem.projectName, value: projectItem.projectName };
-  const defaultValueSample = projectItem.sampleZones.map((el) => ({ label: el, value: el }));
+  const defaultValueSample = projectItem.sampleZones.map((el) => ({ label: el.sName, value: el.sName, sId: el.sId, sName: el.sName }));
   const customStyles = {
     control: (styles, { isFocused }) => ({
       ...styles,
@@ -115,12 +115,12 @@ const FieldAgentProject = ({ fieldAgentData,
       if (type === 'project') {
         const targetProject = targetProjects.find((proj) => proj.item.name === target);
         const { item } = targetProject;
-        const samOption = item.subZonesPolygon[item.subZonesPolygon.length - 1].sampleZones.map((sample) => ({ value: `${sample.sampleName}`, label: `${sample.sampleName}` }));
+        const samOption = item.subZonesPolygon[item.subZonesPolygon.length - 1].sampleZones.map((sample) => ({ value: `${sample.sampleName}`, label: `${sample.sampleName}`, sId: sample.id, sName: `${sample.sampleName}` }));
         setSampleOptions(samOption);
         setValue(name, target, { shouldValidate: true });
         selectRef.select.clearValue();
       } else {
-        setValue(name, target.length ? target.map((i) => i.value) : '', { shouldValidate: !!target.length });
+        setValue(name, target.length ? target : '', { shouldValidate: !!target.length });
       }
     } else {
       if (type === 'project') {
@@ -130,6 +130,17 @@ const FieldAgentProject = ({ fieldAgentData,
       setValue(name, '');
     }
   };
+
+  useEffect(() => {
+    if (targetProjects?.length && edit && defaultValueProj) {
+      const targetProject = targetProjects.find((proj) => proj.item.name === defaultValueProj.value);
+      if (targetProject) {
+        const { item } = targetProject;
+        const samOption = item.subZonesPolygon[item.subZonesPolygon.length - 1].sampleZones.map((sample) => ({ value: `${sample.sampleName}`, label: `${sample.sampleName}`, sId: sample.id, sName: `${sample.sampleName}` }));
+        setSampleOptions(samOption);
+      }
+    }
+  }, [targetProjects]);
 
   return (
     <div className="field-agent__form-item">

@@ -11,8 +11,8 @@ import Benefits from 'src/components/Benefits';
 import bubble from 'src/assets/image/wizard/buble.svg';
 import ModalWindow from '../../../ModalWindow';
 
-const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStage, globalFiles, setGlobalFiles, globalCidFiles, setGlobalCidFiles }) => {
-  const currentSubZone = totalData.subZonesPolygon[currentStage];
+const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStage, globalFiles, setGlobalFiles, globalCidFiles, setGlobalCidFiles, handleUpdateProject }) => {
+  const currentSubZone = { ...totalData.subZonesPolygon[currentStage] };
   const { register, handleSubmit, errors, control } = useForm();
   const [files, setFiles] = useState(globalCidFiles);
   const [additional, setAdditional] = useState(currentSubZone.additional ? { additional: currentSubZone.additional } : {});
@@ -34,6 +34,14 @@ const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStag
     setTotalData({ ...totalData, subZonesPolygon: updZone });
     if (modal) setDisplayModal(true);
     // nextPage();
+  };
+
+  const confirmDataUpload = () => {
+    const dataUploadTime = Date.now();
+    const updData = { ...totalData };
+    const updCurrentSubzone = { ...currentSubZone, dataUploadTime, finished: true };
+    updData.subZonesPolygon[currentStage] = updCurrentSubzone;
+    handleUpdateProject(updData);
   };
 
   useEffect(() => {
@@ -90,7 +98,7 @@ const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStag
           />
         </div>
       </form>
-      <ModalWindow displayModal={displayModal} setDisplayModal={setDisplayModal} />
+      <ModalWindow displayModal={displayModal} setDisplayModal={setDisplayModal} confirmDataUpload={confirmDataUpload} />
     </>
   );
 };

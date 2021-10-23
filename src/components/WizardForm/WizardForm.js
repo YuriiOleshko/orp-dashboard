@@ -77,7 +77,7 @@ const WizardForm = () => {
     if (typeof path === 'string') {
       const deposit = parseNearAmount('1');
       const contract = getContract(account, contractMethods, 0);
-      const stake = (defaultState.budget * 1e2).toString();
+      const stake = (defaultState.budget).toString();
       const startNanoSec = defaultState.startTimeProject * oneMillion;
       const endNanoSec = defaultState.finishTimeProject * oneMillion;
       const area = (defaultState.square * oneMillion).toString();
@@ -147,7 +147,7 @@ const WizardForm = () => {
                 <GenInformation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} />
                 <ProjectLocation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
                 <RefoData step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
-                <ProjectInit step={step} handleMint={handleMint} state={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} />
+                <ProjectInit step={step} handleMint={handleMint} projState={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} />
                 <Preview state={defaultState} handleMint={handleMint} prevPage={prevPage} step={step} showPreview={showPreview} setShowPreview={setShowPreview} />
               </div>
             )}

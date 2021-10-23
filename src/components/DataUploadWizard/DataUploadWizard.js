@@ -91,7 +91,9 @@ const DataUploadWizard = () => {
       setLoading(false);
 
       if (curStage >= 0 && item.subZonesPolygon) {
-        const subZoneExist = item.subZonesPolygon.find((i) => i.stage === curStage);
+        const subZoneExist = item.subZonesPolygon.find((i) => i?.stage === curStage);
+        const finished = item.subZonesPolygon.find((i) => i?.stage === curStage && i?.finished);
+        if (finished) history.push('/');
         if (subZoneExist) nextPage();
       }
     } else if (account) {
@@ -107,7 +109,9 @@ const DataUploadWizard = () => {
         setLoading(false);
 
         if (curStage >= 0 && file.subZonesPolygon) {
-          const subZoneExist = file.subZonesPolygon.find((item) => item.stage === curStage);
+          const subZoneExist = file.subZonesPolygon.find((item) => item?.stage === curStage);
+          const finished = file.subZonesPolygon.find((item) => item?.stage === curStage && item?.finished);
+          if (finished) history.push('/');
           if (subZoneExist) nextPage();
         }
       } else {
@@ -153,8 +157,8 @@ const DataUploadWizard = () => {
                     ) }
                     {step === 0 && (<MonitoringData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={() => history.push('/')} currentStage={currentStage} handleUpdateProject={handleUpdateProject} />)}
                     {step === 1 && (<SampleData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} />)}
-                    {step === 2 && (<DocumentData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} globalFiles={globalFiles} setGlobalFiles={setGlobalFiles} globalCidFiles={globalCidFiles} setGlobalCidFiles={setGlobalCidFiles} />)}
-                    {step === 3 && (<PreviewReport totalData={totalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} />)}
+                    {step === 2 && (<DocumentData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} globalFiles={globalFiles} setGlobalFiles={setGlobalFiles} globalCidFiles={globalCidFiles} setGlobalCidFiles={setGlobalCidFiles} handleUpdateProject={handleUpdateProject} />)}
+                    {step === 3 && (<PreviewReport totalData={totalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} handleUpdateProject={handleUpdateProject} />)}
                   </div>
                 ) : <h2>First stage hasn&apos;t started yet.</h2>}
               </div>

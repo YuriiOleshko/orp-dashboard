@@ -1,19 +1,54 @@
 /* eslint-disable no-unused-vars */
-import { React, useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { appStore } from 'src/state/app';
 import CustomBtn from 'src/generic/CustomBtn/CustomBtn';
 import FieldAgentModal from '../FieldAgentForm/FieldAgentModal/FieldAgentModal';
+import Loader from '../Loader/Loader';
+
+const INVITE_API = process.env.REACT_APP_INVITE_API;
 
 const FieldAgentDropList = ({ fieldAgent, listNumber, setModalActive, setEditFieldAgent, setFieldAgents, setModalData, modalData, fa }) => {
+  const { state, update } = useContext(appStore);
+  const { account, app } = state;
+
+  const [loading, setLoading] = useState(false);
   const [hideElement, setHideElement] = useState(false);
   const projects = fieldAgent.projects.map((zones) => zones);
   const sampleZones = projects.map((project) => project.sampleZones);
 
-  const getModal = () => {
-    setModalData({
-      deleteItem: true,
-      fa: fieldAgent,
-    });
+  const getModal = (type = '') => {
+    if (type === 'invite') {
+      setModalData({
+        deleteItem: false,
+        content: 'Congratulations! Invite was successfully sent!',
+      });
+    } else {
+      setModalData({
+        deleteItem: true,
+        fa: fieldAgent,
+      });
+    }
   };
+
+  const resendInvite = async () => {
+    setLoading(true);
+    const inviteBody = { fieldAgentId: fieldAgent.id };
+    await fetch(INVITE_API, {
+      method: 'PUT',
+      body: JSON.stringify(inviteBody),
+      headers: {
+        // "Accept": '*/*',
+        Authorization: `Bearer ${account.accountId}`,
+      },
+    });
+    setLoading(false);
+    getModal('invite');
+  };
+
+  if (loading) {
+    return <div className="dashboard__loader-fa"><Loader /></div>;
+  }
+
   return (
     <>
       <div className={`field-agent_drop ${hideElement ? 'dropdown' : 'up'}`}>
@@ -38,7 +73,7 @@ const FieldAgentDropList = ({ fieldAgent, listNumber, setModalActive, setEditFie
             <span className="field-agent_drop-header">Sampling zones:</span>
             {sampleZones.map((zone, index) => (
               <span className="field-agent_drop_project-info" key={`N${index + 1}`}>
-                {`${zone}`}
+                {`${zone.reduce((str, item, id, arr) => `${str}${item.sName}${id === arr.length - 1 ? '' : ', '}`, '')}`}
               </span>
             ))}
           </div>
@@ -72,7 +107,7 @@ const FieldAgentDropList = ({ fieldAgent, listNumber, setModalActive, setEditFie
             <CustomBtn
               label="Resend Invite"
               customClass="field-agent_drop_edit-btn"
-              handleClick={() => { }}
+              handleClick={resendInvite}
               iconClass="icon-loop-arrow"
             />
             <CustomBtn

@@ -22,6 +22,8 @@ import {
   ipfsError,
 } from './LangExistingProject';
 
+let once = true;
+
 const ExistingProject = () => {
   const intl = useIntl();
   const { state, update } = useContext(appStore);
@@ -29,18 +31,21 @@ const ExistingProject = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
 
-  const loadTokens = async () => {
+  if (app.nftTokens.length && loading) {
+    setLoading(false);
+  }
+
+  const loadTokens = async (fromIndex) => {
     const ipfs = await initIPFS();
     const contract = getContract(account, contractMethods, 0);
     let tokenIds = [];
 
     try {
-      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: 0, limit: 30 });
+      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: fromIndex, limit: 20 });
       if (tokenIds.length === 0) {
         setLoading(false);
         return;
       }
-      setLoading(true);
       // Get all files saved to ipfs for each nft token
       const data = await Promise.all(
         tokenIds.map(async (token) => {
@@ -58,16 +63,48 @@ const ExistingProject = () => {
           return currentStage ? currentStage.id : -1;
         }),
       );
-      update('app.nftTokens', data);
-      update('app.currentProjectStage', currentProjectStage);
+      if (!state.firstLoad) {
+        const updStages = [...app.currentProjectStage];
+        const updNft = [...app.nftTokens];
+        updStages.push(...currentProjectStage);
+        updNft.push(...data);
+        update('app.currentProjectStage', updStages);
+        update('app.nftTokens', updNft);
+      } else {
+        update('app.currentProjectStage', currentProjectStage);
+        update('app.nftTokens', data);
+        update('firstLoad', false);
+      }
+      setLoading(false);
     } catch (e) {
       setErr(true);
+      setLoading(false);
     }
   };
 
   useEffect(async () => {
-    if (account && account.accountId) await loadTokens();
+    if (account && account.accountId && !app.nftTokens.length) await loadTokens(0);
   }, [account]);
+
+  useEffect(() => {
+    if (account && account.accountId && app.nftTokens.length) {
+      const handler = async (e) => {
+        const scrollHeight = window.pageYOffset + document.documentElement.clientHeight;
+        const pageHeight = document.documentElement.scrollHeight;
+        const triggerHeight = pageHeight - scrollHeight;
+        if (triggerHeight <= 500 && once) {
+          once = false;
+          await loadTokens(app.nftTokens.length);
+        } else if (triggerHeight > 500) {
+          once = true;
+        }
+      };
+
+      window.addEventListener('scroll', handler);
+
+      return () => window.removeEventListener('scroll', handler);
+    }
+  }, [account, app.nftTokens.length, state.firstLoad]);
 
   const filterNftTokens = (e) => {
     e.target.classList.toggle('active');
@@ -105,17 +142,16 @@ const ExistingProject = () => {
           <div className="dashboard__filter-space">.</div>
         </div>
       </div>
-      {err ? <div className="dashboard__error">{intl.formatMessage(ipfsError)}</div>
-        : loading
-          ? app.nftTokens.length && app.currentProjectStage.length ? (
+      {err ? (<div className="dashboard__error">{intl.formatMessage(ipfsError)}</div>)
+        : loading ? <div className="dashboard__loader"><Loader /></div>
+          : app.nftTokens.length && app.currentProjectStage.length ? (
             <div className="dashboard__list">
               {app.nftTokens.map((data, index) => (
                 /* eslint-disable-next-line react/no-array-index-key */
                 <ProjectCard data={data} currentStage={app.currentProjectStage[index]} key={`${index} - ${data.id}`} />
               ))}
             </div>
-          ) : <div className="dashboard__loader"><Loader /></div>
-          : <div className="dashboard__loader">{intl.formatMessage(noProjects)}</div>}
+          ) : <div className="dashboard__loader">{intl.formatMessage(noProjects)}</div>}
     </>
   );
 };

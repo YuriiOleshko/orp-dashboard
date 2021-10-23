@@ -134,6 +134,10 @@ const EditPage = () => {
   const [dataCost, setDataCost] = useState({ costs: [50, 150, 150, 1500], dataChart, widthChart: 800 });
   const [nftTxHash, setNftTxHash] = useState('');
 
+  const [infoChart, setInfoChart] = useState([]);
+  const [firstStagePrice, setFirstStagePrice] = useState();
+  const [totalProjectCost, setTotalProjectCost] = useState();
+
   const countSumOfParts = (funders, part) => {
     const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
     const sumOfParts = parts.reduce((sum, curr) => sum + curr, 0);
@@ -194,16 +198,38 @@ const EditPage = () => {
     if (dataProject.funders.length > 0) setInputArray(dataProject.funders);
   };
 
+  const setChartData = async () => {
+    const oneMillion = 1000000;
+
+    const contract = getContract(account, contractMethods, 0);
+    const allStages = await contract.get_project_stages({ project_id: nameId });
+    const chartData = allStages.map((item) => {
+      const stageDuration = (item.ends_at - item.starts_at) / oneMillion;
+      let months = (stageDuration / (1000 * 60 * 60 * 24 * 365)) * 12;
+      months = Math.trunc(months);
+      return {
+        name: `${months} ${intl.formatMessage(ste4Month)}`,
+        // 'Data Upload Fee Slope, %': 6,
+        'Data Upload Fee, USD': item.fee,
+        stage: `Stage ${item.id}`,
+      };
+    });
+    setInfoChart(chartData);
+    setFirstStagePrice(chartData[0]['Data Upload Fee, USD']);
+    setTotalProjectCost(chartData.reduce((sum, item) => item['Data Upload Fee, USD'] + sum, 0));
+  };
+
   useEffect(async () => {
     const params = (new URL(document.location)).searchParams;
     const hash = params.get('transactionHashes');
     if (hash) {
       setNftTxHash(hash);
     }
-    if (data) {
+    if (data && account) {
       changeData(data);
-      setLoading(false);
       setInitState({ ...data });
+      setChartData();
+      setLoading(false);
     } else if (account) {
       const ipfs = await initIPFS();
       const contract = getContract(account, contractMethods, 0);
@@ -212,6 +238,7 @@ const EditPage = () => {
         const file = await getJSONFileFromIpfs(ipfs, token.info.cid);
         changeData(file);
         setInitState(file);
+        setChartData();
         setLoading(false);
         return;
       }
@@ -542,7 +569,7 @@ const EditPage = () => {
                 </h3>
                 <div className="preview__block-wrapper ">
                   <div className="wizard__cost-list">
-                    <div className="wizard__cost-item">
+                    {/* <div className="wizard__cost-item">
                       <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-1">
                         <ReactSVG src={buble} />
                       </div>
@@ -565,7 +592,7 @@ const EditPage = () => {
                       <span className="bold">
                         <NumberFormat value={dataCost.costs[1]} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                       </span>
-                    </div>
+                    </div> */}
                     <div className="wizard__cost-item">
                       <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-3">
                         <ReactSVG src={buble} />
@@ -575,7 +602,8 @@ const EditPage = () => {
                       </ReactTooltip>
                       <span>{intl.formatMessage(step4Coast3)}</span>
                       <span className="bold">
-                        <NumberFormat value={dataCost.costs[2]} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                        {/* value={dataCost.costs[2]} */}
+                        <NumberFormat value={firstStagePrice} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                       </span>
                     </div>
                   </div>
@@ -584,10 +612,11 @@ const EditPage = () => {
                       <h3 className="wizard__cost-title">{intl.formatMessage(step4TitleTime)}</h3>
                     </div>
                     <div className="wizard__wrapper-chart">
-                      <Chart data={dataCost.dataChart} width={dataCost.widthChart} />
+                      {/* <Chart data={dataCost.dataChart} width={dataCost.widthChart} /> */}
+                      <Chart data={infoChart} />
                       <div className="wizard__point-words">
                         <span className="green">{intl.formatMessage(step4PointDai)}</span>
-                        <span className="blue">{intl.formatMessage(step4PointSlope)}</span>
+                        {/* <span className="blue">{intl.formatMessage(step4PointSlope)}</span> */}
                       </div>
                     </div>
                   </div>
@@ -601,7 +630,8 @@ const EditPage = () => {
                       </ReactTooltip>
                       <span>{intl.formatMessage(step4Coast4)}</span>
                       <span className="bold">
-                        <NumberFormat value={dataCost.costs[3]} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                        {/* value={dataCost.costs[3]} */}
+                        <NumberFormat value={totalProjectCost} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                       </span>
                     </div>
                   </div>

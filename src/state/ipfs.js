@@ -1,5 +1,6 @@
 import ipfsClient from 'ipfs-http-client';
 import uint8arrays from 'uint8arrays';
+import axios from 'axios';
 
 export const initIPFS = async () => {
   const ipfs = ipfsClient({
@@ -27,6 +28,21 @@ export const initIPFS = async () => {
 //       console.log(error, 'error');
 //     });
 // };
+
+export const getJSONFileFromIpfsNew = async (cid) => {
+  const config = {
+    method: 'get',
+    url: `https://1x589Wf0bGYEc1dhSmPCbTlumFQ:cacb603095351699082f9e83396ea0bb@ipfs.infura.io:5001/api/v0/cat?arg=${cid}`,
+    headers: { },
+  };
+
+  return axios(config)
+    .then((response) => JSON.stringify(response.data))
+    .catch((error) => {
+      console.log(error);
+      return undefined;
+    });
+};
 
 export const getJSONFileFromIpfs = async (client, cid) => {
   let file;

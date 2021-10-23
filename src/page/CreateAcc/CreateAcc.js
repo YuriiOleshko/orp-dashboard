@@ -12,6 +12,7 @@ import {
   getContract,
   contractMethods,
 } from 'src/utils/near-utils';
+import { GAS, parseNearAmount } from 'src/state/near';
 import { copyRight } from '../Login/LangLogin';
 
 import {
@@ -34,8 +35,19 @@ const CreateAcc = () => {
 
   const onSubmit = async (data) => {
     update('loading', true);
+    const deposit = parseNearAmount('1');
     const contract = getContract(account, contractMethods, 0);
-    const test = await contract.add_profile({ account_id: account.accountId, first_name: data.firstName, last_name: data.lastName, email: data.email, organization: data.companyName });
+    const test = await contract.add_profile(
+      {
+        account_id: account.accountId,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        organization: data.companyName,
+      },
+      GAS,
+      deposit,
+    );
     update('loading', false);
     history.push('/start-project');
   };

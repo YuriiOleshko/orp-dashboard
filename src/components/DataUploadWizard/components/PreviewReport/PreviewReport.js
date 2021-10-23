@@ -5,7 +5,7 @@ import PreviewSapmleZone from '../PreviewSampleZone/PreviewSampleZone';
 import ModalWindow from '../../../ModalWindow/ModalWindow';
 import { initIPFS, getFilesFromDirectory } from '../../../../state/ipfs';
 
-const PreviewReport = ({ prevPage, totalData, currentStage }) => {
+const PreviewReport = ({ prevPage, totalData, currentStage, handleUpdateProject }) => {
   const [displayModal, setDisplayModal] = useState(false);
   const [filesNames, setFilesNames] = useState([]);
   const currentSubZone = { ...totalData.subZonesPolygon[currentStage] };
@@ -17,6 +17,15 @@ const PreviewReport = ({ prevPage, totalData, currentStage }) => {
       setFilesNames(updateArray.map((item) => item.path));
     }
   }, []);
+
+  const confirmDataUpload = () => {
+    const dataUploadTime = Date.now();
+    const updData = { ...totalData };
+    const updCurrentSubzone = { ...currentSubZone, dataUploadTime, finished: true };
+    updData.subZonesPolygon[currentStage] = updCurrentSubzone;
+    handleUpdateProject(updData);
+  };
+
   return (
     <>
       <div className="upload-wizard__monitoring">
@@ -70,7 +79,7 @@ const PreviewReport = ({ prevPage, totalData, currentStage }) => {
           />
         </div>
       </form>
-      <ModalWindow displayModal={displayModal} setDisplayModal={setDisplayModal} />
+      <ModalWindow displayModal={displayModal} setDisplayModal={setDisplayModal} confirmDataUpload={confirmDataUpload} />
     </>
   );
 };

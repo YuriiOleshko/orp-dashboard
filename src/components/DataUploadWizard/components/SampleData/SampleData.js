@@ -1,9 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 /* eslint-disable react/no-array-index-key */
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, useContext,
+} from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { appStore } from 'src/state/app';
+import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
 // eslint-disable-next-line import/no-unresolved
 import CustomInput from 'src/generic/CustomInput';
 // eslint-disable-next-line import/no-unresolved
@@ -11,31 +15,77 @@ import CustomBtn from 'src/generic/CustomBtn';
 import SampleZoneItem from 'src/components/DataUploadWizard/components/SampleZoneItem';
 import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
+const AGENT_API = process.env.REACT_APP_AGENT_API;
+
 const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage }) => {
   const { register, handleSubmit, errors, clearErrors, control, setValue, getValues } = useForm();
+  const { state } = useContext(appStore);
+  const { account } = state;
   const history = useHistory();
+  const { nameId } = useParams();
 
   const currSubZone = { ...totalData.subZonesPolygon[currentStage] };
   const currentSampleZones = [...currSubZone.sampleZones];
-  const sZones = currentSampleZones.map((el, index) => ({
+  // const sZones = currentSampleZones.map((el, index) => ({
+  //   ...el,
+  //   sampleName: `S${index + 1}`,
+  //   coordinates: el.geometry.coordinates,
+  //   sampleTrees: el.sampleTrees.length ? el.sampleTrees : Array.from({ length: 10 }).map((e, i) => ({
+  //     id: Date.now() + i,
+  //     treeName: `S${index + 1}_T${i + 1}`,
+  //     status: 'damaged',
+  //     height: '250',
+  //     diameter: '100',
+  //     treePhoto: '/ipfs/QmeAkTfuybkK3DTWL9NC5SB4TfprfVTVbxEbvwoysgJF44',
+  //     labelPhoto: '/ipfs/QmeAkTfuybkK3DTWL9NC5SB4TfprfVTVbxEbvwoysgJF44',
+  //   })),
+  // }));
+  const sZones = currentSampleZones.map((el) => ({
     ...el,
-    sampleName: `S${index + 1}`,
-    coordinates: el.geometry.coordinates,
-    sampleTrees: el.sampleTrees.length ? el.sampleTrees : Array.from({ length: 10 }).map((e, i) => ({
-      id: Date.now() + i,
-      treeName: `S${index + 1}_T${i + 1}`,
-      status: 'Damaged',
-      height: '250',
-      diameter: '100',
-      treePhoto: '/ipfs/QmWFSPqvG3j8wRfD9RRuQPP4P2EcR19YpPaAShEZPpi4r8',
-      labelPhoto: '/ipfs/QmWFSPqvG3j8wRfD9RRuQPP4P2EcR19YpPaAShEZPpi4r8',
-    })),
   }));
   const [currentSubZone, setCurrentSubZone] = useState(currSubZone);
   const [sampleZones, setSampleZones] = useState(sZones);
   const [warning, setWarning] = useState([]);
-  // const [drops, setDrops] = useState([]);
-  // console.log(sampleZones);
+
+  useEffect(async () => {
+    if (account && account.accountId) {
+      const ipfs = await initIPFS();
+
+      const sampleZonesFromApp = await Promise.all(
+        sampleZones.map(async (item) => {
+          const result = await fetch(
+            `${AGENT_API}/list?stage-id=${currentStage}&sample-zone=${item.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${account.accountId}`,
+              },
+            },
+          ).then((data) => data.json());
+
+          if (result.length) {
+            const cid = Object.values(result[0].projects)[0][0].cid;
+            const treesJSON = await getJSONFileFromIpfs(ipfs, cid) || [];
+            const parsedTreeJSON = treesJSON.map((tree, id) => {
+              const treeName = Object.keys(tree)[0];
+              const treeInfo = Object.values(tree)[0];
+              return {
+                id: Date.now() + id,
+                treeName,
+                status: treeInfo.select.toLowerCase(),
+                height: treeInfo.height,
+                diameter: treeInfo.diametr,
+                treePhoto: treeInfo.treeImage,
+                labelPhoto: treeInfo.treeLabel,
+              };
+            });
+            return { ...item, sampleTrees: parsedTreeJSON };
+          }
+          return item;
+        }),
+      );
+      setSampleZones(sampleZonesFromApp);
+    }
+  }, [account]);
 
   const onSubmit = (data) => {
     const currentZones = sampleZones.map((item) => item.sampleName);
@@ -82,7 +132,7 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
   };
 
   const handleClickBack = () => {
-    const subZoneExist = totalData.subZonesPolygon.find((item) => item.stage === currentStage);
+    const subZoneExist = totalData.subZonesPolygon.find((item) => item?.stage === currentStage);
     if (subZoneExist) history.push('/');
     else prevPage();
   };
@@ -123,7 +173,7 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
           ))}
         </div>
         <div className="upload-wizard__panel">
-          <CustomBtn label="Back" handleClick={handleClickBack} type="button" customClass="btn__cancel" />
+          <CustomBtn label="Back to list" handleClick={handleClickBack} type="button" customClass="btn__cancel" />
           <CustomBtn
             label="Next"
             handleClick={() => {}}

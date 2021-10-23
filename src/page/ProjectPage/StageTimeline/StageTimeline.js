@@ -16,14 +16,14 @@ import stage7 from 'src/assets/image/stages/stage7.svg';
 import {
   stage,
   upload,
-  collateral,
+  // collateral,
   startEnd,
-  active,
-  lost,
+  // active,
+  // lost,
   tooltip,
 } from './LangStageTimeline';
 
-const StageTimeline = ({ data }) => {
+const StageTimeline = ({ data, createStageVoting, payStageVoting }) => {
   const intl = useIntl();
   const [images, setImages] = useState([stage1, stage2, stage3, stage4, stage5, stage6, stage7]);
 
@@ -52,7 +52,8 @@ const StageTimeline = ({ data }) => {
       <div className="stage-titles">
         <span className="title-item">{intl.formatMessage(stage)}</span>
         <span className="title-item">{intl.formatMessage(upload)}</span>
-        <span className="title-item">{intl.formatMessage(collateral)}</span>
+        {/* <span className="title-item">{intl.formatMessage(collateral)}</span> */}
+        <span className="title-item">Stage Status</span>
         <span className="title-item">{intl.formatMessage(startEnd)}</span>
       </div>
       <div className="stage-list">
@@ -64,7 +65,35 @@ const StageTimeline = ({ data }) => {
             <div className={`upload-item ${item.dataUpload ? 'upload-item-confirmed' : ''}`}>
               {item.dataUpload ? <i className="icon-galka" /> : null}
             </div>
-            {item.collateral === 'ok' && (
+            {item.stageStatus.active && item.stageStatus.status !== null && (
+              <div className="collateral-item collateral-item-active">
+                {item.stageStatus.status ? (
+                  <span className="collateral-item-text">Stage Approved</span>
+                ) : (
+                  <span className="collateral-item-text cursor-pointer" onClick={() => payStageVoting(`${item.fee}`, item.id)}>Approve stage</span>
+                )}
+              </div>
+            )}
+            {item.stageStatus.active && item.stageStatus.status === null && (
+              <div className="collateral-item collateral-item-active">
+                <span className="collateral-item-text cursor-pointer" onClick={() => createStageVoting(item.id)}>Create stage voting</span>
+              </div>
+            )}
+            {!item.stageStatus.active && item.stageStatus.status !== null && (
+              <div className="collateral-item">
+                {item.stageStatus.status ? (
+                  <span className="collateral-item-text">Stage Approved</span>
+                ) : (
+                  <span className="collateral-item-text">Stage not paid</span>
+                )}
+              </div>
+            )}
+            {!item.stageStatus.active && item.stageStatus.status === null && (
+              <div className="collateral-item">
+                {/* <span className="collateral-item-text">Vote not created</span> */}
+              </div>
+            )}
+            {/* {item.collateral === 'ok' && (
               <div className="collateral-item collateral-item-active">
                 <span className="collateral-item-text">{intl.formatMessage(active)}</span>
               </div>
@@ -76,7 +105,7 @@ const StageTimeline = ({ data }) => {
             )}
             {item.collateral === 'future' && (
               <div className="collateral-item" />
-            )}
+            )} */}
             <ReactTooltip id="collateral-lost" place="right" className="collateral-lost-tooltip" arrowColor="#ffffff">
               {intl.formatMessage(tooltip)}
             </ReactTooltip>

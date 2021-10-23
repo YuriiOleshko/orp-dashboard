@@ -50,7 +50,7 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
   const intl = useIntl();
 
   const handleClickNext = () => {
-    const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i.stage === currentStage);
+    const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i?.stage === currentStage);
     if (targetSubZoneIndex >= 0) {
       const numOfSampleZones = coordinate.subZonesPolygon[targetSubZoneIndex].sampleZones.length;
       if (numOfSampleZones) {
@@ -61,7 +61,7 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
   };
 
   const handleClickReset = () => {
-    const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i.stage === currentStage);
+    const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i?.stage === currentStage);
     if (targetSubZoneIndex >= 0) {
       const resetedCoordinate = { ...coordinate };
       resetedCoordinate.subZonesPolygon.splice(targetSubZoneIndex, 1);
@@ -92,7 +92,7 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
         <CustomBtn label="Reset" handleClick={handleClickReset} type="button" iconClass="icon-replace" customClass="btn__reset upload-wizard__reset" />
       </div>
       {showMap && <Map currentStage={currentStage} subZones state={coordinate} setState={setCoordinate} setShow={setShowMap} jsonFile={jsonFile} setJsonFile={setJsonFile} intl={intl} clear={clearErrors} setSubzoneArea={setSubzoneArea} />}
-      {coordinate.subZonesPolygon.length ? (
+      {coordinate.subZonesPolygon.length && coordinate.subZonesPolygon[currentStage] ? (
         <div className="upload-wizard__map">
           <WrapperScaleImg cid={coordinate.subZonesPolygon[currentStage].cidSubScreenShot} />
         </div>
@@ -100,20 +100,22 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
         <WrapperScaleImg cid={totalData.cidScreenShot} />
       )}
       <div className="upload-wizard__area-info">
-        {!!coordinate.subZonesPolygon.length && (
+        {!!coordinate.subZonesPolygon.length && !!coordinate.subZonesPolygon[currentStage] && (
           <div className="upload-wizard__area">
             <span>Area, sq. km</span>
-            <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[coordinate.subZonesPolygon.length - 1].square}</p>
+            <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[currentStage].square}</p>
           </div>
         )}
-        {!!coordinate.subZonesPolygon.length && !!coordinate.subZonesPolygon[currentStage].sampleZones.length && (
+        {!!coordinate.subZonesPolygon.length
+          && !!coordinate.subZonesPolygon[currentStage]
+          && !!coordinate.subZonesPolygon[currentStage].sampleZones.length && (
           <div className="upload-wizard__num-zones">
             <span>Number of Sample zones</span>
             <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[currentStage].sampleZones.length}</p>
           </div>
         )}
       </div>
-      {!!coordinate.subZonesPolygon.length && (
+      {!!coordinate.subZonesPolygon.length && !!coordinate.subZonesPolygon[currentStage] && (
         <div className="upload-wizard__sz">
           <p className="upload-wizard__sz-title" onClick={() => setShowSampleMap(true)}>Point 3 places on the map to define Sample zones for reporting in this Stage</p>
           {!!coordinate.subZonesPolygon[currentStage].sampleZones.length && (

@@ -3,7 +3,8 @@ import { ReactSVG } from 'react-svg';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { appStore } from 'src/state/app';
-import logo from 'src/assets/image/ORPLogo.svg';
+// import logo from 'src/assets/image/ORPLogo.svg';
+import logo from 'src/assets/image/logo.svg';
 import { setting, LogOut } from '../LangLayot';
 
 const Header = ({ headerLinks, classStyle }) => {

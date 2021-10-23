@@ -92,7 +92,8 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
     const toDate = {
       finishTimeProject: Date.parse(endDate),
     };
-    const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+    // const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+    const twoYears = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
     if (toDate.finishTimeProject - fromDate.startTimeProject >= twoYears) {
       setDateWarning(false);
       setState({ ...state, ...updData, ...fromDate, ...toDate, ...details, ...fileIcon });
@@ -148,7 +149,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               onChange={(date) => {
                 setStartDate(date);
                 if (endDate) {
-                  const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+                  const twoYears = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
                   const start = Date.parse(date);
                   const end = Date.parse(endDate);
                   if (end - start >= twoYears) {
@@ -171,7 +172,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               onChange={(date) => {
                 setEndDate(date);
                 if (startDate) {
-                  const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+                  const twoYears = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
                   const start = Date.parse(startDate);
                   const end = Date.parse(date);
                   if (end - start >= twoYears) {
@@ -192,7 +193,8 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             />
             {dateWarning && (
               <div className="wizard__date-warning">
-                <span className="wizard__date-warning-text">Project duration must be at least 2 years.</span>
+                {/* <span className="wizard__date-warning-text">Project duration must be at least 2 years.</span> */}
+                <span className="wizard__date-warning-text">Project duration must be at least 3 days.</span>
               </div>
             )}
           </div>
@@ -208,7 +210,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           name="budget"
           usdMask
           prefix="$"
-          decimal
+          // decimal
         />
         <div className="wizard__funders-wrapper">
           <div className="wizard__create" onClick={() => createInput(countStep + 1)}>

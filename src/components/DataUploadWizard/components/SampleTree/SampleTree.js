@@ -60,7 +60,7 @@ const SampleTree = ({ sampleName, sampleTree, sampleTreeIndex, sampleTreeId, sam
           error={errors[sampleName] && errors[sampleName][sampleTreeId] && errors[sampleName][sampleTreeId].status}
           value={status}
           classError="error__background"
-          optionArray={[{ label: 'Status', value: '' }, { label: 'Damaged', value: 'Damaged' }, { label: 'Alive', value: 'Alive' }, { label: 'Dead', value: 'Dead' }]}
+          optionArray={[{ label: 'Status', value: '' }, { label: 'Damaged', value: 'damaged' }, { label: 'Alive', value: 'alive' }, { label: 'Dead', value: 'dead' }]}
           // change={(ev) => handleChange(ev, 'status')}
         />
       </div>

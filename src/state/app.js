@@ -13,6 +13,7 @@ const initialState = {
   near: {
     initialized: false,
   },
+  firstLoad: true,
 };
 
 export const { appStore, AppProvider } = StateUtils(initialState, 'app');

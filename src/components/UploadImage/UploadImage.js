@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useContext, useMemo } from 're
 import { useFormContext, Controller } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
 import { appStore } from 'src/state/app';
-import { getFilesFromDirWithContent, initIPFS } from 'src/state/ipfs';
+import { getJSONFileFromIpfsNew, initIPFS } from 'src/state/ipfs';
 import CustomBtn from 'src/generic/CustomBtn/CustomBtn';
 import Loader from '../Loader/Loader';
 
@@ -32,33 +32,26 @@ const UploadImage = ({
 
   const showPreviewPhoto = async () => {
     setShowPreview(true);
-    const ipfs = await initIPFS();
-    const ipfsPhoto = await getFilesFromDirWithContent(ipfs, photoCid);
 
-    if (ipfsPhoto[0].path && ipfsPhoto[0].content) {
-      const extension = ipfsPhoto[0].path.match(/^.*\.(jpg|jpeg|png)$/i);
-      if (extension[1].toLowerCase() === 'jpg') extension[1] = 'jpeg';
-      const mimeType = `image/${extension[1].toLowerCase()}`;
+    let ipfsPhoto = await getJSONFileFromIpfsNew(photoCid);
+    ipfsPhoto = await JSON.parse(JSON.parse(ipfsPhoto));
 
-      const blobImage = new Blob(ipfsPhoto[0].content, { type: mimeType })
-      const imageUrl = URL.createObjectURL(blobImage);
-      setPreviewImg(imageUrl);
-    }
-  
+    const base64Photo = ipfsPhoto.data.includes('data:') ? ipfsPhoto.data : `data:${ipfsPhoto.mime};base64,${ipfsPhoto.data}`;
+    setPreviewImg(base64Photo);
   };
 
-  const sendImageToIpfs = async (reader, path) => {
+  const sendImageToIpfs = async (url, path) => {
     update('loading', true);
-    const buffer = await Buffer.from(reader.result);
-    const dataToSend = { path, content: buffer };
-    const addOptions = {
-      pin: true,
-      wrapWithDirectory: true,
-      timeout: 10000,
-    };
+
+    const extension = path.match(/^.*\.(jpg|jpeg|png)$/i);
+    if (extension[1].toLowerCase() === 'jpg') extension[1] = 'jpeg';
+    const mimeType = `image/${extension[1].toLowerCase()}`;
+
+    const dataToSend = { path, mime: mimeType, data: url };
+
     const ipfs = await initIPFS();
-    const result = await ipfs.add(dataToSend, addOptions);
-    if (!result.path) {
+    const result = await ipfs.add(JSON.stringify(dataToSend));
+    if (result.path) {
       setValue(name, `/ipfs/${result.cid.string}`, { shouldValidate: true });
       setPhotoCid(`/ipfs/${result.cid.string}`);
     }
@@ -83,10 +76,8 @@ const UploadImage = ({
             const readerUrl = new window.FileReader();
             reader.readAsArrayBuffer(e.target.files[0]);
             readerUrl.readAsDataURL(e.target.files[0]);
-            reader.onloadend = () => {
-              sendImageToIpfs(reader, e.target.files[0].path);
-            }
             readerUrl.onloadend = (event) => {
+              sendImageToIpfs(event.target.result, e.target.files[0].path);
               setPreviewImg(event.target.result);
             };
           }

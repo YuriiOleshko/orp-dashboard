@@ -12,7 +12,8 @@ const ProjectCard = ({ data, currentStage }) => {
   const [openSettings, setSettings] = useState(true);
 
   let location = noData;
-  const subZoneExist = item.subZonesPolygon?.find((i) => i.stage === currentStage);
+  const subZoneExist = item.subZonesPolygon?.find((i) => i?.stage === currentStage);
+  const finished = item.subZonesPolygon?.find((i) => i?.stage === currentStage && i?.finished);
 
   if (region) {
     location = region.split(', ');
@@ -21,7 +22,7 @@ const ProjectCard = ({ data, currentStage }) => {
 
   const handleClick = (type) => {
     if (type === 'monitoring' && !subZoneExist) history.push({ pathname: `/data-upload/${id}`, state: data });
-    if (type === 'report' && subZoneExist) history.push({ pathname: `/data-upload/${id}`, state: data });
+    if (type === 'report' && subZoneExist && !finished) history.push({ pathname: `/data-upload/${id}`, state: data });
   };
 
   return (
@@ -35,7 +36,7 @@ const ProjectCard = ({ data, currentStage }) => {
             Upload Monitoring Data
           </span>
           <span
-            className={`dashboard__info ${subZoneExist ? 'active' : 'not-active'}`}
+            className={`dashboard__info ${subZoneExist && !finished ? 'active' : 'not-active'}`}
             onClick={() => handleClick('report')}
           >
             Upload Stage Report

@@ -196,7 +196,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
           }
         }
         if (sampleZones && state.subZonesPolygon) {
-          const targetSubZoneIndex = state.subZonesPolygon.findIndex((item) => item.stage === currentStage);
+          const targetSubZoneIndex = state.subZonesPolygon.findIndex((item) => item?.stage === currentStage);
           if (targetSubZoneIndex >= 0) {
             draw.add(state.subZonesPolygon[targetSubZoneIndex].polygon[0]);
             state.subZonesPolygon[targetSubZoneIndex].sampleZones.forEach((item) => {
@@ -510,10 +510,10 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
               </div>
             </div>
           )}
-          {subZones && !!datePolygon.subZonesPolygon?.length && (
+          {subZones && !!datePolygon.subZonesPolygon?.length && datePolygon.subZonesPolygon[currentStage] && (
             <div className="map__inside-block">
               <span>Square kilometers</span>
-              <span>{datePolygon.subZonesPolygon[datePolygon.subZonesPolygon.length - 1].square}</span>
+              <span>{datePolygon.subZonesPolygon[currentStage].square}</span>
               <span>Region</span>
               <span>{datePolygon.region}</span>
               <span>Code Plus</span>
