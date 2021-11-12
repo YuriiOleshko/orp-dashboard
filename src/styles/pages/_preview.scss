@@ -229,6 +229,9 @@
     & .preview__wrapper-element{
       flex-basis: 32%!important;
     }
+    .square, .amountTrees {
+      flex-basis: 47% !important;
+    }
   }
 
 
@@ -274,5 +277,7 @@
     }
   }
 
-
+  .noscroll {
+    overflow: unset;
+  }
 }

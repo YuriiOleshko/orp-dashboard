@@ -44,7 +44,7 @@ const Login = () => {
               handleClick={() => wallet.signIn()}
               idLang="login.button"
             />
-            <div className="login__subtitle" data-tip data-for="login-tooltip">
+            <div className="login__subtitle" data-tip data-for="login-tooltip" onClick={() => window.location = 'https://wallet.testnet.near.org/create'}>
               <span>{intl.formatMessage(subTitle)}</span>
               <div className="login__tooltip-point">
                 <ReactSVG src={buble} />

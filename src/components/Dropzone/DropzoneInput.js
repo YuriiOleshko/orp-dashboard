@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 import React, {
   useCallback, useContext, useEffect,
 } from 'react';
@@ -10,6 +11,9 @@ import {
 import { initIPFS } from '../../state/ipfs';
 import { appStore } from '../../state/app';
 import { ipfsURL } from '../../state/near';
+
+const MIN_WIDTH_RES = 200;
+const MIN_HEIGHT_RES = 200;
 
 const DropzoneInput = ({ classCustom,
   change,
@@ -26,6 +30,7 @@ const DropzoneInput = ({ classCustom,
   convertFiles,
   setConvertFiles,
   acceptedFileTypes,
+  setResolutionWarning,
   showFileStatus = true }) => {
   // const [previewImg, setPreviewImg] = useState('');
   const { update } = useContext(appStore);
@@ -74,13 +79,38 @@ const DropzoneInput = ({ classCustom,
       const readerUrl = new window.FileReader();
       reader.readAsArrayBuffer(el);
       readerUrl.readAsDataURL(el);
-      reader.onloadend = () => {
-        // eslint-disable-next-line no-use-before-define
-        convertToBuffer(reader, index, arr, el.path);
+      reader.onloadend = (e) => {
+        if (!multi) {
+          const blob = new Blob([e.target.result]);
+          const objUrl = URL.createObjectURL(blob);
+          const image = new Image();
+          image.src = objUrl;
+          image.onload = function () {
+            if (this.height >= MIN_HEIGHT_RES && this.width >= MIN_WIDTH_RES) {
+              setResolutionWarning('');
+              // eslint-disable-next-line no-use-before-define
+              convertToBuffer(reader, index, arr, el.path);
+            } else {
+              setResolutionWarning(`Photo resolution must be more than ${MIN_WIDTH_RES}x${MIN_HEIGHT_RES}`);
+            }
+          };
+        } else {
+          // eslint-disable-next-line no-use-before-define
+          convertToBuffer(reader, index, arr, el.path);
+        }
       };
       if (!multi) {
         readerUrl.onloadend = (event) => {
-          setPreviewImg(event.target.result);
+          const image = new Image();
+          image.src = event.target.result;
+          image.onload = function () {
+            if (this.height >= MIN_HEIGHT_RES && this.width >= MIN_WIDTH_RES) {
+              setResolutionWarning('');
+              setPreviewImg(event.target.result);
+            } else {
+              setResolutionWarning(`Photo resolution must be more than ${MIN_WIDTH_RES}x${MIN_HEIGHT_RES}`);
+            }
+          };
         };
       }
     });

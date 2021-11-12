@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useIntl } from 'react-intl';
@@ -24,13 +25,17 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
       polygon: state.polygon,
       codePlus: state.codePlus,
       polygonCoordinate: state.polygonCoordinate,
+      subZonesPolygon: [],
       square: state.square,
       coordinate: state.coordinate,
+      cidScreenShot: state.cidScreenShot || '',
     } : { region: '',
       polygon: [],
       codePlus: null,
       polygonCoordinate: [],
+      subZonesPolygon: [],
       square: 0,
+      cidScreenShot: state.cidScreenShot || '',
       coordinate: { longitude: '', latitude: '' } };
   const { register, handleSubmit, errors, clearErrors } = useForm();
   const [showMap, setShowMap] = useState(false);
@@ -102,7 +107,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
               )}
             </div>
           </div>
-          {coordinate.cidScreenShot && <WrapperScaleImg cid={state.cidScreenShot} />}
+          {coordinate?.cidScreenShot && <WrapperScaleImg cid={coordinate?.cidScreenShot} />}
 
         </div>
         <div className="wizard__coord-region">
@@ -126,7 +131,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
             {coordinate.codePlus}
           </p>
         </div>
-        <div className="wizard__wrapper-coor">
+        {/* <div className="wizard__wrapper-coor">
           <span className="input__label">{intl.formatMessage(step2Input1)}</span>
           <div className="wizard__wrapper-coor">
 
@@ -167,7 +172,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
               return null;
             })}
           </div>
-        </div>
+        </div> */}
 
         <div className="wizard__wrapper-panel">
           <CustomBtn label={intl.formatMessage(wizardBtnBack)} handleClick={() => prevPage()} type="button" customClass="btn__cancel" />

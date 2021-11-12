@@ -193,7 +193,7 @@ const FieldAgents = () => {
             </div>
             <div className="field-agent__empty-text">
               <span><b>You have not added any Field Agents yet. </b></span>
-              <span>Start assigning people to your projects with the Assign Field Agent button.</span>
+              <span>Start assigning people to submit forest data about your projects from the Forester app. You can assign individual people to monitor individual sample zones by clicking the “Assign Field Agent” button.</span>
             </div>
           </div>
         )}

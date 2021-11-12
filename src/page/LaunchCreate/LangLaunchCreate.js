@@ -1,4 +1,6 @@
-const title = { id: 'launch.title', defaultMessage: 'Launch Your First Project' };
-const desc = { id: 'launch.desc', defaultMessage: 'OPP provides the digital infrastructure for collecting, uploading, confirming, and visualizing reforestation data. OPP is an open-source and secure protocol for reforestation projects to transparently measure, report, and verify (MRV) the entire life cycle of their trees. Let’s get started saving the planet!' };
-const btnLabel = { id: 'launch.label-btn', defaultMessage: 'Launch a Project' };
-export { title, desc, btnLabel };
+const title1 = { id: 'launch.title1', defaultMessage: 'Launch a forest project!' };
+const desc1 = { id: 'launch.desc1', defaultMessage: 'The future of forestation starts with the Open Forest Protocol. Launch a project today and track the full lifecycle of your forest within our ecosystem.' };
+const title2 = { id: 'launch.title2', defaultMessage: 'Welcome to the Open Forest Protocol!' };
+const desc2 = { id: 'launch.desc2', defaultMessage: 'It looks like you don’t have any ongoing forest projects. Click the button below to set up your project! (Estimated completion time is about 10 minutes).' };
+const btnLabel = { id: 'launch.label-btn', defaultMessage: 'Register Project' };
+export { title1, desc1, title2, desc2, btnLabel };

@@ -35,7 +35,7 @@ import {
 import { getContract, contractMethods } from 'src/utils/near-utils';
 import PopupSuccess from 'src/components/PopupSuccess/PopupSuccess';
 
-const options = [{ label: 'Trees', value: 'Trees' }, { label: 'Reserves', value: 'Reserves' }, { label: 'Forest', value: 'Forest' }];
+const options = [{ label: 'Afforestation & reforestation', value: 'Afforestation & reforestation' }, { label: 'Conservation', value: 'Conservation' }, { label: 'Improved forest management', value: 'Improved forest management' }];
 
 const EditPage = () => {
   const location = useLocation();
@@ -127,6 +127,7 @@ const EditPage = () => {
   const [benefits, setBenefits] = useState({});
   const [filesSave, setFilesSave] = useState([]);
   const [newFilesSave, setNewFilesSave] = useState([]);
+  const [resolutionWarning, setResolutionWarning] = useState('');
 
   const [isDisabledBtn, setIsDisabledBtn] = useState(false);
   const [myFiles, setMyFiles] = useState([]);
@@ -293,7 +294,7 @@ const EditPage = () => {
   const updateInitState = async (newData, isFiles = false) => {
     const copyData = { ...newData };
     const budget = initState.budget;
-    const { funders } = copyData;
+    const { funders = [] } = copyData;
     const updBudjet = budget.replace(/(\$|,|\.00)/g, '');
     const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: +((`${item.part}`).replace(/\D/g, '')) }));
     const updData = { ...copyData, budget: updBudjet, funders: updFunders };
@@ -447,7 +448,7 @@ const EditPage = () => {
                   />
                 </div> */}
 
-                <div className="wizard__funders-wrapper">
+                {/* <div className="wizard__funders-wrapper">
                   <div className="wizard__create" onClick={() => createInput(countStep + 1)}>
                     <i className="icon-plus-cir" />
                     <span>{intl.formatMessage(step1Creator)}</span>
@@ -477,11 +478,12 @@ const EditPage = () => {
                       <span className="wizard__funder-warning-text">Total sum of percents is more than 100%, please enter correct values.</span>
                     </div>
                   )}
-                </div>
+                </div> */}
                 <div className="preview__icon-file">
                   <span className="preview__label">{intl.formatMessage(step1Input6)}</span>
-                  <div className="wizard__icon-file">
-                    <DropzoneInput classCutom="" change={setFileIcon} state={initState} myFiles={myFile} setMyFiles={setMyFile} previewImg={previewImg} setPreviewImg={setPreviewImg} />
+                  <div className="wizard__icon-file noscroll">
+                    <DropzoneInput classCutom="" change={setFileIcon} state={initState} myFiles={myFile} setMyFiles={setMyFile} previewImg={previewImg} setPreviewImg={setPreviewImg} setResolutionWarning={setResolutionWarning} />
+                    {resolutionWarning && <span className="wizard__icon-file-warning">{resolutionWarning}</span>}
                   </div>
                 </div>
                 <div className="preview__wrapper-element textarea">
@@ -496,7 +498,6 @@ const EditPage = () => {
                   {intl.formatMessage(step3)}
                 </h3>
                 <div className="preview__block-wrapper more">
-                  <div className="preview__step1-wrapper">
                     <div className="preview__wrapper-element">
                       <span className="preview__label">{intl.formatMessage(step3Input1)}</span>
                       <p className="preview__field ">
@@ -517,20 +518,19 @@ const EditPage = () => {
                         usdMask
                       />
                     </div>
-                    <div className="preview__wrapper-element">
+                    {/* <div className="preview__wrapper-element">
                       <span className="preview__label">{intl.formatMessage(step3Input3)}</span>
                       <p className="preview__field  ">
                         {<NumberFormat value={avgTrees.avgTrees} displayType="text" thousandSeparator /> || ''}
                       </p>
-                    </div>
-                  </div>
-                  <div className="wizard__benefits">
+                    </div> */}
+                  {/* <div className="wizard__benefits">
                     <span className="input__label">{intl.formatMessage(step3Ben)}</span>
                     <Benefits save={setBenefits} state={initState} />
 
-                  </div>
+                  </div> */}
                   <UpdatedFiles state={initState} loadingData={loadingData} privateFiles={filesSave} setPrivateFiles={setFilesSave} setUpdatedFiles={setUpdatedFiles} updatedFiles={updatedFiles} />
-                  <div className="wizard__icon-file">
+                  <div className="wizard__icon-file preview__wrapper-element">
                     <div className="wizard__wrapper-tooltip">
                       {' '}
                       <div className="wizard__tooltip-point" data-tip data-for="step3-tooltip-files">
@@ -543,7 +543,7 @@ const EditPage = () => {
                     </div>
                     <DropzoneInput classCutom="" change={setFiles} multi amountFiles={10} state={initState} filesSave={newFilesSave} setFilesSave={setNewFilesSave} myFiles={myFiles} setMyFiles={setMyFiles} edit convertFiles={convertFiles} setConvertFiles={setConvertFiles} />
                   </div>
-                  <div className="preview__wrapper-element">
+                  {/* <div className="preview__wrapper-element">
                     <div className="wizard__textarea">
                       <label className="preview__label ">{intl.formatMessage(step3Area)}</label>
                       <textarea name="GenInfo" placeholder={intl.formatMessage(step3AreaPlace)} defaultValue={initState.additional} value={additional.additional} onChange={(ev) => setAdditional({ additional: ev.target.value })} />
@@ -555,7 +555,7 @@ const EditPage = () => {
                       </ReactTooltip>
 
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

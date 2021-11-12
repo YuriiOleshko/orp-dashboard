@@ -7,7 +7,6 @@ import RenderRoutes from './components/RenderRoutes';
 import LaunchCreate from './page/LaunchCreate';
 import Layout from './Layouts/Layout';
 import LaunchProject from './page/LaunchProject';
-import CollateralStatus from './page/CollateralStatus';
 import ExistingProject from './page/ExistingProject';
 import Mfs from './page/Mfs';
 import LayoutDash from './Layouts/LayoutDash/LayoutDash';
@@ -73,12 +72,6 @@ const routes = [
         key: 'START_PROJECT',
         exact: true,
         component: () => <Layout><LaunchCreate /></Layout>,
-      },
-      {
-        path: '/collaterial',
-        key: 'Collaterial__Status',
-        exact: true,
-        component: () => <LayoutDash><CollateralStatus /></LayoutDash>,
       },
       {
         path: '/create-project',

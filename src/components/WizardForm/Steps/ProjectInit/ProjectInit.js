@@ -31,14 +31,12 @@ const calcStageDuration = (timestamp) => {
   if (hours) return `${hours} hours`;
 };
 
-const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview, projState }) => {
+const ProjectInit = ({ step, handleMint, prevPage, nextPage, setShowPreview, projState, firstStagePrice, setFirstStagePrice, totalProjectCost, setTotalProjectCost }) => {
   const intl = useIntl();
   const { state } = useContext(appStore);
   const { account } = state;
   const [loading, setLoading] = useState(true);
   const [dataChart, setDataChart] = useState([]);
-  const [firstStagePrice, setFirstStagePrice] = useState();
-  const [totalProjectCost, setTotalProjectCost] = useState();
 
   useEffect(async () => {
     if (step === 3) {

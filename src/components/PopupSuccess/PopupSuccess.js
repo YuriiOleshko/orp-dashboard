@@ -7,7 +7,7 @@ import {
   wizardPopupTitle, wizardPopupDesc, wizardPopupBtn,
 } from '../WizardForm/LangWizardForm';
 
-const lodingDesc = ['Minting your project NFT', 'Saving your project data to blockchain'];
+const lodingDesc = ['Registering Your Project on OFP', 'Registering Your Project on OFP'];
 
 const PopupSuccess = ({ close, hash }) => {
   const intl = useIntl();
@@ -47,8 +47,10 @@ const PopupSuccess = ({ close, hash }) => {
             <h2>{intl.formatMessage(wizardPopupTitle)}</h2>
             <p className="first">{intl.formatMessage(wizardPopupDesc)}</p>
             <p className="second">
-              Your Project NFT:
-              <a href={explorerLink} target="_blank" rel="noreferrer">Here</a>
+              Click
+              <a href={explorerLink} target="_blank" rel="noreferrer">here</a>
+              {' '}
+              for more information.
             </p>
           </div>
           <div className="wizard__popup-btn">

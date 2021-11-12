@@ -105,7 +105,7 @@
         }
 
         .upload-item,
-        .collateral-item,
+        .approve-item,
         .term-item {
           display: flex;
           justify-content: center;
@@ -135,7 +135,7 @@
           }
         }
 
-        .collateral-item {
+        .approve-item {
           &-text {
             color: $white;
             font-size: 12px;
@@ -167,7 +167,7 @@
           }
         }
 
-        .collateral-lost-tooltip {
+        .approve-lost-tooltip {
           padding: 16px 17px !important;
           background-color: $white !important;
           border-radius: 2px !important;

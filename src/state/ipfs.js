@@ -7,6 +7,10 @@ export const initIPFS = async () => {
     host: 'ipfs.infura.io',
     port: 5001,
     protocol: 'https',
+    headers: {
+      Authorization: 'Basic MXpqSUVXZm5mZEdLSmRmWlppb1RlNlRBak1KOmY2YjU0N2I3NzQxMzEwOGE3MWY0M2Q2YzkzMjZhNGI2',
+    },
+
   });
   return ipfs;
 };
@@ -45,13 +49,15 @@ export const getJSONFileFromIpfsNew = async (cid) => {
 };
 
 export const getJSONFileFromIpfs = async (client, cid) => {
-  let file;
+  let file = '';
   try {
     for await (const chunk of client.cat(cid)) {
-      file = JSON.parse(uint8arrays.toString(chunk));
+      file += uint8arrays.toString(chunk);
     }
+    file = JSON.parse(file);
     return file;
   } catch (e) {
+    console.log(e);
     return false;
   }
 };

@@ -13,7 +13,8 @@ import { getContract, contractMethods } from 'src/utils/near-utils';
 import { appStore } from 'src/state/app';
 import { initIPFS } from 'src/state/ipfs';
 import CustomBtn from 'src/generic/CustomBtn';
-import logo from 'src/assets/image/ORPLogo.svg';
+// import logo from 'src/assets/image/ORPLogo.svg';
+import logo from 'src/assets/image/logo.svg';
 import { setting } from 'src/Layouts/Layout/LangLayot';
 import {
   btnLabel, title, titlePreview, step1, step2, step3, step4,
@@ -42,6 +43,8 @@ const WizardForm = () => {
   const [defaultState, setDefaultState] = useState({ developer: intl.formatMessage(setting) });
   const [nftTxHash, setNftTxHash] = useState('');
   const [loadProfile, setProfile] = useState(false);
+  const [firstStagePrice, setFirstStagePrice] = useState();
+  const [totalProjectCost, setTotalProjectCost] = useState();
 
   useEffect(() => {
     const params = (new URL(document.location)).searchParams;
@@ -132,7 +135,7 @@ const WizardForm = () => {
                   label={intl.formatMessage(btnLabel)}
                   customClass="btn__cancel"
                   handleClick={() => {
-                    history.push('start-project');
+                    history.push('/');
                   }}
                   iconClass="icon-close"
                 />
@@ -147,8 +150,8 @@ const WizardForm = () => {
                 <GenInformation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} />
                 <ProjectLocation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
                 <RefoData step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
-                <ProjectInit step={step} handleMint={handleMint} projState={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} />
-                <Preview state={defaultState} handleMint={handleMint} prevPage={prevPage} step={step} showPreview={showPreview} setShowPreview={setShowPreview} />
+                <ProjectInit step={step} handleMint={handleMint} projState={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} firstStagePrice={firstStagePrice} setFirstStagePrice={setFirstStagePrice} totalProjectCost={totalProjectCost} setTotalProjectCost={setTotalProjectCost} />
+                <Preview state={defaultState} handleMint={handleMint} prevPage={prevPage} step={step} showPreview={showPreview} setShowPreview={setShowPreview} firstStagePrice={firstStagePrice} totalProjectCost={totalProjectCost} />
               </div>
             )}
           </div>

@@ -16,9 +16,9 @@ const ModalWindow = (props) => {
               Stage 1 Upload Fee.
             </span>
             <span>
-              This action is non-revokable.
+              This action cannot be undone once submitted.
             </span>
-            <span>The locked fee will be deducted upon submission.</span>
+            <span>The Stage Upload Fee will be deducted from your NEAR account balance.</span>
           </div>
           <div className="modal_btn">
             <CustomBtn label="Back" handleClick={() => { setDisplayModal(false); }} customClass="modal_btn_item back" />

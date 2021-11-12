@@ -1,14 +1,16 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
 import React, {
   useCallback, useEffect, useState,
 } from 'react';
 import { useIntl } from 'react-intl';
 import { useDropzone } from 'react-dropzone';
+import JSZip from 'jszip';
 import togeojson from '@mapbox/togeojson';
 import CustomBtn from 'src/generic/CustomBtn';
+var shapefile = require("shapefile");
 import { step2GeoBtn, step2Types } from '../../LangWizardForm';
 
-const acceptType = ['7b202274', '3c3f786d'];
+const acceptType = ['7b202274', '3c3f786d', '504b34', '0027a'];
 
 const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
   setJsonFile, setShowMap, currentStage, subZones, customClass }) => {
@@ -16,13 +18,36 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
   const [geoJson, setGeoJson] = useState([]);
   const [myFiles, setMyFiles] = useState([]);
 
+  const getDom = (xml) => (new DOMParser()).parseFromString(xml, 'text/xml');
+  const getExtension = (fileName) => fileName.split('.').pop();
+
+  const getKmlDom = (kmzFile) => {
+    const jsZip = new JSZip();
+    return jsZip.loadAsync(kmzFile).then((zip) => {
+      let kmlDom = null;
+      zip.forEach((relPath, file) => {
+        if (getExtension(relPath) === 'kml' && kmlDom === null) {
+          kmlDom = file.async('string').then(getDom);
+        }
+      });
+      return kmlDom || Promise.reject("No kml file found");
+    });
+  };
+
   const onDrop = useCallback((acceptedFiles) => {
     const fileread = new FileReader();
+    const filereadBuff = new FileReader();
     if (acceptedFiles.length <= 0) return false;
-    fileread.onload = function (e) {
+    fileread.onload = async function (e) {
       const content = e.target.result;
       let intern;
-      if (acceptedFiles[0].codeType === '3c3f786d') {
+      if (acceptedFiles[0].codeType === '0027a') {
+        return;
+      } else if (acceptedFiles[0].codeType === '504b34') {
+        const kmlDom = await getKmlDom(acceptedFiles[0]);
+        const geo = togeojson.kml(kmlDom);
+        intern = geo; // Array of Objects.
+      } else if (acceptedFiles[0].codeType === '3c3f786d') {
         const dom = new DOMParser().parseFromString(content, 'text/xml');
         const geo = togeojson.kml(dom);
         intern = geo; // Array of Objects.
@@ -31,6 +56,20 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
       setMyFiles([...acceptedFiles]);
       if (newDataInter) setGeoJson([newDataInter]);
     };
+    filereadBuff.onload = async function (e) {
+      if (acceptedFiles[0].codeType === '0027a') {
+        shapefile.open(e.target.result)
+        .then(source => source.read()
+          .then(function log(result) {
+            if (result.done) return;
+            const newDataInter = result.value.geometry.type === 'Polygon' && result.value;
+            setMyFiles([...acceptedFiles]);
+            if (newDataInter) setGeoJson([newDataInter]);
+          }))
+        .catch(error => console.error(error.stack));
+      }
+    };
+    filereadBuff.readAsArrayBuffer(acceptedFiles[0]);
     fileread.readAsText(acceptedFiles[0]);
   }, []);
   // eslint-disable-next-line no-unused-vars
@@ -89,7 +128,7 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
       }
       return {
         code: 'unsuitable file type',
-        message: '.geojson, .kml',
+        message: '.geojson, .kml, .kmz, .shp',
       };
     };
     fileReader.readAsArrayBuffer(file);
@@ -102,6 +141,9 @@ const GeoJsonUploader = ({ coordinate, setCoordinate, state, setState,
         <div className="wizard__geo-wrapper">
           <input {...getInputProps()} />
           <CustomBtn label={intl.formatMessage(step2GeoBtn)} type="button" handleClick={() => {}} customClass={`btn__map ${customClass}`} />
+          <div className="wizard__types-file">
+            Make sure that the coordinate system is WGS 84
+          </div>
           <div className="wizard__types-file">
             {intl.formatMessage(step2Types)}
           </div>

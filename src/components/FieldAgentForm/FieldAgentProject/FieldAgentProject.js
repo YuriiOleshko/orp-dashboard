@@ -2,6 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import { ReactSVG } from 'react-svg';
+import ReactTooltip from 'react-tooltip';
+import bubble from 'src/assets/image/wizard/buble.svg';
 
 const FieldAgentProject = ({ fieldAgentData,
   setFieldAgentData,
@@ -145,7 +148,17 @@ const FieldAgentProject = ({ fieldAgentData,
   return (
     <div className="field-agent__form-item">
       <div className="field-agent__select">
-        <span className="field-agent__select-label">{edit ? 'Project' : 'Add Project'}</span>
+        <div className="field-agent__select-label">
+          <span className="field-agent__select-label-text">{edit ? 'Project' : 'Add Project'}</span>
+          <div>
+            <div data-tip data-for="projects">
+              <ReactSVG src={bubble} />
+            </div>
+            <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="projects" effect="float">
+              If the project you are looking for is not visible in the list, please setup monitoring zone first.
+            </ReactTooltip>
+          </div>
+        </div>
         <Controller
           name={`projects.${id}.projectName`}
           control={control}
@@ -180,7 +193,7 @@ const FieldAgentProject = ({ fieldAgentData,
               closeMenuOnSelect={false}
               defaultValue={defaultValueSample}
               isMulti
-              placeholder="Choose one or several sampling zones"
+              placeholder="Choose either one or multiple sampling zones"
               options={sampleOptions}
               styles={sampleStyles}
               onChange={(e) => selectOnChange(e, `projects.${id}.sampleZones`, 'zones')}

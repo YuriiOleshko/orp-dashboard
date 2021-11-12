@@ -11,7 +11,7 @@ const LoaderIpfs = ({ customClass = '', text, error = true }) => {
   return (
     <div className={cssClass}>
       {error && <i className="icon-shield" />}
-      {text || 'Sending data to IPFS...'}
+      {text || 'Registering your project details, please wait as this might take a few moments'}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -6,6 +7,9 @@ import { Controller, useForm } from 'react-hook-form';
 // eslint-disable-next-line no-unused-vars
 
 import { useIntl } from 'react-intl';
+import bubble from 'src/assets/image/wizard/buble.svg';
+import { ReactSVG } from 'react-svg';
+import ReactTooltip from 'react-tooltip';
 import {
   step1Input1, step1Input1Place, step1Input2, step1Input2Place,
   step1Input0,
@@ -18,13 +22,13 @@ import CustomBtn from '../../../../generic/CustomBtn';
 import DropzoneInput from '../../../Dropzone/DropzoneInput';
 import CustomSelect from '../../../../generic/CustomSelect';
 
-const options = [{ label: 'Trees', value: 'Trees' }, { label: 'Reserves', value: 'Reserves' }, { label: 'Forest', value: 'Forest' }];
+const options = [{ label: 'Afforestation & reforestation', value: 'Afforestation & reforestation' }, { label: 'Conservation', value: 'Conservation' }, { label: 'Improved forest management', value: 'Improved forest management' }];
 const GenInformation = ({ step, nextPage, state, setState }) => {
   // eslint-disable-next-line no-unused-vars
   const { handleSubmit, errors, register, control } = useForm();
   const [startDate, setStartDate] = useState(new Date());
   const [countStep, setCountStep] = useState(0);
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState({ details: state.details || '' });
   const [fileIcon, setFileIcon] = useState({});
   const [inputsArray, setInputArray] = useState([{ name: '', desc: '', part: '' }]);
   const [myFiles, setMyFiles] = useState([]);
@@ -33,6 +37,11 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [isActiveWarning, setIsActiveWarning] = useState(false);
   const [dateWarning, setDateWarning] = useState(false);
   const [isDisabledBtn, setIsDisabledBtn] = useState(false);
+  const [resolutionWarning, setResolutionWarning] = useState('');
+
+  // const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+  const threeDays = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
+  const thrirtyDays = new Date(1970, 0, 30, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
 
   const countSumOfParts = (funders) => {
     const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
@@ -82,7 +91,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const intl = useIntl();
   const onSubmit = (data) => {
     const copyData = { ...data };
-    const { budget, funders } = copyData;
+    const { budget = '2000', funders = [] } = copyData;
     const updBudjet = budget.replace(/(\$|,|\.00)/g, '');
     const updFunders = funders.filter((item) => (Object.values(item).some((el) => el))).map((item) => ({ ...item, part: +((`${item.part}`).replace(/\D/g, '')) }));
     const updData = { ...copyData, budget: updBudjet, funders: updFunders };
@@ -92,9 +101,8 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
     const toDate = {
       finishTimeProject: Date.parse(endDate),
     };
-    // const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
-    const twoYears = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
-    if (toDate.finishTimeProject - fromDate.startTimeProject >= twoYears) {
+    const projectDuration = toDate.finishTimeProject - fromDate.startTimeProject;
+    if (projectDuration >= threeDays && projectDuration <= thrirtyDays) {
       setDateWarning(false);
       setState({ ...state, ...updData, ...fromDate, ...toDate, ...details, ...fileIcon });
       nextPage();
@@ -143,16 +151,22 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
         </div>
         <div className="wizard__duration">
           <label className="input__label required">{intl.formatMessage(step1Input3)}</label>
+          <div className="wizard__tooltip-point wizard__tooltip-point-left" data-tip data-for="project-duration">
+            <ReactSVG src={bubble} />
+          </div>
+          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="project-duration" effect="float">
+            For testing purposes, project duration can be 3-30 days.
+          </ReactTooltip>
           <div className="wizard__wrapper-input">
             <DatePicker
               selected={startDate}
               onChange={(date) => {
                 setStartDate(date);
                 if (endDate) {
-                  const twoYears = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
                   const start = Date.parse(date);
                   const end = Date.parse(endDate);
-                  if (end - start >= twoYears) {
+                  const projectDuration = end - start;
+                  if (projectDuration >= threeDays && projectDuration <= thrirtyDays) {
                     setDateWarning(false);
                   } else {
                     setDateWarning(true);
@@ -172,10 +186,10 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               onChange={(date) => {
                 setEndDate(date);
                 if (startDate) {
-                  const twoYears = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
                   const start = Date.parse(startDate);
                   const end = Date.parse(date);
-                  if (end - start >= twoYears) {
+                  const projectDuration = end - start;
+                  if (projectDuration >= threeDays && projectDuration <= thrirtyDays) {
                     setDateWarning(false);
                   } else {
                     setDateWarning(true);
@@ -194,25 +208,26 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
             {dateWarning && (
               <div className="wizard__date-warning">
                 {/* <span className="wizard__date-warning-text">Project duration must be at least 2 years.</span> */}
-                <span className="wizard__date-warning-text">Project duration must be at least 3 days.</span>
+                <span className="wizard__date-warning-text">Project duration must be 3-30 days.</span>
               </div>
             )}
           </div>
         </div>
-        <CustomInput
+        {/* <CustomInput
           control={control}
           rules={{ required: true }}
           label={intl.formatMessage(step1Input4)}
           placeholder={intl.formatMessage(step1Input4Place)}
           required
           error={errors.budget}
-          value={state.budget}
+          // value={state.budget}
+          value={2000}
           name="budget"
           usdMask
           prefix="$"
           // decimal
-        />
-        <div className="wizard__funders-wrapper">
+        /> */}
+        {/* <div className="wizard__funders-wrapper">
           <div className="wizard__create" onClick={() => createInput(countStep + 1)}>
             <i className="icon-plus-cir" />
             <span>{intl.formatMessage(step1Creator)}</span>
@@ -242,15 +257,21 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
               <span className="wizard__funder-warning-text">Total sum of percents is more than 100%, please enter correct values.</span>
             </div>
           )}
-        </div>
-        <div className="wizard__icon-file">
-          <span className="input__label">{intl.formatMessage(step1Input6)}</span>
-          <DropzoneInput classCutom="" change={setFileIcon} state={state} myFiles={myFiles} setMyFiles={setMyFiles} previewImg={previewImg} setPreviewImg={setPreviewImg} />
-        </div>
+        </div> */}
         <div className="wizard__textarea">
           <label className="input__label ">{intl.formatMessage(step1Input7)}</label>
-
-          <textarea name="GenInfo" placeholder={intl.formatMessage(step1Input2Place)} onChange={(ev) => setDetails({ details: ev.target.value })} />
+          <div className="wizard__tooltip-point wizard__tooltip-point-left" data-tip data-for="project-description">
+            <ReactSVG src={bubble} />
+          </div>
+          <ReactTooltip className="wizard__tooltip" place="top" width={300} type="light" id="project-description" effect="float">
+            This is a place for you to share with the larger OFP Ecosystem what your forest project is all about. Feel free to include contact information, specifications about the duration and goals of the project, and any other relevant information you think a funder or validator might need to know.
+          </ReactTooltip>
+          <textarea name="GenInfo" placeholder={intl.formatMessage(step1Input2Place)} onChange={(ev) => setDetails({ details: ev.target.value })} defaultValue={details.details} />
+        </div>
+        <div className="wizard__icon-file noscroll">
+          <span className="input__label">{intl.formatMessage(step1Input6)}</span>
+          <DropzoneInput classCutom="" change={setFileIcon} state={state} myFiles={myFiles} setMyFiles={setMyFiles} previewImg={previewImg} setPreviewImg={setPreviewImg} setResolutionWarning={setResolutionWarning} />
+          {resolutionWarning && <span className="wizard__icon-file-warning">{resolutionWarning}</span>}
         </div>
         <div className="wizard__wrapper-btn-next">
           <CustomBtn disabled={isDisabledBtn} label={intl.formatMessage(wizardBtnNext)} type="submit" handleClick={() => { }} customClass={`btn__next ${isDisabledBtn ? 'btn__next-disabled' : ''}`} />

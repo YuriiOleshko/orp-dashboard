@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable no-unneeded-ternary */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useIntl } from 'react-intl';
 import NumberFormat from 'react-number-format';
@@ -14,13 +15,10 @@ import {
   daysText,
   remainingDurationText,
   uploadsText,
-  currentOCCText,
-  tokensText,
-  projectedOCCText,
 } from './LangProjectInfo';
 
 const ProjectInfo = ({ data }) => {
-  const { square, amountTrees, startTimeProject, finishTimeProject, remainingUploads = 4, currentOCC = 19, projectedOCC = 87.945 } = data;
+  const { square, amountTrees, startTimeProject, finishTimeProject, remainingUploads = 4, type } = data;
   const noData = '---';
   const intl = useIntl();
   const currentDate = Date.now();
@@ -32,8 +30,7 @@ const ProjectInfo = ({ data }) => {
           <span className="info-size">
             {intl.formatMessage(sizeText)}:{' '}
             <span className="info-value">
-              {square ? <NumberFormat value={square} displayType="text" thousandSeparator decimalScale={3} /> : noData} {intl.formatMessage(sqkmText)},
-              {amountTrees ? <NumberFormat value={amountTrees} displayType="text" thousandSeparator /> : noData} {intl.formatMessage(treesText)}
+              {square ? <NumberFormat value={square} displayType="text" thousandSeparator decimalScale={3} /> : noData} {intl.formatMessage(sqkmText)}
             </span>
           </span>
         </div>
@@ -42,7 +39,7 @@ const ProjectInfo = ({ data }) => {
             {intl.formatMessage(totalDurationText)}:{' '}
             <span className="info-value">
               { startTimeProject && finishTimeProject ? (
-                `${formattedDate(startTimeProject, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - startTimeProject, intl.formatMessage(monthsText), intl.formatMessage(daysText))})`
+                `${formattedDate(startTimeProject, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - startTimeProject, 'years')})`
               ) : noData}
             </span>
           </span>
@@ -52,14 +49,11 @@ const ProjectInfo = ({ data }) => {
             {intl.formatMessage(remainingDurationText)}:{' '}
             <span className="info-value">
               { startTimeProject && finishTimeProject ? (
-                `${formattedDate(currentDate, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - currentDate, intl.formatMessage(monthsText), intl.formatMessage(daysText))})`
+                `${formattedDate(currentDate, '/')} - ${formattedDate(finishTimeProject, '/')} (${convertDateToMonths(finishTimeProject - currentDate, 'years')})`
               ) : noData}
             </span>
           </span>
         </div>
-      </div>
-
-      <div className="col col-2">
         <div className="info-item">
           <span className="info-uploads">
             {intl.formatMessage(uploadsText)}:{' '}
@@ -68,19 +62,30 @@ const ProjectInfo = ({ data }) => {
             </span>
           </span>
         </div>
-        <div className="info-item">
-          <span className="info-current-occ">
-            {intl.formatMessage(currentOCCText)}:{' '}
+      </div>
+
+      <div className="col col-2">
+        {/* <div className="info-item">
+          <span className="info-uploads">
+            {intl.formatMessage(uploadsText)}:{' '}
             <span className="info-value">
-              {currentOCC} {intl.formatMessage(tokensText)}
+              {remainingUploads}
+            </span>
+          </span>
+        </div> */}
+        <div className="info-item">
+          <span className="info-uploads">
+            Project Type:{' '}
+            <span className="info-value">
+              {type}
             </span>
           </span>
         </div>
         <div className="info-item">
-          <span className="info-size">
-            {intl.formatMessage(projectedOCCText)}:{' '}
+          <span className="info-uploads">
+            Estimated Number of Trees:{' '}
             <span className="info-value">
-              {projectedOCC} {intl.formatMessage(tokensText)}
+              {amountTrees ? <NumberFormat value={amountTrees} displayType="text" thousandSeparator /> : noData} {intl.formatMessage(treesText)}
             </span>
           </span>
         </div>

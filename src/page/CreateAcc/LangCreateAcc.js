@@ -5,8 +5,7 @@ const inputPlaceholderCompany = { id: 'acc.input-company', defaultMessage: 'Name
 const inputPlaceholderEmail = { id: 'acc.input-email', defaultMessage: 'E-mail' };
 const inputPlaceholderPassword = { id: 'acc.input-pas', defaultMessage: 'Password' };
 const inputPlaceholderRePassword = { id: 'acc.input-repas', defaultMessage: 'Repeat Password' };
-const btnLabel = { id: 'acc.btn-label', defaultMessage: 'Setup Dashboard' };
-const btnLateLabel = { id: 'acc.btn-label-later', defaultMessage: 'Setup Later' };
+const btnLabel = { id: 'acc.btn-label', defaultMessage: 'Setup Account' };
 
 export { title, inputPlaceholderName,
   inputPlaceholderLast,
@@ -14,4 +13,4 @@ export { title, inputPlaceholderName,
   inputPlaceholderEmail,
   inputPlaceholderPassword,
   inputPlaceholderRePassword,
-  btnLabel, btnLateLabel };
+  btnLabel };

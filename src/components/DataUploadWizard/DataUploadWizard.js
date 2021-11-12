@@ -17,7 +17,8 @@ import { getContract, contractMethods } from 'src/utils/near-utils';
 import { appStore } from 'src/state/app';
 import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
 import CustomBtn from 'src/generic/CustomBtn';
-import logo from 'src/assets/image/ORPLogo.svg';
+// import logo from 'src/assets/image/ORPLogo.svg';
+import logo from 'src/assets/image/logo.svg';
 import { setting } from 'src/Layouts/Layout/LangLayot';
 
 import PopupSuccess from '../PopupSuccess/PopupSuccess';
@@ -111,8 +112,9 @@ const DataUploadWizard = () => {
         if (curStage >= 0 && file.subZonesPolygon) {
           const subZoneExist = file.subZonesPolygon.find((item) => item?.stage === curStage);
           const finished = file.subZonesPolygon.find((item) => item?.stage === curStage && item?.finished);
-          if (finished) history.push('/');
-          if (subZoneExist) nextPage();
+          // if (finished) history.push('/');
+          // if (subZoneExist) nextPage();
+          history.push('/');
         }
       } else {
         history.push('/404');
@@ -133,7 +135,7 @@ const DataUploadWizard = () => {
                   </div>
                   {currentStage >= 0 && (
                   <>
-                    {step === 0 && (<h2 className="upload-wizard__title">Choose the Sub-zone you will be reforesting in this Stage</h2>)}
+                    {step === 0 && (<h2 className="upload-wizard__title">Define the area that you will be monitoring at this stage.</h2>)}
                     {((step >= 1) && ((step <= 2))) && (<h2 className="upload-wizard__title">Upload Stage Report</h2>)}
                     {step === 3 && (<h2 className="upload-wizard__title">Stage Report Preview</h2>)}
                   </>

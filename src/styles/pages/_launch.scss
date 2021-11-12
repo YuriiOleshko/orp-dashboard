@@ -1,6 +1,14 @@
 .launch{
   padding: 59px 0 35px;
 
+  &__loader,
+  &__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  }
+
   &__cart{
     max-width: 608px;
     width: 100%;

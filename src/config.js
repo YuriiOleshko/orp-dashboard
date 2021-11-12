@@ -3,7 +3,8 @@ const contractName = process.env.REACT_APP_CONTRACT_NAME || [
   'dt1.ofp.testnet',
   'ot1.ofp.testnet',
 ];
-const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://gateway.ipfs.io';
+// const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://gateway.ipfs.io';
+const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://ipfs.infura.io';
 
 export default function getConfig() {
   let config = {

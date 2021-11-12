@@ -3,7 +3,6 @@ import {
   Route, Router, useHistory,
 } from 'react-router';
 import LayoutDash from '../../Layouts/LayoutDash/LayoutDash';
-import CollateralStatus from '../CollateralStatus';
 import ExistingProject from '../ExistingProject';
 
 const Dashboard = () => {
@@ -15,7 +14,6 @@ const Dashboard = () => {
         <div className="dashboard__wrapper">
           <Router history={history}>
             <Route exact path="/" component={() => <ExistingProject />} />
-            {/* <Route exact path="/collaterial" component={() => <CollateralStatus />} /> */}
           </Router>
         </div>
       </section>

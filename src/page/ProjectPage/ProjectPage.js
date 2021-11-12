@@ -171,12 +171,12 @@ const ProjectPage = () => {
             <div className="project__stage">
               <StageTimeline data={stageData} createStageVoting={createStageVoting} payStageVoting={payStageVoting} />
             </div>
-            {!!(data.funders) && (
+            {/* {!!(data.funders) && (
             <div className="project__funders">
               <span className="funders-title">{intl.formatMessage(fundersTitle)}</span>
               <CustomChart data={data.funders} />
             </div>
-            )}
+            )} */}
             <div className="project__info">
               <ProjectInfo data={data} />
             </div>

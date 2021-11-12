@@ -22,7 +22,6 @@ import {
   inputPlaceholderCompany,
   inputPlaceholderEmail,
   btnLabel,
-  btnLateLabel,
 } from './LangCreateAcc';
 
 const CreateAcc = () => {
@@ -53,7 +52,7 @@ const CreateAcc = () => {
   };
 
   if (profile && Object.keys(profile).length) {
-    return <Redirect to="/" />;
+    return <Redirect to="/start-project" />;
   }
 
   return (
@@ -67,6 +66,7 @@ const CreateAcc = () => {
                 {intl.formatMessage(title)}
               </h2>
               <form onSubmit={handleSubmit(onSubmit)}>
+                <CustomInput type="text" label={intl.formatMessage(inputPlaceholderCompany)} name="companyName" register={register({ maxLength: 180 })} />
                 <CustomInput
                   type="text"
                   error={errors.firstName}
@@ -87,8 +87,6 @@ const CreateAcc = () => {
                     maxLength: 100,
                   })}
                 />
-
-                <CustomInput type="text" label={intl.formatMessage(inputPlaceholderCompany)} name="companyName" register={register({ maxLength: 180 })} />
                 <CustomInput
                   type="text"
                   label={intl.formatMessage(inputPlaceholderEmail)}
@@ -110,9 +108,9 @@ const CreateAcc = () => {
                     }}
                     idLang="login.button"
                   />
-                  <Link to="start-project" className="login__anchor">
+                  {/* <Link to="start-project" className="login__anchor">
                     {intl.formatMessage(btnLateLabel)}
-                  </Link>
+                  </Link> */}
                 </div>
               </form>
             </div>
@@ -127,7 +125,7 @@ const CreateAcc = () => {
         ) : (
           <p className="login__loading">
             <i className="icon-shield" />
-            Sending data to blockchain...
+            Setting up your account...
           </p>
         )}
       </div>

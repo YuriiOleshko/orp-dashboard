@@ -6,7 +6,10 @@ export const formattedDate = (timestamp, divider) => {
   return `${addZeroAheadToDate(time.getMonth() + 1)}${divider}${addZeroAheadToDate(time.getDate())}${divider}${time.getFullYear().toString().slice(-2)}`;
 };
 
-export const convertDateToMonths = (timestamp, monthsText, daysText) => {
+export const convertDateToMonths = (timestamp, yearsText) => {
+  if (timestamp <= 0) {
+    return `${0} ${yearsText}`;
+  }
   const date = new Date();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -15,8 +18,8 @@ export const convertDateToMonths = (timestamp, monthsText, daysText) => {
   const totalDays = Math.ceil(timestamp / (1000 * 60 * 60 * 24));
   const restMonthsDec = totalDays / daysInMonth;
   const restMonths = Math.trunc(restMonthsDec);
-  const restDays = Math.ceil((restMonthsDec - restMonths) * daysInMonth);
-  return `${restMonths} ${monthsText} ${restDays} ${daysText}`;
+  const restYears = Math.trunc((restMonths / 12));
+  return `${restYears} ${yearsText}`;
 };
 
 export const randomHexColor = () => {

@@ -68,6 +68,6 @@
     font-size: 14px;
     line-height: 1.2;
     @include theme-aware('color', 'color-font-copy');
-    padding: 0 30px;
+    padding: 0 5px 0 30px;
   }
 }

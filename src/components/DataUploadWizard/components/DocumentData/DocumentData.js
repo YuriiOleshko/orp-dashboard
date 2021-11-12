@@ -95,6 +95,7 @@ const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStag
             label="Submit Report"
             handleClick={() => { }}
             type="submit"
+            customClass="btn__submit-report"
           />
         </div>
       </form>

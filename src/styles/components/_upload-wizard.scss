@@ -135,11 +135,27 @@
   }
 
   &__sz {
+    position: relative;
     margin-top: 40px;
   }
 
-  &__sz-title {
+  &__sz-header {
+    display: inline-block;
     font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  &__sz-warning {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    color: red;
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  &__sz-title {
     font-size: 16px;
   }
 

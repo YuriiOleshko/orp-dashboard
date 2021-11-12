@@ -171,8 +171,14 @@
   }
 
   &__select-label {
+    display: flex;
     margin-bottom: 10px;
     font-size: 16px;
+    height: 19px;
+  }
+
+  &__select-label-text {
+    margin-right: 5px;
   }
 
   &__button {

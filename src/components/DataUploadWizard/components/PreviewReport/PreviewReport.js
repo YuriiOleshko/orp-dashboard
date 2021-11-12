@@ -35,14 +35,14 @@ const PreviewReport = ({ prevPage, totalData, currentStage, handleUpdateProject 
             <p className="upload-wizard__input-value">{currentSubZone.square}</p>
           </div>
           <div className="upload-wizard__num-zones">
-            <span>Number of Sample zones</span>
+            <span>Number of Sampling Zones</span>
             <p className="upload-wizard__input-value">{sampleZones.length}</p>
           </div>
         </div>
         <div className="upload-wizard__preview-map">
-          {/* <span>Point 3 places on the map to define Sample zones for reporting in this Stage</span>
+          {/* <span>Point 3 places on the map to define Sampling Zones for reporting in this Stage</span>
           <img src={map} alt="map" />
-          <span className="upload-wizard__preview-link">Download Sample zones coordinates</span> */}
+          <span className="upload-wizard__preview-link">Download Sampling Zones coordinates</span> */}
         </div>
         <WrapperScaleImg cid={currentSubZone.cidSampleScreenShot} />
       </div>
@@ -74,8 +74,9 @@ const PreviewReport = ({ prevPage, totalData, currentStage, handleUpdateProject 
         <div className="upload-wizard__panel">
           <CustomBtn label="Back" handleClick={prevPage} type="button" customClass="btn__cancel" />
           <CustomBtn
-            label="Next"
+            label="Submit Report"
             handleClick={() => { setDisplayModal(!displayModal); }}
+            customClass="btn__submit-report"
           />
         </div>
       </form>

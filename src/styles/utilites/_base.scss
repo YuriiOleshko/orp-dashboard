@@ -107,6 +107,11 @@ p {
     box-shadow: none;
     padding: 10px;
   }
+  &__map-sampling {
+    display: block;
+    width: 300px;
+    margin: auto;
+  }
   &__cancel{
     padding: 10px;
 
@@ -116,6 +121,14 @@ p {
         font-size: 14px;
         margin-right: 11px;
       }
+  }
+
+  &__submit-report {
+    @include theme-aware('background', 'normal-orange');
+  }
+
+  &__send-invite {
+    @include theme-aware('background', 'confirmed');
   }
 
 

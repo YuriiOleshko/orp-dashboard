@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import ReactTooltip from 'react-tooltip';
@@ -65,48 +66,55 @@ const StageTimeline = ({ data, createStageVoting, payStageVoting }) => {
             <div className={`upload-item ${item.dataUpload ? 'upload-item-confirmed' : ''}`}>
               {item.dataUpload ? <i className="icon-galka" /> : null}
             </div>
-            {item.stageStatus.active && item.stageStatus.status !== null && (
-              <div className="collateral-item collateral-item-active">
+            {/* {item.stageStatus.active && item.stageStatus.status !== null && (
+              <div className="approve-item approve-item-active">
                 {item.stageStatus.status ? (
-                  <span className="collateral-item-text">Stage Approved</span>
+                  <span className="approve-item-text">Stage Approved</span>
                 ) : (
-                  <span className="collateral-item-text cursor-pointer" onClick={() => payStageVoting(`${item.fee}`, item.id)}>Approve stage</span>
+                  <span className="approve-item-text cursor-pointer" onClick={() => payStageVoting(`${item.fee}`, item.id)}>Approve stage</span>
                 )}
               </div>
             )}
             {item.stageStatus.active && item.stageStatus.status === null && (
-              <div className="collateral-item collateral-item-active">
-                <span className="collateral-item-text cursor-pointer" onClick={() => createStageVoting(item.id)}>Create stage voting</span>
+              <div className="approve-item approve-item-active">
+                <span className="approve-item-text cursor-pointer" onClick={() => createStageVoting(item.id)}>Create stage voting</span>
               </div>
             )}
             {!item.stageStatus.active && item.stageStatus.status !== null && (
-              <div className="collateral-item">
+              <div className="approve-item">
                 {item.stageStatus.status ? (
-                  <span className="collateral-item-text">Stage Approved</span>
+                  <span className="approve-item-text">Stage Approved</span>
                 ) : (
-                  <span className="collateral-item-text">Stage not paid</span>
+                  <span className="approve-item-text">Stage not paid</span>
                 )}
               </div>
             )}
             {!item.stageStatus.active && item.stageStatus.status === null && (
-              <div className="collateral-item">
-                {/* <span className="collateral-item-text">Vote not created</span> */}
+              <div className="approve-item">
+                // <span className="approve-item-text">Vote not created</span>
               </div>
-            )}
-            {/* {item.collateral === 'ok' && (
-              <div className="collateral-item collateral-item-active">
-                <span className="collateral-item-text">{intl.formatMessage(active)}</span>
-              </div>
-            )}
-            {item.collateral === 'lost' && (
-              <div data-tip data-for="collateral-lost" className="collateral-item collateral-item-lost">
-                <span className="collateral-item-text">{intl.formatMessage(lost)}</span>
-              </div>
-            )}
-            {item.collateral === 'future' && (
-              <div className="collateral-item" />
             )} */}
-            <ReactTooltip id="collateral-lost" place="right" className="collateral-lost-tooltip" arrowColor="#ffffff">
+            {item.stageStatus.active && item.stageStatus.status !== null && (
+              <div className="approve-item approve-item-active">
+                <span className="approve-item-text">Stage Created</span>
+              </div>
+            )}
+            {item.stageStatus.active && item.stageStatus.status === null && (
+              <div className="approve-item approve-item-active">
+                <span className="approve-item-text cursor-pointer" onClick={() => createStageVoting(item.id)}>Create stage voting</span>
+              </div>
+            )}
+            {!item.stageStatus.active && item.stageStatus.status !== null && (
+              <div className="approve-item">
+                <span className="approve-item-text">Stage Created</span>
+              </div>
+            )}
+            {!item.stageStatus.active && item.stageStatus.status === null && (
+            <div className="approve-item">
+              {/* <span className="approve-item-text">Stage not created</span> */}
+            </div>
+            )}
+            <ReactTooltip id="approve-lost" place="right" className="approve-lost-tooltip" arrowColor="#ffffff">
               {intl.formatMessage(tooltip)}
             </ReactTooltip>
             <div className={`term-item ${item.pastTerm ? 'term-item-past' : ''}`}>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { CSVLink } from 'react-csv';
@@ -6,13 +7,17 @@ import {
   ste4Create, backPreview, previewFiles, step1, step1Input2, step1Input0, step1Input1, step1Input3, step1CreatorLabel, step1Input5Info, step1Input6, step1Input7, step1Input4, step2, step2Input1, step2Input2, step2CodePlus, step3, step3Input1, step3Input2, step3Input3, step3Ben, step3Area, step4Coast1, step4Coast2, step4Coast3, step4Coast4, step4TitleCoast, step3Public, step3Private, step2List,
 } from '../../LangWizardForm';
 import CustomBtn from '../../../../generic/CustomBtn';
-import { initIPFS, getFilesFromDirectory } from '../../../../state/ipfs';
-import { ipfsURL } from '../../../../state/near';
+import {
+  initIPFS,
+  getFilesFromDirectory,
+  getFilesFromDirWithContent,
+} from '../../../../state/ipfs';
+// import { ipfsURL } from '../../../../state/near';
 import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
 const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 
-const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPreview }) => {
+const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPreview, firstStagePrice, totalProjectCost }) => {
   const intl = useIntl();
   const [iconHash, setIconHash] = useState('');
   const [screenHash, setScreenHash] = useState('');
@@ -28,13 +33,18 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
         setScreenHash(state.cidScreenShot);
       }
       if (state.iconCidDir) {
-        let count = 0;
-        for await (const file of ipfs.get(state.iconCidDir)) {
-          if (count === 1) {
-            setIconHash(file.path);
-          }
-          count++;
-        }
+        const icon = await getFilesFromDirWithContent(ipfs, state.iconCidDir);
+        const blobIcon = new Blob(icon[0].content);
+        const iconUrl = URL.createObjectURL(blobIcon);
+        setIconHash(iconUrl);
+
+        // let count = 0;
+        // for await (const file of ipfs.get(state.iconCidDir)) {
+        //   if (count === 1) {
+        //     setIconHash(file.path);
+        //   }
+        //   count++;
+        // }
       }
     }
   }, [showPreview]);
@@ -59,7 +69,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
             {intl.formatMessage(step4TitleCoast)}
           </h3>
           <div className="preview__block-wrapper">
-            <div className="preview__wrapper-element cost">
+            {/* <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
                   {intl.formatMessage(step4Coast1)}
@@ -81,7 +91,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 </span>
 
               </p>
-            </div>
+            </div> */}
             <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
@@ -89,7 +99,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   {' '}
                 </span>
                 <span className="bold">
-                  <NumberFormat value="50" displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                  <NumberFormat value={firstStagePrice} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                 </span>
 
               </p>
@@ -101,7 +111,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   {' '}
                 </span>
                 <span className="bold">
-                  <NumberFormat value="1500" displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
+                  <NumberFormat value={totalProjectCost} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                 </span>
 
               </p>
@@ -149,14 +159,14 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 </div>
               </div>
             </div>
-            <div className="preview__wrapper-element">
+            {/* <div className="preview__wrapper-element">
               <span className="preview__label">{intl.formatMessage(step1Input4)}</span>
               <p className="preview__field">
                 {<NumberFormat value={state.budget} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" /> || ''}
               </p>
-            </div>
+            </div> */}
 
-            {state.funders.map((el, index) => (
+            {/* {state.funders.map((el, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <div className="preview__funder" key={index + el + index + index}>
                 <div className="preview__wrapper-element ">
@@ -177,7 +187,13 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   </div>
                 </div>
               </div>
-            ))}
+            ))} */}
+            <div className="preview__wrapper-element">
+              <span className="preview__label">{intl.formatMessage(step1Input7)}</span>
+              <p className="preview__field textarea ">
+                {state.details || ''}
+              </p>
+            </div>
             <div className="preview__icon-file">
               <span className="preview__label">{intl.formatMessage(step1Input6)}</span>
               {!iconHash ? (
@@ -187,15 +203,9 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
               )
                 : (
                   <div className="preview__icon">
-                    <img src={`${ipfsURL}${iconHash}`} alt="img" />
+                    <img src={iconHash} alt="img" />
                   </div>
                 )}
-            </div>
-            <div className="preview__wrapper-element">
-              <span className="preview__label">{intl.formatMessage(step1Input7)}</span>
-              <p className="preview__field textarea ">
-                {state.details || ''}
-              </p>
             </div>
           </div>
         </div>
@@ -210,7 +220,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
               </div>
             )}
             <div className="preview__wrapper-element">
-              <span className="preview__label">{intl.formatMessage(step2Input2)}</span>
+              <span className="preview__label">Country</span>
               <p className="preview__field  small">
                 {state.region || ''}
               </p>
@@ -223,7 +233,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
               </p>
             </div>
 
-            <div className="preview__wrapper-element big">
+            {/* <div className="preview__wrapper-element big">
               <span className="preview__label">{intl.formatMessage(step2Input1)}</span>
               <div className="wizard__wrapper-coor">
                 {state.polygonCoordinate.length > 0 && state.polygonCoordinate[0].map((point, index) => {
@@ -262,37 +272,37 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   return null;
                 }) }
               </div>
-            </div>
+            </div> */}
 
           </div>
         </div>
         <div className="preview__block">
           <div className="preview__block">
             <h3 className="preview__title">
-              {intl.formatMessage(step3)}
+              Additional Information
             </h3>
             <div className="preview__block-wrapper more">
               <div className="preview__step1-wrapper">
-                <div className="preview__wrapper-element">
+                <div className="preview__wrapper-element square">
                   <span className="preview__label">{intl.formatMessage(step3Input1)}</span>
                   <p className="preview__field ">
                     {<NumberFormat value={state.square} displayType="text" thousandSeparator /> || ''}
                   </p>
                 </div>
-                <div className="preview__wrapper-element">
+                <div className="preview__wrapper-element amountTrees">
                   <span className="preview__label">{intl.formatMessage(step3Input2)}</span>
                   <p className="preview__field ">
                     {<NumberFormat value={state.amountTrees} displayType="text" thousandSeparator /> || ''}
                   </p>
                 </div>
-                <div className="preview__wrapper-element">
+                {/* <div className="preview__wrapper-element">
                   <span className="preview__label">{intl.formatMessage(step3Input3)}</span>
                   <p className="preview__field  ">
                     {<NumberFormat value={state.avgTrees} displayType="text" thousandSeparator /> || ''}
                   </p>
-                </div>
+                </div> */}
               </div>
-              {state.benefits && (
+              {/* {state.benefits && (
               <div className="wizard__benefits preview__benefits ">
                 <span className="preview__label">{intl.formatMessage(step3Ben)}</span>
                 <div className="wizard__icon-select">
@@ -309,7 +319,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                   ))}
                 </div>
               </div>
-              )}
+              )} */}
               {filesNames.length > 0 && (
               <div className="wizard__icon-file">
                 <span className="preview__label">{intl.formatMessage(previewFiles)}</span>
@@ -341,12 +351,12 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 </ul>
               </div>
               )}
-              <div className="preview__wrapper-element">
+              {/* <div className="preview__wrapper-element">
                 <span className="preview__label">{intl.formatMessage(step3Area)}</span>
                 <p className="preview__field textarea ">
                   {state.additional || ''}
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

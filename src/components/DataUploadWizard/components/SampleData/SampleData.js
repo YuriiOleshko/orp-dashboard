@@ -146,7 +146,7 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
             <p className="upload-wizard__input-value">{currentSubZone.square}</p>
           </div>
           <div className="upload-wizard__num-zones">
-            <span>Number of Sample zones</span>
+            <span>Number of Sampling Zones</span>
             <p className="upload-wizard__input-value">{sampleZones.length}</p>
           </div>
         </div>

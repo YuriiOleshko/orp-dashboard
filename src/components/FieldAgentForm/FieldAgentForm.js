@@ -38,13 +38,13 @@ const FieldAgentForm = ({ title, buttonText, setModalActive, fieldAgents, setFie
       setModalData({
         deleteItem: true,
         error: true,
-        content: 'Choosen sample zone is already signed to your field agent.',
+        content: 'Chosen sampling zone has already been signed to your field agent.',
       });
       return;
     }
     if (editEmail !== fieldAgentData.email) {
       setModalData({
-        content: 'Invites to all projects have been sent to the Field Agent’s new email.',
+        content: 'Invitation to the project(s) have been sent to the Field Agent’s email',
       });
 
     } else {
@@ -121,8 +121,6 @@ const FieldAgentForm = ({ title, buttonText, setModalActive, fieldAgents, setFie
 
         if (updSampleZones.ok) {
           updSampleZones = await updSampleZones.json();
-
-          // console.log(updSampleZones, 'SAMPLE ZONES');
           const targetIndex = copyFa.findIndex((el) => el.id === fieldAgentData.id);
           copyFa.splice(targetIndex, 1, newAgent);
     
@@ -302,15 +300,15 @@ const FieldAgentForm = ({ title, buttonText, setModalActive, fieldAgents, setFie
             <div className="field-agent__form-item field-agent__form-control">
               {similarWarning && <span className="field-agent__form-warning">You have repetetive projects for this field agent!</span>}
               <CustomBtn
-                label={buttonText}
-                handleClick={() => {}}
-                customClass="field-agent__button"
-                type="submit"
-              />
-              <CustomBtn
                 label="Cancel"
                 handleClick={() => setModalActive(false)}
                 customClass="field-agent__button"
+              />
+              <CustomBtn
+                label={buttonText}
+                handleClick={() => {}}
+                customClass="field-agent__button btn__send-invite"
+                type="submit"
               />
             </div>
           </div>

@@ -30,6 +30,7 @@ const ExistingProject = () => {
   const { account, app } = state;
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
+  const [menuArr, setMenuArr] = useState(app.nftTokens.map((el) => false));
 
   if (app.nftTokens.length && loading) {
     setLoading(false);
@@ -68,9 +69,11 @@ const ExistingProject = () => {
         const updNft = [...app.nftTokens];
         updStages.push(...currentProjectStage);
         updNft.push(...data);
+        setMenuArr(updNft.map((el) => false));
         update('app.currentProjectStage', updStages);
         update('app.nftTokens', updNft);
       } else {
+        setMenuArr(data.map(() => false));
         update('app.currentProjectStage', currentProjectStage);
         update('app.nftTokens', data);
         update('firstLoad', false);
@@ -106,6 +109,19 @@ const ExistingProject = () => {
     }
   }, [account, app.nftTokens.length, state.firstLoad]);
 
+  useEffect(() => {
+    const closeToggleMenu = (e) => {
+      const toggleMenu = document.querySelectorAll('.dashboard__info__window');
+      if (!e.target.closest('.dashboard__info__window') && !e.target.closest('.dashboard__setting')) {
+        toggleMenu.forEach((el) => el.classList.remove('null'));
+        toggleMenu.forEach((el) => el.classList.add('hiden'));
+        setMenuArr((prev) => prev.map(() => false));
+      }
+    };
+    window.addEventListener('click', closeToggleMenu);
+    return () => window.removeEventListener('click', closeToggleMenu);
+  }, []);
+
   const filterNftTokens = (e) => {
     e.target.classList.toggle('active');
   };
@@ -123,6 +139,10 @@ const ExistingProject = () => {
           </div>
           <div className="dashboard__filter dashboard__filter-name" onClick={filterNftTokens}>
             {intl.formatMessage(filterName)}
+            <i className="icon-play" />
+          </div>
+          <div className="dashboard__filter dashboard__filter-stage" onClick={filterNftTokens}>
+            Stage
             <i className="icon-play" />
           </div>
         </div>
@@ -148,7 +168,7 @@ const ExistingProject = () => {
             <div className="dashboard__list">
               {app.nftTokens.map((data, index) => (
                 /* eslint-disable-next-line react/no-array-index-key */
-                <ProjectCard data={data} currentStage={app.currentProjectStage[index]} key={`${index} - ${data.id}`} />
+                <ProjectCard data={data} currentStage={app.currentProjectStage[index]} key={`${index} - ${data.id}`} menuArr={menuArr} setMenuArr={setMenuArr} index={index} />
               ))}
             </div>
           ) : <div className="dashboard__loader">{intl.formatMessage(noProjects)}</div>}

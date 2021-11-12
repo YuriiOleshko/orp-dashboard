@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useIntl } from 'react-intl';
@@ -22,7 +23,8 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
   const [files, setFiles] = useState({});
   const [avgTrees, setAvgTrees] = useState({ avgTrees: state.avgTrees || '' });
   // eslint-disable-next-line no-unused-vars
-  const [additional, setAdditional] = useState({});
+  const [additional, setAdditional] = useState({ additional: state.additional || '' });
+  const [amountTrees, setAmountTrees] = useState({ amountTrees: state.amountTrees || '' });
   const [benefits, setBenefits] = useState({});
   const [filesSave, setFilesSave] = useState([]);
   const [myFiles, setMyFiles] = useState([]);
@@ -39,6 +41,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
     nextPage();
   };
   const changeAvgTrees = (ev) => {
+    setAmountTrees({ amountTrees: ev.value });
     // here ev is object: {formattedValue, value, floatValue} ==> follow NumberFormat doc
     if (ev.value) setAvgTrees({ avgTrees: Math.floor((+ev.value) / state.square) });
     else setAvgTrees({ avgTrees: '' });
@@ -66,23 +69,23 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
             required
             change={changeAvgTrees}
             error={errors.amountTrees}
-            value={state.amountTrees}
+            value={state.amountTrees || amountTrees.amountTrees}
             name="amountTrees"
             usdMask
           />
-          <div className="wizard__coord">
+          {/* <div className="wizard__coord">
             <span className="input__label">{intl.formatMessage(step3Input3)}</span>
             <p className="wizard__code-plus">
               <NumberFormat value={avgTrees.avgTrees} displayType="text" thousandSeparator />
             </p>
-          </div>
+          </div> */}
         </div>
-        <div className="wizard__benefits">
+        {/* <div className="wizard__benefits">
           <span className="input__label">{intl.formatMessage(step3Ben)}</span>
           <Benefits save={setBenefits} state={state} />
 
-        </div>
-        <div className="wizard__icon-file">
+        </div> */}
+        <div className="wizard__icon-file wizard__icon-file-small noscroll">
           <div className="wizard__wrapper-tooltip">
             {' '}
             <div className="wizard__tooltip-point" data-tip data-for="step3-tooltip-files">
@@ -96,9 +99,9 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
 
           <DropzoneInput classCutom="" change={setFiles} multi amountFiles={10} state={state} filesSave={filesSave} setFilesSave={setFilesSave} myFiles={myFiles} setMyFiles={setMyFiles} />
         </div>
-        <div className="wizard__textarea">
+        {/* <div className="wizard__textarea">
           <label className="input__label ">{intl.formatMessage(step3Area)}</label>
-          <textarea name="GenInfo" placeholder={intl.formatMessage(step3AreaPlace)} onChange={(ev) => setAdditional({ additional: ev.target.value })} />
+          <textarea name="GenInfo" placeholder={intl.formatMessage(step3AreaPlace)} onChange={(ev) => setAdditional({ additional: ev.target.value })} defaultValue={additional.additional} />
           <div className="wizard__tooltip-point refo" data-tip data-for="step3-tooltip-area">
             <ReactSVG src={bubble} />
           </div>
@@ -106,7 +109,7 @@ const RefoData = ({ step, nextPage, prevPage, state, setState }) => {
             {intl.formatMessage(step3TooltipTextArea)}
           </ReactTooltip>
 
-        </div>
+        </div> */}
         <div className="wizard__wrapper-panel">
           <CustomBtn label={intl.formatMessage(wizardBtnBack)} handleClick={() => prevPage()} type="button" customClass="btn__cancel" />
           <CustomBtn label={intl.formatMessage(wizardBtnNext)} handleClick={() => {}} type="submit" />

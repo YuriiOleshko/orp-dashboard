@@ -113,6 +113,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+      width: 100%;
 
       & .input {
         flex-basis: 47%;
@@ -157,7 +158,9 @@
   }
 
   &__duration {
-    flex-basis: 47%;
+    position: relative;
+    // flex-basis: 47%;
+    flex-basis: 32%;
     display: flex;
     flex-direction: column;
 
@@ -169,7 +172,8 @@
       padding: 18px 20px;
       border-radius: 6px;
       flex-basis: 40%;
-      max-width: 170px;
+      // max-width: 170px;
+      width: 100%;
       border: none;
       outline: none;
       @include theme-aware("background", "color-bg-input");
@@ -180,6 +184,8 @@
     position: relative;
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+    flex: 1;
 
     & .preview__field {
       margin-top: 0;
@@ -352,7 +358,7 @@
 
     .wizard__creator {
       margin-top: 8px;
-      margin-left: 23px;
+      margin-left: 8px;
       font-size: 16px;
 
       &-wrapper {
@@ -401,6 +407,7 @@
   &__geo-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
   &__wrapper-tooltip {
@@ -413,9 +420,13 @@
   }
 
   &__icon-file {
-    flex-basis: 47%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    // flex-basis: 47%;
+    flex-basis: 32%;
     overflow-x: scroll;
-    padding-top: 3px;
+    // padding-top: 3px;
     &.edit {
       padding-bottom: 10px;
     }
@@ -463,8 +474,10 @@
       }
 
       margin-top: 8px;
-      width: 140px;
-      height: 140px;
+      // width: 140px;
+      // height: 140px;
+      width: 120px;
+      height: 120px;
       border: 2px dashed;
       @include theme-aware("border-color", "color-icon-gray");
       border-radius: 5px;
@@ -494,12 +507,27 @@
     }
   }
 
+  &__icon-file-small {
+    flex-basis: 24%;
+  }
+
+  .noscroll {
+    overflow: unset;
+  }
+
+  &__icon-file-warning {
+    position: absolute;
+    color: red;
+    font-size: 12px;
+    bottom: -20px;
+  }
+
   &__drop-icone {
-    width: 145px;
-    height: 143px;
+    width: 123px;
+    height: 120px;
     position: absolute;
     @include theme-aware("background", "color-bg-input");
-    top: -5px;
+    top: -2px;
     left: -5px;
 
     img {
@@ -509,10 +537,11 @@
   }
 
   &__textarea {
-    flex-basis: 47%;
+    position: relative;
+    // flex-basis: 47%;
+    flex-basis: 32%;
     display: flex;
     flex-direction: column;
-    position: relative;
 
     label {
       margin-bottom: 8px;
@@ -524,7 +553,8 @@
       border-radius: 6px;
       border: none;
       outline: none;
-      height: 140px;
+      // height: 140px;
+      height: 100%;
       resize: none;
       resize: none;
       @include theme-aware("color", "body-color-font");
@@ -550,6 +580,12 @@
       top: 0;
       transform: translateY(0);
     }
+  }
+
+  &__tooltip-point-left {
+    top: 12px;
+    left: 145px;
+    right: unset;
   }
 
   &__wrapper-btn-next {
@@ -1166,6 +1202,12 @@
 
       & select {
         padding: 17px 20px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+        background-repeat: no-repeat !important;
+        background-position-x: 98% !important;
+        background-position-y: 49% !important;
       }
     }
   }
@@ -1179,12 +1221,12 @@
 
     & .wizard__coord {
       min-height: 60px;
-      flex-basis: 32% !important;
+      // flex-basis: 32% !important;
     }
 
     & .input {
       margin-bottom: 0 !important;
-      flex-basis: 32% !important;
+      // flex-basis: 32% !important;
 
       & input {
         min-height: 60px;

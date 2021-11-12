@@ -65,13 +65,13 @@ const SampleZoneItem = ({ sampleName, coordinates, sampleTrees, setSampleZones, 
               {warning.missingDescription && (
                 <>
                   <i className="icon-exclamation" />
-                  <span>Missing description!</span>
+                  <span>Missing information!</span>
                 </>
               )}
               {warning.missingLength && (
                 <>
                   <i className="icon-exclamation" />
-                  <span>Add at least 10 sample trees in this Sample zone to move to the next sample zone.</span>
+                  <span>Add at least 10 sample trees in this sampling zone to move to the next sampling zone.</span>
                 </>
               )}
             </>
