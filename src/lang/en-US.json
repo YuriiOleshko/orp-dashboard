@@ -10,6 +10,7 @@
   "acc.input-last": "Last Name",
   "acc.input-company": "Name of Organization",
   "acc.input-email": "E-mail",
+  "acc.input-terms": "By continuing, you agree to OFP Conditions of Use and Privacy Notice.",
   "acc.input-pas": "Password",
   "acc.input-repas": "Repeat Password",
   "acc.btn-label": "Setup Account",

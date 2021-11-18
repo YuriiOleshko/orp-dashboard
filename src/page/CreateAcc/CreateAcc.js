@@ -21,7 +21,7 @@ import {
   inputPlaceholderLast,
   inputPlaceholderCompany,
   inputPlaceholderEmail,
-  btnLabel,
+  btnLabel, inputPlaceholderTerms,
 } from './LangCreateAcc';
 
 const CreateAcc = () => {
@@ -34,6 +34,8 @@ const CreateAcc = () => {
 
   const onSubmit = async (data) => {
     update('loading', true);
+    alert(data);
+    console.log(data, 'tre');
     const deposit = parseNearAmount('1');
     const contract = getContract(account, contractMethods, 0);
     const test = await contract.add_profile(
@@ -43,6 +45,7 @@ const CreateAcc = () => {
         last_name: data.lastName,
         email: data.email,
         organization: data.companyName,
+        terms: data.terms,
       },
       GAS,
       deposit,
@@ -96,6 +99,18 @@ const CreateAcc = () => {
                     required: true,
                     maxLength: 180,
                     pattern: /^\S+@\S+$/i,
+                  })}
+                />
+                <CustomInput
+                  type="checkbox"
+                  label={intl.formatMessage(inputPlaceholderTerms)}
+                  error={errors.terms}
+                  name="terms"
+                  value={false}
+                  customClassLabel="login__check-label"
+                  customClass="login__checkbox"
+                  register={register({
+                    required: true,
                   })}
                 />
                 <div className="login__wrapper-btn_acc">

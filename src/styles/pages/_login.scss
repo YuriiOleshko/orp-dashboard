@@ -8,6 +8,18 @@
     min-height: 100vh;
   }
 
+  &__checkbox{
+    position: absolute;
+    top:5px;
+    width: 15px!important;
+    min-height:15px!important;
+  }
+
+  &__check-label{
+    padding-left: 25px;
+  }
+
+
   &__tooltip-point{
     position: absolute;
     right: 25px;

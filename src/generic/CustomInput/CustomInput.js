@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import NumberFormat from 'react-number-format';
 
-const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change, onlyNumber, usdMask, control, prefix, suffix, rules, decimal, click, customClass, showErrorMessage = true, classError }) => {
+const CustomInput = ({ type, placeholder, name, value, label, error, register, required, iconClass, change, onlyNumber, usdMask, control, prefix, suffix, rules, decimal, click, customClass, customClassLabel = '', showErrorMessage = true, classError }) => {
   // eslint-disable-next-line
   const defaultValue = value ? value : '';
   const inputType = type || 'text';
@@ -26,7 +26,7 @@ const CustomInput = ({ type, placeholder, name, value, label, error, register, r
     }
   };
 
-  const customLabelClass = `${required ? 'required' : ''} input__label`;
+  const customLabelClass = `${required ? 'required' : ''} input__label ${customClassLabel}`;
   const cssImage = `def ${iconClass}`;
   const classInput = `${error ? `error ${classError}` : ''}`;
   return (
