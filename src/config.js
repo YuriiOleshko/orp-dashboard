@@ -1,5 +1,5 @@
 const contractName = process.env.REACT_APP_CONTRACT_NAME || [
-  'c1.ofp.testnet',
+  'c2.ofp.testnet',
   'dt1.ofp.testnet',
   'ot1.ofp.testnet',
 ];
