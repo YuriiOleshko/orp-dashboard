@@ -61,6 +61,7 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
   }
   const clearAll = () => {
     const clearObj = { region: '',
+      subZonesPolygon: [],
       polygon: [],
       codePlus: null,
       polygonCoordinate: [],
@@ -97,13 +98,15 @@ const ProjectLocation = ({ step, nextPage, prevPage, state, setState }) => {
           <div className="wizard__wrapper-input">
             <div className="wizard__btn-map">
               <CustomBtn label={intl.formatMessage(step2BtnLabel)} handleClick={() => setShowMap(true)} iconClass="icon-marker" customClass="btn__map" />
-              {state.geoJson && (
-              <div className="wizard__geo-prev">
-                <p className="wizard__code-plus">
-                  {state.geoJson.file[0].path}
-                </p>
+              {state.geoJson ? (
+                <div className="wizard__geo-prev">
+                  <p className="wizard__code-plus">
+                    {state.geoJson.file[0].path}
+                  </p>
+                  <CustomBtn label={intl.formatMessage(step2BtnReset)} handleClick={clearAll} iconClass="icon-replace" customClass="btn__reset" />
+                </div>
+              ) : (
                 <CustomBtn label={intl.formatMessage(step2BtnReset)} handleClick={clearAll} iconClass="icon-replace" customClass="btn__reset" />
-              </div>
               )}
             </div>
           </div>

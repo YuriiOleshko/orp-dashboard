@@ -55,7 +55,7 @@ const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStag
   return (
     <>
       <form onSubmit={handleSubmit(() => onSubmit(true))}>
-        <div className="wizard__wrapper-form">
+        <div className="wizard__wrapper-form upload-wizard__wrapper-form">
           <div className="wizard__icon-file">
             <div className="wizard__wrapper-tooltip">
               <span className="input__label">Add Documents</span>

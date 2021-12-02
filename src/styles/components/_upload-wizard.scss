@@ -17,6 +17,15 @@
 .upload-wizard {
   padding: 50px 60px 0;
 
+  &__wrapper-form {
+    justify-content: space-between;
+  }
+
+  & .wizard__textarea {
+    flex: 1;
+    margin-left: 10px;
+  }
+
   &__ipfs {
     position: fixed;
     z-index: 15;

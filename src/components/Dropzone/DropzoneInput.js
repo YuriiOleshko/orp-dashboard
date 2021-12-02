@@ -12,8 +12,8 @@ import { initIPFS } from '../../state/ipfs';
 import { appStore } from '../../state/app';
 import { ipfsURL } from '../../state/near';
 
-const MIN_WIDTH_RES = 200;
-const MIN_HEIGHT_RES = 200;
+const MIN_WIDTH_RES = 500;
+const MIN_HEIGHT_RES = 500;
 
 const DropzoneInput = ({ classCustom,
   change,

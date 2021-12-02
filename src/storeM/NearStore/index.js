@@ -28,7 +28,6 @@ class NearStore {
      const { nearConfig, currentUser, walletConnection, contract } = newStore;
      runInAction(() => {
        this.nearConfig = nearConfig;
-       
        this.walletConnection = walletConnection;
        this.currentUser = currentUser;
        this.contract = contract;

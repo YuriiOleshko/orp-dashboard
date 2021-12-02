@@ -6,9 +6,12 @@ import React, { useState } from 'react';
 import CustomBtn from 'src/generic/CustomBtn';
 import PreviewSampleTree from '../PreviewSampleTree/PreviewSampleTree';
 
-const SampleZoneItem = ({ sampleName,
+const SampleZoneItem = ({
+  sampleName,
   coordinates,
-  sampleTrees }) => {
+  sampleTrees,
+  warning,
+}) => {
   const [hideElement, setHideElement] = useState(true);
   return (
     <div className="sample-zone">
@@ -19,6 +22,14 @@ const SampleZoneItem = ({ sampleName,
         <div className="sample-zone__header-coord">
           <span className="sample-zone__coord">{coordinates[0]}</span>
           <span className="sample-zone__coord">{coordinates[1]}</span>
+        </div>
+        <div className="sample-zone__header-warning">
+          {warning && warning.missingLength && (
+            <>
+              <i className="icon-exclamation" />
+              <span>Add at least 10 sample trees in this sampling zone to move to the next sampling zone.</span>
+            </>
+          )}
         </div>
         <div className={`sample-zone__header-btn ${hideElement ? 'up' : 'dropdown'}`}>
           <CustomBtn

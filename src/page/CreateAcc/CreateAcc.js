@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext } from 'react';
+/* eslint-disable no-debugger */
+import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedDate, useIntl } from 'react-intl';
 import { Redirect, useHistory } from 'react-router';
@@ -32,10 +33,16 @@ const CreateAcc = () => {
   const { profile } = app;
   const { register, handleSubmit, errors } = useForm();
 
+  // useEffect(() => {
+  //   const funcBack = (e) => {
+  //     localStorage.clear();
+  //   };
+  //   window.addEventListener('beforeunload', funcBack);
+  //   return () => window.removeEventListener('beforeunload', funcBack);
+  // }, []);
+
   const onSubmit = async (data) => {
     update('loading', true);
-    alert(data);
-    console.log(data, 'tre');
     const deposit = parseNearAmount('1');
     const contract = getContract(account, contractMethods, 0);
     const test = await contract.add_profile(

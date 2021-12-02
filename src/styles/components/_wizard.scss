@@ -722,6 +722,12 @@
     }
   }
 
+  .btn__reset {
+    max-width: 380px;
+    padding: 11px 0;
+    max-height: 44px;
+  }
+
   &__geo-prev {
     display: flex;
     flex-basis: 47%;

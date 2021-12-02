@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {
+  useContext, useEffect, useState,
+} from 'react';
 import { Redirect } from 'react-router';
 import * as nearAPI from 'near-api-js';
+import { appStore } from './state/app';
 import CreateAcc from './page/CreateAcc/CreateAcc';
 import Login from './page/Login';
 import RenderRoutes from './components/RenderRoutes';
@@ -14,6 +17,30 @@ import ProjectPage from './page/ProjectPage';
 import EditPage from './page/EditPage';
 import DataUpload from './page/DataUpload/DataUpload';
 import FieldAgents from './page/FieldAgents/FieldAgents';
+import { contractMethods, getContract } from './utils/near-utils';
+import Loader from './components/Loader/Loader';
+
+const Terms = ({ children }) => {
+  const { state } = useContext(appStore);
+  const { account, app } = state;
+  const { profile } = app;
+  const [returnElem, setReturnElem] = useState(profile && profile.terms && children);
+  useEffect(async () => {
+    if (profile && profile.terms) {
+      setReturnElem(children);
+    } else if (account && account.accountId) {
+      const contract = getContract(account, contractMethods, 0);
+      const userProfile = await contract.get_profile({ account_id: account.accountId });
+      if (userProfile && userProfile.terms) {
+        setReturnElem(children);
+      } else {
+        setReturnElem(<Redirect to="/create-account" />);
+      }
+    }
+  }, [account]);
+
+  return returnElem || <Loader customClass="lds-ring__big" />;
+};
 
 const routes = [
   { path: '/login', key: 'ROOT', exact: true, component: () => <Login /> },
@@ -34,9 +61,11 @@ const routes = [
         key: 'DASHBOARD',
         exact: true,
         component: () => (
-          <LayoutDash>
-            <ExistingProject />
-          </LayoutDash>
+          <Terms>
+            <LayoutDash>
+              <ExistingProject />
+            </LayoutDash>
+          </Terms>
         ),
       },
       {
@@ -44,9 +73,11 @@ const routes = [
         key: 'MFS',
         exact: true,
         component: () => (
-          <LayoutDash>
-            <Mfs />
-          </LayoutDash>
+          <Terms>
+            <LayoutDash>
+              <Mfs />
+            </LayoutDash>
+          </Terms>
         ),
       },
       {
@@ -54,9 +85,11 @@ const routes = [
         key: 'PROJECT',
         exact: true,
         component: () => (
-          <LayoutDash>
-            <ProjectPage />
-          </LayoutDash>
+          <Terms>
+            <LayoutDash>
+              <ProjectPage />
+            </LayoutDash>
+          </Terms>
         ),
       },
       {
@@ -64,38 +97,64 @@ const routes = [
         key: 'PROJECT',
         exact: true,
         component: () => (
-          <EditPage />
+          <Terms>
+            <EditPage />
+          </Terms>
         ),
       },
       {
         path: '/start-project',
         key: 'START_PROJECT',
         exact: true,
-        component: () => <Layout><LaunchCreate /></Layout>,
+        component: () => (
+          <Terms>
+            <Layout>
+              <LaunchCreate />
+            </Layout>
+          </Terms>
+        ),
       },
       {
         path: '/create-project',
         key: 'CREATE_PROJECT',
         exact: true,
-        component: () => <LaunchProject />,
+        component: () => (
+          <Terms>
+            <LaunchProject />
+          </Terms>
+        ),
       },
       {
         path: '/data-upload/:nameId',
         key: 'DATA_UPLOAD',
         exact: true,
-        component: () => <DataUpload />,
+        component: () => (
+          <Terms>
+            <DataUpload />
+          </Terms>
+        ),
       },
       {
         path: '/field-agents',
         key: 'FIELD_AGENTS',
         exact: true,
-        component: () => <LayoutDash><FieldAgents /></LayoutDash>,
+        component: () => (
+          <Terms>
+            <LayoutDash>
+              <FieldAgents />
+            </LayoutDash>
+          </Terms>
+        ),
       },
       {
         path: '/settings',
         key: 'SETTINGS',
         exact: true,
-        component: () => <h1>SETTINGS</h1>,
+        component: () => (
+          <Terms>
+            <h1>SETTINGS</h1>
+          </Terms>
+        ),
       },
     ],
   },
