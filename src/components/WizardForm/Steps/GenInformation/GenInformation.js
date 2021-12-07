@@ -160,6 +160,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
           <div className="wizard__wrapper-input">
             <DatePicker
               selected={startDate}
+              minDate={new Date()}
               onChange={(date) => {
                 setStartDate(date);
                 if (endDate) {
