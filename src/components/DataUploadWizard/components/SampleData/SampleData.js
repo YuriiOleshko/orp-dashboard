@@ -13,7 +13,6 @@ import CustomInput from 'src/generic/CustomInput';
 // eslint-disable-next-line import/no-unresolved
 import CustomBtn from 'src/generic/CustomBtn';
 import SampleZoneItem from 'src/components/DataUploadWizard/components/SampleZoneItem';
-import PreviewSapmleZone from 'src/components/DataUploadWizard/components/PreviewSampleZone/PreviewSampleZone';
 import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
 const AGENT_API = process.env.REACT_APP_AGENT_API;
@@ -88,16 +87,30 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
     }
   }, [account]);
 
-  const onSubmit = () => {
-    const errorZones = sampleZones.map((item) => ({ missingLength: item.sampleTrees.length < 10 }));
+  const onSubmit = (data) => {
+    const currentZones = sampleZones.map((item) => item.sampleName);
+    const errorZones = currentZones.map((item) => {
+      const missingLength = Object.values(getValues()[item] || {});
+      return { missingLength: missingLength.length < 10 };
+    });
     const hasError = errorZones.find((item) => item.missingLength);
     if (hasError) {
       setWarning(errorZones);
       return;
     }
+    const formSampleZones = Object.values(data);
+    const oldSampleZones = Object.values(currentSubZone.sampleZones);
+    const updSampleZones = formSampleZones.map((item, index) => {
+      const updSampleTrees = Object.values(item);
+      const sampleTreesId = Object.keys(item);
+      const updSampleTreesWithId = updSampleTrees.map((i, id) => ({ ...i, id: +sampleTreesId[id].split('T')[1] }));
+      const target = { ...oldSampleZones[index] };
+      target.sampleTrees = updSampleTreesWithId;
+      return target;
+    });
     const updSubZones = [...totalData.subZonesPolygon];
     const lastSubZone = updSubZones.pop();
-    lastSubZone.sampleZones = sampleZones;
+    lastSubZone.sampleZones = updSampleZones;
     updSubZones.push(lastSubZone);
     setTotalData({ ...totalData, subZonesPolygon: updSubZones });
     nextPage();
@@ -106,6 +119,17 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
   // useEffect(() => {
   //   setTotalData({ ...totalData });
   // }, [sampleZones]);
+
+  const onError = (errors) => {
+    const currentZones = sampleZones.map((item) => item.sampleName);
+    const missingDescription = Object.keys(errors);
+    const errorZones = currentZones.map((item) => {
+      const target = missingDescription.find((i) => i === item);
+      const missingLength = Object.values(getValues()[item] || {});
+      return target ? { missingDescription: true } : { missingLength: missingLength.length < 10 };
+    });
+    setWarning(errorZones);
+  };
 
   const handleClickBack = () => {
     const subZoneExist = totalData.subZonesPolygon.find((item) => item?.stage === currentStage);
@@ -130,8 +154,8 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
           <WrapperScaleImg cid={currentSubZone.cidSampleScreenShot} />
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* <div className="upload-wizard__sz-list">
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
+        <div className="upload-wizard__sz-list">
           {sampleZones.map((i, id) => (
             <SampleZoneItem
               sampleName={i.sampleName}
@@ -145,17 +169,6 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
               setValue={setValue}
               getValues={getValues}
               key={`Zone${id}`}
-            />
-          ))}
-        </div> */}
-        <div className="upload-wizard__sz-list">
-          {sampleZones.map((zone, id) => (
-            <PreviewSapmleZone
-              sampleName={zone.sampleName}
-              coordinates={zone.coordinates}
-              sampleTrees={zone.sampleTrees}
-              warning={warning[id]}
-              key={`${zone.sampleName}${zone.index}`}
             />
           ))}
         </div>
