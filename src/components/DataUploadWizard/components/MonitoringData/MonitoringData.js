@@ -55,7 +55,8 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
     const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i?.stage === currentStage);
     if (targetSubZoneIndex >= 0) {
       const currentNumber = coordinate.subZonesPolygon[targetSubZoneIndex].sampleZones.length;
-      if (currentNumber === numberSampleZones) {
+      // if (currentNumber === numberSampleZones) {
+      if (currentNumber >= 1) {
         setWarning('');
         handleUpdateProject(totalData);
         // nextPage();
