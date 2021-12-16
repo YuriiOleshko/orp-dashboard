@@ -50,7 +50,14 @@ const routes = [
     key: 'HOME',
     component: (props) => {
       const keys = new nearAPI.keyStores.BrowserLocalStorageKeyStore();
-      if (keys.localStorage.length === 0) {
+      let isValid = false;
+      const iterableKeys = Object.keys(localStorage);
+      for (const key of iterableKeys) {
+        if (key.includes('near-api-js:keystore') && (key.includes('.testnet') || key.includes('.near'))) {
+          isValid = true;
+        }
+      }
+      if (keys.localStorage.length === 0 || !isValid) {
         return <Redirect to="/login" />;
       }
       return <RenderRoutes {...props} />;
