@@ -12,10 +12,18 @@ import {
 import { useIntl } from 'react-intl';
 // import axios from 'axios';
 
-import { GAS, parseNearAmount } from 'src/state/near';
+import {
+  GAS,
+  ipfsURL,
+  parseNearAmount,
+} from 'src/state/near';
 import { getContract, contractMethods } from '../../utils/near-utils';
 import { appStore } from '../../state/app';
-import { initIPFS, getJSONFileFromIpfs } from '../../state/ipfs';
+import {
+  initIPFS,
+  getJSONFileFromIpfs,
+  getFilesFromDirWithContent,
+} from '../../state/ipfs';
 
 import CustomBtn from '../../generic/CustomBtn';
 import CustomChart from './CustomChart';
@@ -43,14 +51,23 @@ const ProjectPage = () => {
   const [data, setData] = useState({});
   const [stageData, setStageData] = useState([]);
   const [loadingData, setLoading] = useState(true);
+  const [iconSrc, setIconSrc] = useState();
+  const [iconDetailSrc, setIconDetailSrc] = useState();
   const { state } = useContext(appStore);
   const { account } = state;
 
   let filesCounter = 0;
   let hasPublic;
+  let currentStageZone;
+  let currentStageZoneImage;
 
   if (data.privateFiles && data.privateFiles.length) {
     hasPublic = data.privateFiles.find((item) => !item.private);
+  }
+
+  if (data.currentStage && data.currentStage !== -1 && data.subZonesPolygon[data.currentStage]) {
+    currentStageZone = data.subZonesPolygon[data.currentStage];
+    currentStageZoneImage = data.subZonesPolygon[data.currentStage].cidSampleScreenShot;
   }
 
   const createStageVoting = async (stageId) => {
@@ -132,8 +149,27 @@ const ProjectPage = () => {
             return stageVoting;
           }),
         );
+        if (location.state.iconCidDir) {
+          const ipfs = await initIPFS();
+          const res = await getFilesFromDirWithContent(ipfs, location.state.iconCidDir);
+          if (res && res[0].content) {
+            const blobImage = new Blob(res[0].content);
+            const imageSrc = URL.createObjectURL(blobImage);
+            setIconSrc(imageSrc);
+          }
+        }
+        if (location.state.iconDetailCidDir) {
+          const ipfs = await initIPFS();
+          const res = await getFilesFromDirWithContent(ipfs, location.state.iconDetailCidDir);
+          if (res && res[0].content) {
+            const blobImage = new Blob(res[0].content);
+            const imageSrc = URL.createObjectURL(blobImage);
+            setIconDetailSrc(imageSrc);
+          }
+        }
+        const remainingUploads = location.state.currentStage === -1 ? 'None' : stages.length - location.state.currentStage - 1;
         setStageStatus(stages, location.state, stageVotingArr);
-        setData(location.state);
+        setData({ ...location.state, remainingUploads });
         setLoading(false);
       }
     } else if (account) {
@@ -143,14 +179,32 @@ const ProjectPage = () => {
       const stages = await contract.get_project_stages({ project_id: nameId });
       if (token && stages.length) {
         const file = await getJSONFileFromIpfs(ipfs, token.info.cid);
+        const currentStage = await contract.get_current_project_stage({ project_id: nameId });
         const stageVotingArr = await Promise.all(
           stages.map(async (item) => {
             const stageVoting = await contract.get_stage_voting({ project_id: nameId, stage_id: item.id });
             return stageVoting;
           }),
         );
+        if (file.iconCidDir) {
+          const res = await getFilesFromDirWithContent(ipfs, file.iconCidDir);
+          if (res && res[0].content) {
+            const blobImage = new Blob(res[0].content);
+            const imageSrc = URL.createObjectURL(blobImage);
+            setIconSrc(imageSrc);
+          }
+        }
+        if (file.iconDetailCidDir) {
+          const res = await getFilesFromDirWithContent(ipfs, file.iconDetailCidDir);
+          if (res && res[0].content) {
+            const blobImage = new Blob(res[0].content);
+            const imageSrc = URL.createObjectURL(blobImage);
+            setIconDetailSrc(imageSrc);
+          }
+        }
+        const remainingUploads = currentStage ? stages.length - currentStage.id - 1 : 'None';
         setStageStatus(stages, file, stageVotingArr);
-        setData(file);
+        setData({ ...file, remainingUploads });
         setLoading(false);
         return;
       }
@@ -186,7 +240,6 @@ const ProjectPage = () => {
               <ProjectBenefits data={data.benefits} />
             </div>
             )}
-            {!!(data.details || (data.privateFiles.length && hasPublic)) && (
             <div className="project__text">
               {data.details && (
               <div className="project__description">
@@ -195,19 +248,34 @@ const ProjectPage = () => {
               </div>
               )}
               {!!(data.privateFiles && data.privateFiles.length && hasPublic) && (
-              <div className="project__files">
+              <div className={`project__files ${data.details && 'project__files-margin'}`}>
                 <span className="files-title">{intl.formatMessage(documentationTitle)}</span>
                 <div className="files-list">
                   {data.privateFiles.map((item, index) => (!item.private && (
                   <div className="file-item" key={`${item.path}${index + Date.now()}`}>
-                    {++filesCounter}. {item.path}
+                    <a href={`${ipfsURL}${data.filesCidDir}/${item.path}`} target="_blank" rel="noreferrer">{++filesCounter}. {item.path}</a>
                   </div>
                   )))}
                 </div>
               </div>
               )}
+              {iconSrc && (
+                <div className={`project__files project__icon ${(data.details || (data.privateFiles?.length && hasPublic)) && 'project__files-margin'}`}>
+                  <span className="files-title">Project Cover Photo</span>
+                  <div className="files-list">
+                    <img src={`${iconSrc}`} alt="Cover" />
+                  </div>
+                </div>
+              )}
+              {iconDetailSrc && (
+                <div className={`project__files project__icon-detail ${(data.details || (data.privateFiles?.length && hasPublic) || data.iconCidDir) && 'project__files-margin'}`}>
+                  <span className="files-title">Project Cover Photo</span>
+                  <div className="files-list">
+                    <img src={`${iconDetailSrc}`} alt="Cover" />
+                  </div>
+                </div>
+              )}
             </div>
-            )}
             <div className="project__location">
               {data.region && (
               <span className="location-title">
@@ -220,6 +288,16 @@ const ProjectPage = () => {
               </div>
               )}
             </div>
+            {currentStageZone && (
+              <div className="project__location">
+                <span className="location-title">
+                  Current Stage Subzone
+                </span>
+                <div className="location-img">
+                  <WrapperScaleImg cid={currentStageZoneImage} />
+                </div>
+              </div>
+            )}
             <div className="project__footer">
               <CustomBtn label={intl.formatMessage(edit)} customClass="btn__edit-primary" iconClass="icon-pencil" type="button" handleClick={() => history.push({ pathname: `/edit/${nameId}`, state: data })} />
             </div>

@@ -17,6 +17,10 @@ import {
   title1, title2, desc1, desc2, btnLabel,
 } from './LangLaunchCreate';
 
+import { initialQuery } from 'src/utils/api-request';
+
+const INDEXER_API = process.env.REACT_APP_INDEXER_API;
+
 const LaunchCreate = () => {
   const { state } = useContext(appStore);
   const { account } = state;
@@ -25,14 +29,17 @@ const LaunchCreate = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
   const [tokenLenght, setTokenLength] = useState();
+  const [filterParams, setFilterParams] = useState(initialQuery);
 
   const defineTokensNumber = async () => {
-    const contract = getContract(account, contractMethods, 0);
-    let tokenIds = [];
 
     try {
-      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: 0, limit: 20 });
-      setTokenLength(tokenIds.length);
+      const projects = await fetch(INDEXER_API, {
+        method: 'POST',
+        body: JSON.stringify(filterParams),
+      }).then((data) => data.json());
+
+      setTokenLength(projects.hits.hits.length);
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -43,9 +50,29 @@ const LaunchCreate = () => {
 
   useEffect(async () => {
     if (account && account.accountId) {
-      defineTokensNumber();
+      setFilterParams((prev) => ({
+        ...prev,
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  signer_id: account.accountId,
+                },
+              },
+            ],
+          },
+        },
+      }));
     }
   }, [account]);
+
+  useEffect(() => {
+    const hasSigner = filterParams.query.bool.must.find((item) => item?.match?.signer_id);
+    if (hasSigner) {
+      defineTokensNumber();
+    }
+  }, [filterParams]);
 
   if (loading) {
     return <div className="launch__loader"><Loader /></div>;

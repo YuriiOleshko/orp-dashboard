@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* eslint-disable guard-for-in */
 import React, { useContext, useEffect, useState } from 'react';
 import { appStore } from 'src/state/app';
 import FieldAgentDropList from 'src/components/FieldAgentDropList/FieldAgentDropList';
@@ -9,8 +10,10 @@ import CustomInput from 'src/generic/CustomInput/CustomInput';
 import exclamation from '../../assets/image/exclamation.svg';
 import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
 import { contractMethods, getContract } from 'src/utils/near-utils';
+import { initialQuery } from 'src/utils/api-request';
 
 const AGENT_API = process.env.REACT_APP_AGENT_API;
+const INDEXER_API = process.env.REACT_APP_INDEXER_API;
 
 const FieldAgents = () => {
   const { state, update } = useContext(appStore);
@@ -22,66 +25,79 @@ const FieldAgents = () => {
   const [editFieldAgent, setEditFieldAgent] = useState();
   const [err, setErr] = useState(false);
   const [modalData, setModalData] = useState();
+  const [filterParams, setFilterParams] = useState(initialQuery);
 
-  const loadTokens = async (fromIndex) => {
-    // if (app.nftTokens.length && app.currentProjectStage.length) return;
-    const ipfs = await initIPFS();
-    const contract = getContract(account, contractMethods, 0);
-    let tokenIds = [];
+  const loadTokens = async (fromIndex, body) => {
 
     try {
-      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: fromIndex, limit: 20 });
-      if (tokenIds.length === 0) {
+      const projects = await fetch(INDEXER_API, {
+        method: 'POST',
+        body: JSON.stringify({ ...body, from: fromIndex }),
+      }).then((data) => data.json());
+
+      if (projects.hits.hits.length === 0) {
         update('loading', false);
         return;
       }
-      // Get all files saved to ipfs for each nft token
-      const data = await Promise.all(
-        tokenIds.map(async (token) => {
-          const item = await getJSONFileFromIpfs(ipfs, token.info.cid);
-          return {
-            id: token.token_id,
-            item,
-          };
-        }),
-      );
-      // Get current stage for each nft token (need for Data Upload)
-      const currentProjectStage = await Promise.all(
-        data.map(async (proj) => {
-          const currentStage = await contract.get_current_project_stage({ project_id: proj.id });
-          return currentStage ? currentStage.id : -1;
-        }),
-      );
-      if (!state.firstLoad) {
-        const updStages = [...app.currentProjectStage];
-        const updNft = [...app.nftTokens];
-        updStages.push(...currentProjectStage);
-        updNft.push(...data);
-        update('app.currentProjectStage', updStages);
-        update('app.nftTokens', updNft);
-      } else {
-        update('app.currentProjectStage', currentProjectStage);
-        update('firstLoad', false);
-        update('app.nftTokens', data);
-      }
+
+      const parsedProjects = projects.hits.hits.map((item) => {
+        const runtimeFields = {};
+        for (const prop in item.fields) {
+          runtimeFields[prop] = item.fields[prop][0];
+        }
+        return { id: item._id, item: { ...item._source, ...runtimeFields } };
+      });
+
+      // const result = await fetch(`${AGENT_API}/list`, {
+      //   headers: {
+      //     // "Accept": '*/*',
+      //     Authorization: `Bearer ${account.accountId}`,
+      //   },
+      // }).then((res) => res.json());
+
+
+      update('app.nftTokens', parsedProjects);
+      // update('app.allFa', result);
+      update('loading', false);
     } catch (e) {
       setErr(true);
     }
   };
 
   useEffect(async () => {
-    update('loading', true);
-    if (account && account.accountId && !app.nftTokens.length) {
-      await loadTokens(0);
+    if (account && account.accountId) {
+      setFilterParams((prev) => ({
+        ...prev,
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  signer_id: account.accountId,
+                },
+              },
+            ],
+          },
+        },
+      }));
     }
   }, [account]);
 
   useEffect(async () => {
     update('loading', true);
-    if (app.nftTokens.length) {
-      await loadTokens(app.nftTokens.length);
+    const hasSigner = filterParams.query.bool.must.find((item) => item?.match?.signer_id);
+    if (hasSigner) {
+      await loadTokens(0, filterParams);
     }
-  }, [app.nftTokens.length, state.firstLoad]);
+  }, [filterParams]);
+
+  // useEffect(async () => {
+  //   update('loading', true);
+  //   const hasSigner = filterParams.query.bool.must.find((item) => item?.match?.signer_id);
+  //   if (app.nftTokens.length && hasSigner) {
+  //     await loadTokens(app.nftTokens.length, filterParams);
+  //   }
+  // }, [app.nftTokens.length, state.firstLoad, filterParams]);
 
   useEffect(async () => {
     if (account && account.accountId && app.nftTokens.length) {
@@ -122,6 +138,7 @@ const FieldAgents = () => {
         return { ...fa, projects: parsedProjects };
       })
       setFieldAgents(parsedFieldAgent);
+      update('app.allFa', result);
       // update('loading', false);
     }
   }, [account, app.nftTokens.length]);

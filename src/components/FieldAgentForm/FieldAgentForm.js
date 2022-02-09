@@ -79,7 +79,8 @@ const FieldAgentForm = ({ title, buttonText, setModalActive, fieldAgents, setFie
     const updProjects = projects.map((item, index) => {
       const projIdObj = targetProjects.find((el) => el.item.name === item.projectName);
       // const dumbIdObj = fieldAgentData.projects.find((el, i) => index === i);
-      const stageObj = targetStages.find((el, i) => index === i);
+      // const stageObj = targetStages.find((el, i) => index === i);
+      const stageObj = projIdObj.item.currentStage;
       return { ...item, projectId: projIdObj.id, id: projIdObj.id, stage: stageObj }
     });
     setFieldAgentData({ ...copyData, id: fieldAgentData.id, projects: updProjects });
@@ -110,7 +111,6 @@ const FieldAgentForm = ({ title, buttonText, setModalActive, fieldAgents, setFie
           agentProjects[item.projectId] = sampleArray;
         });
         agentProjects = { projects: agentProjects, fieldAgentId: updAgentEmail.id }
-
         let updSampleZones = await fetch(SAMPLE_API, {
           method: 'POST',
           headers: {
@@ -286,6 +286,7 @@ const FieldAgentForm = ({ title, buttonText, setModalActive, fieldAgents, setFie
                 rules={{ required: true }}
                 projectOptions={projectOptions}
                 setValue={setValue}
+                getValues={getValues}
                 targetProjects={targetProjects}
                 addFieldAgentProject={addFieldAgentProject}
                 errorsProject={errors?.projects && errors.projects[id]?.projectName}

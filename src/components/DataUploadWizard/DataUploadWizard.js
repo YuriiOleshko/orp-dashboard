@@ -45,6 +45,7 @@ const DataUploadWizard = () => {
   const [currentStage, setCurrentStage] = useState();
   const [globalFiles, setGlobalFiles] = useState([]);
   const [globalCidFiles, setGlobalCidFiles] = useState({});
+  const [editSub, setEditSub] = useState(false);
 
   const stepForm = [{ id: 'uploadWizard.sampleData' }, { id: 'uploadWizard.documents' }];
 
@@ -64,11 +65,12 @@ const DataUploadWizard = () => {
       const deposit = parseNearAmount('1');
       const contract = getContract(account, contractMethods, 0);
       const oneMillion = 1e6;
+      const tenThousands = 1e4;
 
       const stake = (dataProject.budget * 1e2).toString();
       const startNanoSec = dataProject.startTimeProject * oneMillion;
       const endNanoSec = dataProject.finishTimeProject * oneMillion;
-      const area = (dataProject.square * oneMillion).toString();
+      const area = (dataProject.square * tenThousands).toString();
 
       await contract.update_project_info({
         project_id: nameId,
@@ -157,12 +159,12 @@ const DataUploadWizard = () => {
                     {state.loading && (
                     <LoaderIpfs customClass="upload-wizard__ipfs" />
                     ) }
-                    {step === 0 && (<MonitoringData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={() => history.push('/')} currentStage={currentStage} handleUpdateProject={handleUpdateProject} />)}
-                    {step === 1 && (<SampleData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} />)}
+                    {step === 0 && (<MonitoringData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={() => history.push('/')} currentStage={currentStage} handleUpdateProject={handleUpdateProject} editSub={editSub} setEditSub={setEditSub} />)}
+                    {step === 1 && (<SampleData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} setEditSub={setEditSub} />)}
                     {step === 2 && (<DocumentData totalData={totalData} setTotalData={setTotalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} globalFiles={globalFiles} setGlobalFiles={setGlobalFiles} globalCidFiles={globalCidFiles} setGlobalCidFiles={setGlobalCidFiles} handleUpdateProject={handleUpdateProject} />)}
                     {step === 3 && (<PreviewReport totalData={totalData} nextPage={nextPage} prevPage={prevPage} currentStage={currentStage} handleUpdateProject={handleUpdateProject} />)}
                   </div>
-                ) : <h2>First stage hasn&apos;t started yet.</h2>}
+                ) : <h2>No stage</h2>}
               </div>
 
             </div>

@@ -8,24 +8,24 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router';
 import { appStore } from 'src/state/app';
 import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
+import { contractMethods, getContract } from 'src/utils/near-utils';
 // eslint-disable-next-line import/no-unresolved
 import CustomInput from 'src/generic/CustomInput';
 // eslint-disable-next-line import/no-unresolved
 import CustomBtn from 'src/generic/CustomBtn';
 import SampleZoneItem from 'src/components/DataUploadWizard/components/SampleZoneItem';
+import Loader from 'src/components/Loader/Loader';
 import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
 const AGENT_API = process.env.REACT_APP_AGENT_API;
 
-const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage }) => {
+const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage, setEditSub }) => {
   const { register, handleSubmit, errors, clearErrors, control, setValue, getValues } = useForm();
   const { state } = useContext(appStore);
   const { account } = state;
   const history = useHistory();
   const { nameId } = useParams();
 
-  const currSubZone = { ...totalData.subZonesPolygon[currentStage] };
-  const currentSampleZones = [...currSubZone.sampleZones];
   // const sZones = currentSampleZones.map((el, index) => ({
   //   ...el,
   //   sampleName: `S${index + 1}`,
@@ -40,19 +40,27 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
   //     labelPhoto: '/ipfs/QmeAkTfuybkK3DTWL9NC5SB4TfprfVTVbxEbvwoysgJF44',
   //   })),
   // }));
-  const sZones = currentSampleZones.map((el) => ({
-    ...el,
-  }));
-  const [currentSubZone, setCurrentSubZone] = useState(currSubZone);
-  const [sampleZones, setSampleZones] = useState(sZones);
+
+  const [currentSubZone, setCurrentSubZone] = useState();
+  const [sampleZones, setSampleZones] = useState();
   const [warning, setWarning] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     if (account && account.accountId) {
       const ipfs = await initIPFS();
+      const contract = getContract(account, contractMethods, 0);
+      const token = await contract.get_project({ project_id: nameId });
+      const projectData = await getJSONFileFromIpfs(ipfs, token.info.cid);
+
+      const currSubZone = { ...projectData.subZonesPolygon[currentStage] };
+      const currentSampleZones = [...currSubZone.sampleZones];
+      const sZones = currentSampleZones.map((el) => ({
+        ...el,
+      }));
 
       const sampleZonesFromApp = await Promise.all(
-        sampleZones.map(async (item) => {
+        sZones.map(async (item) => {
           const result = await fetch(
             `${AGENT_API}/list?stage-id=${currentStage}&sample-zone=${item.id}`,
             {
@@ -83,7 +91,11 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
           return item;
         }),
       );
+      setCurrentSubZone(currSubZone);
+      setSampleZones(sZones);
+      setTotalData(projectData);
       setSampleZones(sampleZonesFromApp);
+      setLoading(false);
     }
   }, [account]);
 
@@ -137,12 +149,16 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
     else prevPage();
   };
 
+  if (loading) {
+    return <Loader customClass="lds-ring__big" />;
+  }
+
   return (
     <>
       <div className="upload-wizard__monitoring">
         <div className="upload-wizard__area-info">
           <div className="upload-wizard__area">
-            <span>Area, sq. km</span>
+            <span>Area, Hectares</span>
             <p className="upload-wizard__input-value">{currentSubZone.square}</p>
           </div>
           <div className="upload-wizard__num-zones">
@@ -153,6 +169,16 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage 
         <div className="upload-wizard__map">
           <WrapperScaleImg cid={currentSubZone.cidSampleScreenShot} />
         </div>
+        <CustomBtn
+          label="Edit Subzone"
+          customClass="btn__edit-grey"
+          iconClass="icon-pencil"
+          type="button"
+          handleClick={() => {
+            setEditSub(true);
+            prevPage();
+          }}
+        />
       </div>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="upload-wizard__sz-list">

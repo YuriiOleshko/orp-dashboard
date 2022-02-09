@@ -17,6 +17,8 @@ import ProjectPage from './page/ProjectPage';
 import EditPage from './page/EditPage';
 import DataUpload from './page/DataUpload/DataUpload';
 import FieldAgents from './page/FieldAgents/FieldAgents';
+import TermsConditions from './page/TermsConditions';
+import PrivateNotice from './page/PrivateNotice';
 import { contractMethods, getContract } from './utils/near-utils';
 import Loader from './components/Loader/Loader';
 
@@ -45,6 +47,8 @@ const Terms = ({ children }) => {
 const routes = [
   { path: '/login', key: 'ROOT', exact: true, component: () => <Login /> },
   { path: '/create-account', key: 'CREATE_ACC', exact: true, component: () => <CreateAcc /> },
+  { path: '/terms-conditions', key: 'TERMS_CONDITIONS', exact: true, component: () => <TermsConditions /> },
+  { path: '/private_notice', key: 'PRIVACY_NOTICE', exact: true, component: () => <PrivateNotice /> },
   {
     path: '/',
     key: 'HOME',

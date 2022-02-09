@@ -76,7 +76,8 @@ const DocumentData = ({ nextPage, prevPage, totalData, setTotalData, currentStag
           </div>
           <div className="wizard__textarea">
             <label className="input__label ">Additional Comments</label>
-            <textarea name="GenInfo" placeholder="Type here" onChange={(ev) => setAdditional({ additional: ev.target.value })} defaultValue={additional.additional} />
+            <textarea name="GenInfo" placeholder="Type here" ref={register({ required: true })} onChange={(ev) => setAdditional({ additional: ev.target.value })} defaultValue={additional.additional} />
+            {errors.GenInfo && <div className="input__error">This is required</div>}
           </div>
         </div>
         <div className="upload-wizard__panel upload-wizard__panel-document">

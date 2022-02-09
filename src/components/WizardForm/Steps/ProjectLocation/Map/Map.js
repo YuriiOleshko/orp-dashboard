@@ -8,6 +8,9 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import defaultTheme from '@mapbox/mapbox-gl-draw/src/lib/theme';
 import area from '@turf/area';
 import centerOfMass from '@turf/center-of-mass';
+import { randomPoint } from '@turf/random';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import bbox from '@turf/bbox';
 import html2canvas from 'html2canvas';
 // import Canvas2Image from 'canvas2image-2';
 import API from '../../../../../api/api-map';
@@ -84,6 +87,32 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
     let copyCoordinate = { ...state };
 
     const getPrevSampleNumber = (sub) => +sub.sampleZones[sub.sampleZones.length - 1].sampleName.split('S')[1];
+
+    const drawRandomPoint = (box, prevSampleNumber, draw, sub, i) => {
+      let point = randomPoint(1, {bbox: box});
+
+      if (booleanPointInPolygon(point.features[0], sub)) {
+        point = {
+          ...point.features[0],
+          id: `${Date.now() + i}`,
+          properties: {
+            sampleName: `S${prevSampleNumber + i + 1}`
+          },
+          sampleName: `S${prevSampleNumber + i + 1}`,
+          coordinates: point.features[0].geometry.coordinates,
+        }
+        const updZone = [...state.subZonesPolygon];
+        const targetSubZone = updZone.pop();
+        targetSubZone.sampleZones.push({ ...point });
+        updZone.push(targetSubZone);
+        setState({ ...state, subZonesPolygon: updZone });
+        setDataPolygon({ ...state, subZonesPolygon: updZone });
+        copyCoordinate = { ...state, subZonesPolygon: updZone };
+        draw.add(point);
+      } else {
+        drawRandomPoint(box, prevSampleNumber, draw, sub, i);
+      }
+    }
 
     mapboxgl.accessToken = process.env.REACT_APP_MAP_KEY;
     // eslint-disable-next-line no-shadow
@@ -190,7 +219,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
         if (subZones && state.subZonesPolygon) {
           draw.add(state.polygon[0]);
           state.subZonesPolygon.forEach((item) => {
-            if (item) {
+            if (item && item.polygon) {
               draw.add(item.polygon[0]);
               item.sampleZones.forEach((i) => {
                 draw.add(i);
@@ -207,9 +236,30 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
           const targetSubZoneIndex = state.subZonesPolygon.findIndex((item) => item?.stage === currentStage);
           if (targetSubZoneIndex >= 0) {
             draw.add(state.subZonesPolygon[targetSubZoneIndex].polygon[0]);
-            state.subZonesPolygon[targetSubZoneIndex].sampleZones.forEach((item) => {
-              draw.add(item);
-            });
+            if (state.subZonesPolygon[targetSubZoneIndex].sampleZones.length) {
+              state.subZonesPolygon[targetSubZoneIndex].sampleZones.forEach((item) => {
+                draw.add(item);
+              });
+            } else {
+              if (numberSampleZones > 0) {
+                let prevSampleNumber = 0;
+                const lastActiveSubZone = [...state.subZonesPolygon].reverse().find((item) => item);
+            
+                if (lastActiveSubZone && lastActiveSubZone.sampleZones.length) {
+                  prevSampleNumber = getPrevSampleNumber(lastActiveSubZone);
+                } else {
+                  const prevActiveSubZone = [...state.subZonesPolygon].reverse().find((item) => item && item.stage !== currentStage);
+                  if (prevActiveSubZone) {
+                    prevSampleNumber = getPrevSampleNumber(prevActiveSubZone);
+                  }
+                }
+                const box = bbox(state.subZonesPolygon[targetSubZoneIndex].polygon[0]);
+
+                for (let i = 0; i < numberSampleZones; i++) {
+                  drawRandomPoint(box, prevSampleNumber, draw, state.subZonesPolygon[targetSubZoneIndex].polygon[0], i);
+                }
+              }
+            }
           }
           // eslint-disable-next-line no-use-before-define
           // if (state.subZonesPolygon[0].sampleZones.length) updateArea(state.subZonesPolygon[0].sampleZones[0], true);
@@ -235,7 +285,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
         const center = centerOfMass(features).geometry.coordinates;
         const place = await API.getInfoForMap(center[1], center[0]);
         let placeName;
-        if (place.features.length > 0)placeName = place.features[0].place_name;
+        if (place.features.length > 0)placeName = place.features[0].place_name.split(',').splice(-2).join().trim();
         else placeName = 'Not Found';
         if (subZones) {
           // If drawing subzone only
@@ -250,7 +300,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
             draw.deleteAll();
             draw.add(state.polygon[0]);
             copyCoordinate?.subZonesPolygon.forEach((item) => {
-              if (item) {
+              if (item && item.polygon) {
                 draw.add(item.polygon[0]);
                 item.sampleZones.forEach((i) => draw.add(i));
               }
@@ -259,7 +309,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
           }
           // Disable editing of project recently created subzones and sampling zones in the previous stages
           const editingFigure = state.subZonesPolygon.find((sub) => {
-            if (sub) {
+            if (sub && sub.polygon) {
               if (sub.stage === currentStage) {
                 return false;
               }
@@ -277,7 +327,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
             draw.deleteAll();
             draw.add(state.polygon[0]);
             copyCoordinate?.subZonesPolygon.forEach((item) => {
-              if (item) {
+              if (item && item.polygon) {
                 draw.add(item.polygon[0]);
                 item.sampleZones.forEach((i) => draw.add(i));
               }
@@ -286,7 +336,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
           }
           if (data.features.length > 1) {
             const areaData = area(features);
-            const roundedArea = (Math.round(areaData * 100) / 100 / 1000000).toFixed(3);
+            const roundedArea = (Math.round(areaData * 100) / 100 / 10000).toFixed(3);
             // If subzone polygon was added as kml or geoJson file
             if (geo) {
               const copySubZones = [...state.subZonesPolygon];
@@ -450,7 +500,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
           }
           if (data.features.length > 0) {
             const areaData = area(data);
-            const roundedArea = (Math.round(areaData * 100) / 100 / 1000000).toFixed(3);
+            const roundedArea = (Math.round(areaData * 100) / 100 / 10000).toFixed(3);
             setDataPolygon({
               region: placeName,
               polygon: data.features,
@@ -459,6 +509,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
               square: roundedArea,
               coordinate: { longitude: center[0], latitude: center[1], zoom: coordinate.zoom },
               subZonesPolygon: [],
+              cidScreenShot: state.cidScreenShot || '',
             });
             setState({
               region: placeName,
@@ -468,6 +519,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
               polygonCoordinate: features.geometry.coordinates,
               coordinate: { longitude: center[0], latitude: center[1], zoom: coordinate.zoom },
               subZonesPolygon: [],
+              cidScreenShot: state.cidScreenShot || '',
             });
           } else {
             setDataPolygon({
@@ -477,6 +529,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
               square: 0,
               polygonCoordinate: [],
               coordinate: { longitude: 0, latitude: 0, zoom: 0 },
+              cidScreenShot: state.cidScreenShot || '',
             });
             setState({
               region: '',
@@ -485,6 +538,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
               codePlus: null,
               square: 0,
               coordinate: { longitude: '', latitude: '', zoom: 0 },
+              cidScreenShot: state.cidScreenShot || '',
             });
 
           // if (e.type !== 'draw.delete') alert('Use the draw tools to draw a polygon!');
@@ -540,7 +594,13 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
             {coord.zoom}
           </div>
           <div className="map__btn-wrapper">
-            <CustomBtn label={intl.formatMessage(wizardBtnBack)} handleClick={() => setShow(false)} type="button" customClass="btn__cancel" />
+            <CustomBtn
+              label={intl.formatMessage(wizardBtnBack)}
+              handleClick={() => {
+                setShow(false);
+              }}
+              type="button"
+              customClass="btn__cancel" />
           </div>
 
         </div>
@@ -548,17 +608,17 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
         <div className="map__calculation-box">
           {initZone && <p>Draw a polygon using the draw tools.</p>}
           {subZones && <p>Draw a polygon inside marked area using the draw tools.</p>}
-          {sampleZones && <p>Point {numberSampleZones} places on the map using point tool.</p>}
+          {sampleZones && <p>Place {numberSampleZones} sampling zones on the map using the point tool</p>}
           {initZone && datePolygon.square > 0 && (
             <div className="map__inside-block">
-              <span>Square kilometers</span>
+              <span>Hectares</span>
               <span>{datePolygon.square}</span>
-              <span>Region</span>
+              <span>Location</span>
               <span>{datePolygon.region}</span>
               <span>Google Plus Code</span>
               <span>{datePolygon.codePlus}</span>
               <div className="map__btn-wrapper">
-                <CustomBtn label="Upload Data" handleClick={() => uploadStateCoordinate()} />
+                <CustomBtn label="Save" handleClick={() => uploadStateCoordinate()} />
               </div>
             </div>
           )}
@@ -568,14 +628,14 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
                 <span>{contractError.msg}</span>
               ) : (
                 <>
-                  <span>Square kilometers</span>
+                  <span>Hectares</span>
                   <span>{datePolygon.subZonesPolygon[currentStage].square}</span>
-                  <span>Region</span>
+                  <span>Location</span>
                   <span>{datePolygon.region}</span>
                   <span>Google Plus Code</span>
                   <span>{datePolygon.codePlus}</span>
                   <div className="map__btn-wrapper">
-                    <CustomBtn label="Upload Data" handleClick={() => uploadStateCoordinate()} />
+                    <CustomBtn label="Save" handleClick={() => uploadStateCoordinate()} />
                   </div>
                 </>
               )}
@@ -584,7 +644,7 @@ const Map = ({ state, setState, setShow, intl, clear, setShowPrev, initZone, sub
           {sampleZones && !!datePolygon.subZonesPolygon && !!datePolygon.subZonesPolygon[currentStage].sampleZones.length && (
             <div className="map__inside-block">
               <div className="map__btn-wrapper">
-                <CustomBtn label="Upload Data" handleClick={() => uploadStateCoordinate()} />
+                <CustomBtn label="Save" handleClick={() => uploadStateCoordinate()} />
               </div>
             </div>
           )}

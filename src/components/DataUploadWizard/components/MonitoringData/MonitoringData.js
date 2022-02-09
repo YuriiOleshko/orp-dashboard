@@ -19,7 +19,7 @@ import CustomBtn from 'src/generic/CustomBtn';
 import GeoJsonUploader from 'src/components/WizardForm/Steps/AnotherComponents/GeoJsonUploader';
 import WrapperScaleImg from '../../../WrapperScaleImg/WrapperScaleImg';
 
-const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentStage, handleUpdateProject }) => {
+const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentStage, handleUpdateProject, editSub, setEditSub }) => {
   const { state } = useContext(appStore);
   const { account } = state;
   const { register, handleSubmit, errors, clearErrors } = useForm();
@@ -51,6 +51,15 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
   const [warning, setWarning] = useState('');
   const intl = useIntl();
 
+  const getValidSquare = (num) => {
+    // const oneMillion = 1e6;
+    const tenThousands = 1e4;
+    let squareMeters = (num * tenThousands).toFixed(3);
+    const decimal = squareMeters - Math.floor(squareMeters);
+    squareMeters = decimal > 0 ? squareMeters : `${Math.floor(squareMeters)}`;
+    return squareMeters;
+  };
+
   const handleClickNext = () => {
     const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i?.stage === currentStage);
     if (targetSubZoneIndex >= 0) {
@@ -58,10 +67,11 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
       // if (currentNumber === numberSampleZones) {
       if (currentNumber >= 1) {
         setWarning('');
+        setEditSub(false);
         handleUpdateProject(totalData);
         // nextPage();
       } else {
-        setWarning('You have chosen wrong number of sampling zones!');
+        setWarning("You haven't set the right number of sampling zones!");
       }
     }
   };
@@ -81,19 +91,47 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
 
   useEffect(async () => {
     if (subzoneArea) {
-      const oneMillion = 1e6;
-      const squareMeters = `${subzoneArea * oneMillion}`;
+      const squareMeters = getValidSquare(subzoneArea);
       const contract = getContract(account, contractMethods, 0);
       try {
         const num = await contract.calculate_sample_zones({ project_area: squareMeters });
         setNumberSampleZones(num);
         setContractError({});
       } catch (e) {
-        setContractError({ type: 'sample-zones', msg: 'Draw smaler zone!' });
+        setContractError({ type: 'sample-zones', msg: 'Error, try again!' });
         console.log(e);
       }
     }
   }, [subzoneArea]);
+
+  useEffect(() => {
+    const targetSubZoneIndex = coordinate.subZonesPolygon.findIndex((i) => i?.stage === currentStage);
+    if (targetSubZoneIndex >= 0) {
+      const currentNumber = coordinate.subZonesPolygon[targetSubZoneIndex].sampleZones.length;
+      // if (currentNumber === numberSampleZones || currentNumber === 0) {
+      if (currentNumber >= 1 || currentNumber === 0) {
+        setWarning('');
+      } else {
+        setWarning("You haven't set the right number of sampling zones!");
+      }
+    }
+  }, [coordinate]);
+
+  useEffect(async () => {
+    if (editSub) {
+      const subArea = totalData.subZonesPolygon.find((i) => i?.stage === currentStage);
+      if (subArea) {
+        const squareMeters = getValidSquare(subArea.square);
+        const contract = getContract(account, contractMethods, 0);
+        try {
+          const num = await contract.calculate_sample_zones({ project_area: squareMeters });
+          setNumberSampleZones(num);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }, [editSub]);
 
   return (
     <div className="upload-wizard__monitoring">
@@ -119,39 +157,39 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
       ) : (
         <WrapperScaleImg cid={totalData.cidScreenShot} />
       )}
-      <div className="upload-wizard__area-info">
-        {!!coordinate.subZonesPolygon.length && !!coordinate.subZonesPolygon[currentStage] && (
-          <div className="upload-wizard__area">
-            <span>Area, sq. km</span>
-            <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[currentStage].square}</p>
-          </div>
-        )}
-        {!!coordinate.subZonesPolygon.length
-          && !!coordinate.subZonesPolygon[currentStage]
-          && !!coordinate.subZonesPolygon[currentStage].sampleZones.length && (
-          <div className="upload-wizard__num-zones">
-            <span>Number of Sampling Zones</span>
-            <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[currentStage].sampleZones.length}</p>
-          </div>
-        )}
-      </div>
       {!!coordinate.subZonesPolygon.length && !!coordinate.subZonesPolygon[currentStage] && (
         <div className="upload-wizard__sz">
           {warning && <span className="upload-wizard__sz-warning">{warning}</span>}
           <span className="upload-wizard__sz-header">Sampling Zones</span>
           <p className="upload-wizard__sz-title">
-            Point
+            Place
             {' '}
             {numberSampleZones}
             {' '}
-            sampling zones (points) in the monitoring area so you can report on the forestation activities happening there.
+            sampling zones in the monitoring area so you can report on the forestation activities happening there.
           </p>
           <CustomBtn
-            label="Place sampling points"
+            label="Place sampling zones"
             handleClick={() => setShowSampleMap(true)}
             iconClass="icon-marker"
             customClass="btn__map btn__map-sampling"
           />
+          <div className="upload-wizard__area-info">
+            {!!coordinate.subZonesPolygon.length && !!coordinate.subZonesPolygon[currentStage] && (
+              <div className="upload-wizard__area">
+                <span>Area, Hectares</span>
+                <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[currentStage].square}</p>
+              </div>
+            )}
+            {!!coordinate.subZonesPolygon.length
+              && !!coordinate.subZonesPolygon[currentStage]
+              && !!coordinate.subZonesPolygon[currentStage].sampleZones.length && (
+              <div className="upload-wizard__num-zones">
+                <span>Number of Sampling Zones</span>
+                <p className="upload-wizard__input-value">{coordinate.subZonesPolygon[currentStage].sampleZones.length}</p>
+              </div>
+            )}
+          </div>
           {!!coordinate.subZonesPolygon[currentStage].sampleZones.length && (
             <>
               <WrapperScaleImg cid={coordinate.subZonesPolygon[currentStage].cidSampleScreenShot} />
@@ -168,9 +206,21 @@ const MonitoringData = ({ totalData, setTotalData, nextPage, prevPage, currentSt
       )}
       {showSampleMap && <Map currentStage={currentStage} sampleZones state={coordinate} setState={setCoordinate} numberSampleZones={numberSampleZones} setShow={setShowSampleMap} intl={intl} clear={clearErrors} />}
       <div className="upload-wizard__panel">
-        <CustomBtn label="Back" handleClick={prevPage} type="button" customClass="btn__cancel" />
         <CustomBtn
-          label="Save"
+          label="Back"
+          handleClick={() => {
+            if (editSub) {
+              setEditSub(false);
+              nextPage();
+            } else {
+              prevPage();
+            }
+          }}
+          type="button"
+          customClass="btn__cancel"
+        />
+        <CustomBtn
+          label={editSub ? 'Edit' : 'Save'}
           handleClick={handleClickNext}
           type="submit"
         />

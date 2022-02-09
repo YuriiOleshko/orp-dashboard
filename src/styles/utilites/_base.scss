@@ -111,6 +111,7 @@ p {
     display: block;
     width: 300px;
     margin: auto;
+    margin-bottom: 30px;
   }
   &__cancel{
     padding: 10px;
@@ -182,6 +183,35 @@ p {
     padding: 12px;
   }
 
+  &__edit-grey {
+    width: 120px;
+    background-color: transparent !important;
+    box-shadow: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: $color-font !important;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    & .icon-pencil {
+      margin-right: 12px;
+      font-size: 18px;
+      vertical-align: text-bottom;
+      &::before {
+        color: #cecece;
+      }
+    }
+  }
+
+  &__next-disabled {
+    background-color: $q_icon_bg !important;
+    &:hover {
+      background-color: $q_icon_bg !important;
+      cursor: not-allowed;
+    }
+  }
 
 }
 

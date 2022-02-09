@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable guard-for-in */
 import React, {
   useContext,
   useEffect,
@@ -10,7 +11,9 @@ import { parseNearAmount } from 'src/state/near';
 import { getContract, contractMethods } from 'src/utils/near-utils';
 import { appStore } from 'src/state/app';
 import { initIPFS, getJSONFileFromIpfs } from 'src/state/ipfs';
+import { initialQuery } from 'src/utils/api-request';
 import ProjectCard from './ProjectCard';
+import Filter from './Filter';
 import {
   title,
   filterStatus,
@@ -22,7 +25,8 @@ import {
   ipfsError,
 } from './LangExistingProject';
 
-let once = true;
+const AGENT_API = process.env.REACT_APP_AGENT_API;
+const INDEXER_API = process.env.REACT_APP_INDEXER_API;
 
 const ExistingProject = () => {
   const intl = useIntl();
@@ -31,83 +35,76 @@ const ExistingProject = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
   const [menuArr, setMenuArr] = useState(app.nftTokens.map((el) => false));
+  const [filterParams, setFilterParams] = useState(initialQuery);
+  const [sortType, setSortType] = useState({ type: 'deadline', value: 'asc' });
 
   if (app.nftTokens.length && loading) {
     setLoading(false);
   }
 
-  const loadTokens = async (fromIndex) => {
-    const ipfs = await initIPFS();
-    const contract = getContract(account, contractMethods, 0);
-    let tokenIds = [];
+  // console.log(filterParams, 'asdasdasdasd');
 
+  const loadTokens = async (fromIndex, body) => {
     try {
-      tokenIds = await contract.get_account_projects({ account_id: account.accountId, from_index: fromIndex, limit: 20 });
-      if (tokenIds.length === 0) {
+      const projects = await fetch(INDEXER_API, {
+        method: 'POST',
+        body: JSON.stringify({ ...body, from: fromIndex }),
+      }).then((data) => data.json());
+
+      if (projects.hits.hits) {
+        const parsedProjects = projects.hits.hits.map((item) => {
+          const runtimeFields = {};
+          for (const prop in item.fields) {
+            runtimeFields[prop] = item.fields[prop][0];
+          }
+          return { id: item._id, item: { ...item._source, ...runtimeFields } };
+        });
+
+        const result = await fetch(`${AGENT_API}/list`, {
+          headers: {
+            // "Accept": '*/*',
+            Authorization: `Bearer ${account.accountId}`,
+          },
+        }).then((res) => res.json());
+
+        setMenuArr(parsedProjects.map(() => false));
+        update('app.nftTokens', parsedProjects);
+        update('app.allFa', result);
         setLoading(false);
-        return;
-      }
-      // Get all files saved to ipfs for each nft token
-      const data = await Promise.all(
-        tokenIds.map(async (token) => {
-          const item = await getJSONFileFromIpfs(ipfs, token.info.cid);
-          return {
-            id: token.token_id,
-            item,
-          };
-        }),
-      );
-      // Get current stage for each nft token (need for Data Upload)
-      const currentProjectStage = await Promise.all(
-        data.map(async (proj) => {
-          const currentStage = await contract.get_current_project_stage({ project_id: proj.id });
-          return currentStage ? currentStage.id : -1;
-        }),
-      );
-      if (!state.firstLoad) {
-        const updStages = [...app.currentProjectStage];
-        const updNft = [...app.nftTokens];
-        updStages.push(...currentProjectStage);
-        updNft.push(...data);
-        setMenuArr(updNft.map((el) => false));
-        update('app.currentProjectStage', updStages);
-        update('app.nftTokens', updNft);
       } else {
-        setMenuArr(data.map(() => false));
-        update('app.currentProjectStage', currentProjectStage);
-        update('app.nftTokens', data);
-        update('firstLoad', false);
+        update('app.nftTokens', []);
+        setLoading(false);
       }
-      setLoading(false);
     } catch (e) {
+      console.log(e);
       setErr(true);
       setLoading(false);
     }
   };
 
   useEffect(async () => {
-    if (account && account.accountId && !app.nftTokens.length) await loadTokens(0);
+    if (account && account.accountId) {
+      setFilterParams((prev) => ({
+        ...prev,
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  signer_id: account.accountId,
+                },
+              },
+            ],
+          },
+        },
+      }));
+    }
   }, [account]);
 
-  useEffect(() => {
-    if (account && account.accountId && app.nftTokens.length) {
-      const handler = async (e) => {
-        const scrollHeight = window.pageYOffset + document.documentElement.clientHeight;
-        const pageHeight = document.documentElement.scrollHeight;
-        const triggerHeight = pageHeight - scrollHeight;
-        if (triggerHeight <= 500 && once) {
-          once = false;
-          await loadTokens(app.nftTokens.length);
-        } else if (triggerHeight > 500) {
-          once = true;
-        }
-      };
-
-      window.addEventListener('scroll', handler);
-
-      return () => window.removeEventListener('scroll', handler);
-    }
-  }, [account, app.nftTokens.length, state.firstLoad]);
+  useEffect(async () => {
+    const hasSigner = filterParams.query.bool.must.find((item) => item?.match?.signer_id);
+    if (hasSigner) await loadTokens(0, filterParams);
+  }, [filterParams]);
 
   useEffect(() => {
     const closeToggleMenu = (e) => {
@@ -122,8 +119,14 @@ const ExistingProject = () => {
     return () => window.removeEventListener('click', closeToggleMenu);
   }, []);
 
-  const filterNftTokens = (e) => {
+  const sortNftTokens = (e, type) => {
     e.target.classList.toggle('active');
+    setSortType((prev) => {
+      if (prev.type === type) {
+        return { type, value: prev.value === 'asc' ? 'desc' : 'asc' };
+      }
+      return { type, value: 'asc' };
+    });
   };
 
   return (
@@ -131,44 +134,47 @@ const ExistingProject = () => {
       <div className="dashboard__panel">
         <h2 className="dashboard__title">{intl.formatMessage(title)}</h2>
       </div>
-      <div className="dashboard__filters">
-        <div className="dashboard__filter-calling">
-          <div className="dashboard__filter dashboard__filter-status active" onClick={filterNftTokens}>
+      <div className="dashboard__filter">
+        <Filter setFilterParams={setFilterParams} sortType={sortType} />
+      </div>
+      <div className="dashboard__sorting-wrapper">
+        <div className="dashboard__sorting-calling">
+          <div className="dashboard__sorting dashboard__sorting-status">
             {intl.formatMessage(filterStatus)}
-            <i className="icon-play" />
+            {/* <i className="icon-play" /> */}
           </div>
-          <div className="dashboard__filter dashboard__filter-name" onClick={filterNftTokens}>
+          <div className="dashboard__sorting dashboard__sorting-name">
             {intl.formatMessage(filterName)}
-            <i className="icon-play" />
+            {/* <i className="icon-play" /> */}
           </div>
-          <div className="dashboard__filter dashboard__filter-stage" onClick={filterNftTokens}>
+          <div className="dashboard__sorting dashboard__sorting-stage">
             Stage
-            <i className="icon-play" />
+            {/* <i className="icon-play" /> */}
           </div>
         </div>
-        <div className="dashboard__filter-info">
-          <div className="dashboard__filter dashboard__filter-location" onClick={filterNftTokens}>
+        <div className="dashboard__sorting-info">
+          <div className="dashboard__sorting dashboard__sorting-location">
             {intl.formatMessage(filterLocation)}
-            <i className="icon-play" />
+            {/* <i className="icon-play" /> */}
           </div>
-          <div className="dashboard__filter dashboard__filter-area" onClick={filterNftTokens}>
+          <div className="dashboard__sorting dashboard__sorting-area" onClick={(e) => sortNftTokens(e, 'parsedSquare')}>
             {intl.formatMessage(filterArea)}
             <i className="icon-play" />
           </div>
-          <div className="dashboard__filter dashboard__filter-duration" onClick={filterNftTokens}>
+          <div className="dashboard__sorting dashboard__sorting-duration" onClick={(e) => sortNftTokens(e, 'deadline')}>
             {intl.formatMessage(filterDuration)}
             <i className="icon-play" />
           </div>
-          <div className="dashboard__filter-space">.</div>
+          <div className="dashboard__sorting-space">.</div>
         </div>
       </div>
       {err ? (<div className="dashboard__error">{intl.formatMessage(ipfsError)}</div>)
         : loading ? <div className="dashboard__loader"><Loader /></div>
-          : app.nftTokens.length && app.currentProjectStage.length ? (
+          : app.nftTokens.length && app.allFa.length ? (
             <div className="dashboard__list">
               {app.nftTokens.map((data, index) => (
                 /* eslint-disable-next-line react/no-array-index-key */
-                <ProjectCard data={data} currentStage={app.currentProjectStage[index]} key={`${index} - ${data.id}`} menuArr={menuArr} setMenuArr={setMenuArr} index={index} />
+                <ProjectCard data={data} key={`${index} - ${data.id}`} menuArr={menuArr} setMenuArr={setMenuArr} index={index} allFa={app.allFa} />
               ))}
             </div>
           ) : <div className="dashboard__loader">{intl.formatMessage(noProjects)}</div>}

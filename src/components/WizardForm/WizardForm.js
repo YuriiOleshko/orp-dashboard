@@ -28,7 +28,8 @@ import Preview from './Steps/PreviewProject';
 import PopupSuccess from '../PopupSuccess/PopupSuccess';
 import LoaderIpfs from '../LoaderIpfs.js';
 
-const stepForm = [step1, step2, step3, step4];
+// const stepForm = [step1, step2, step3, step4];
+const stepForm = [step1, step2, step3];
 
 const WizardForm = () => {
   const intl = useIntl();
@@ -72,18 +73,19 @@ const WizardForm = () => {
     setStep(step - 1);
   };
 
-  const handleMint = async () => {
+  const handleMint = async (data) => {
     const ipfs = await initIPFS();
-    const { path } = await ipfs.add(JSON.stringify(defaultState));
+    const { path } = await ipfs.add(JSON.stringify(data));
     const oneMillion = 1e6;
+    const tenThousands = 1e4;
 
     if (typeof path === 'string') {
       const deposit = parseNearAmount('1');
       const contract = getContract(account, contractMethods, 0);
-      const stake = (defaultState.budget).toString();
-      const startNanoSec = defaultState.startTimeProject * oneMillion;
-      const endNanoSec = defaultState.finishTimeProject * oneMillion;
-      const area = (defaultState.square * oneMillion).toString();
+      const stake = (data.budget).toString();
+      const startNanoSec = data.startTimeProject * oneMillion;
+      const endNanoSec = data.finishTimeProject * oneMillion;
+      const area = (data.square * tenThousands).toFixed(0); // hectares to square meters
 
       // const tokenMetadata = {
       //   media: `/ipfs/${path}`,
@@ -141,7 +143,7 @@ const WizardForm = () => {
                 />
               </div>
             </div>
-            {step < 4 && <StepWizard step={step} stepForm={stepForm} />}
+            {step < 3 && <StepWizard step={step} stepForm={stepForm} />}
             {loadProfile && (
               <div className="wizard__gen-wrapper">
                 {state.loading && (
@@ -149,8 +151,8 @@ const WizardForm = () => {
                 ) }
                 <GenInformation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} />
                 <ProjectLocation step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
-                <RefoData step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} />
-                <ProjectInit step={step} handleMint={handleMint} projState={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} firstStagePrice={firstStagePrice} setFirstStagePrice={setFirstStagePrice} totalProjectCost={totalProjectCost} setTotalProjectCost={setTotalProjectCost} />
+                <RefoData step={step} state={defaultState} setState={setDefaultState} nextPage={nextPage} prevPage={prevPage} setShowPreview={setShowPreview} handleMint={handleMint} />
+                {/* <ProjectInit step={step} handleMint={handleMint} projState={defaultState} setState={setDefaultState} prevPage={prevPage} nextPage={nextPage} setShowPreview={setShowPreview} firstStagePrice={firstStagePrice} setFirstStagePrice={setFirstStagePrice} totalProjectCost={totalProjectCost} setTotalProjectCost={setTotalProjectCost} /> */}
                 <Preview state={defaultState} handleMint={handleMint} prevPage={prevPage} step={step} showPreview={showPreview} setShowPreview={setShowPreview} firstStagePrice={firstStagePrice} totalProjectCost={totalProjectCost} />
               </div>
             )}

@@ -31,7 +31,7 @@ const PreviewReport = ({ prevPage, totalData, currentStage, handleUpdateProject 
       <div className="upload-wizard__monitoring">
         <div className="upload-wizard__area-info">
           <div className="upload-wizard__area">
-            <span>Area, sq. km</span>
+            <span>Area, Hectares</span>
             <p className="upload-wizard__input-value">{currentSubZone.square}</p>
           </div>
           <div className="upload-wizard__num-zones">
@@ -60,7 +60,7 @@ const PreviewReport = ({ prevPage, totalData, currentStage, handleUpdateProject 
         <div className="upload-preview_documents">
           {!!filesNames.length && (
           <div className="upload-preview_documents_wrap">
-            <h4>Uploaded Stage Report</h4>
+            <h4>Additional Documents</h4>
             {filesNames.reverse().map((item, index) => <span className="upload-preview_documents_wrap-img" key={item}>{`${index + 1}. ${item}`}</span>)}
           </div>
           )}

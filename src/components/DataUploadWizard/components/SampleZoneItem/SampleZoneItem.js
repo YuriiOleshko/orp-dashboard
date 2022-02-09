@@ -95,8 +95,8 @@ const SampleZoneItem = ({ sampleName, coordinates, sampleTrees, setSampleZones, 
         <div className="content-header">
           <span className="header-tree">Tree</span>
           <span className="header-status">Tree status</span>
-          <span className="header-height">Height, sm</span>
-          <span className="header-diameter">Diameter, sm</span>
+          <span className="header-height">Height, cm</span>
+          <span className="header-diameter">Diameter, cm</span>
           <span className="header-tree-photo">Upload tree photo</span>
           <span className="header-label-photo">Upload tree label photo</span>
         </div>

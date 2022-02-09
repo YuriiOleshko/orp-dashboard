@@ -110,7 +110,18 @@ const CreateAcc = () => {
                 />
                 <CustomInput
                   type="checkbox"
-                  label={intl.formatMessage(inputPlaceholderTerms)}
+                  label={(
+                    <span>
+                      By continuing, you agree to OFP
+                      {' '}
+                      <Link to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms of Use</Link>
+                      {' '}
+                      and
+                      {' '}
+                      <Link to="/private_notice" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
+                      .
+                    </span>
+)}
                   error={errors.terms}
                   name="terms"
                   value={false}

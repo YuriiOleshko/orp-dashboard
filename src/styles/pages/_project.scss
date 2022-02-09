@@ -26,28 +26,6 @@
       }
     }
 
-    .btn__edit-grey {
-      width: 120px;
-      background-color: transparent;
-      box-shadow: none;
-      font-size: 12px;
-      font-weight: 700;
-      color: $color-font;
-
-      &:hover {
-        background-color: transparent;
-      }
-
-      & .icon-pencil {
-        margin-right: 12px;
-        font-size: 18px;
-        vertical-align: text-bottom;
-        &::before {
-          color: #cecece;
-        }
-      }
-    }
-
     .header-name {
       font-size: 28px;
       font-weight: 700;
@@ -252,10 +230,10 @@
   }
 
   &__description {
-    flex: 1;
+    flex: 2.6;
     background: $white;
     padding: 20px;
-    margin-right: 30px;
+    // margin-right: 30px;
     border-radius: 8px;
     font-size: 16px;
 
@@ -267,6 +245,7 @@
   }
 
   &__files {
+    flex: 1;
     padding: 20px 45px 27px 30px;
     background-color: $white;
     font-size: 16px;
@@ -284,6 +263,9 @@
       &:last-child {
         margin-bottom: 0;
       }
+      a {
+        color: $spinkit-spinner-color;
+      }
     }
 
     .file-visibility {
@@ -293,6 +275,24 @@
 
     .file-public {
       color: $lightBlue;
+    }
+  }
+
+  &__files-margin {
+    margin-left: 30px;
+  }
+
+  &__icon {
+    flex: none;
+    & img {
+      width: 123px;
+    }
+  }
+
+  &__icon-detail {
+    flex: none;
+    & img {
+      height: 123px;
     }
   }
 

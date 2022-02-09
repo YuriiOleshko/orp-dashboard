@@ -26,7 +26,7 @@ import { appStore } from 'src/state/app';
 import LoaderIpfs from 'src/components/LoaderIpfs.js';
 import Loader from 'src/components/Loader';
 import Chart from 'src/components/Chart/Chart';
-import { getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
+import { getFilesFromDirWithContent, getJSONFileFromIpfs, initIPFS } from 'src/state/ipfs';
 import UpdatedFiles from './UpdatedFiles';
 import { noDublicateElements } from 'src/utils/convert-utils';
 import {
@@ -34,6 +34,7 @@ import {
 } from 'src/state/near';
 import { getContract, contractMethods } from 'src/utils/near-utils';
 import PopupSuccess from 'src/components/PopupSuccess/PopupSuccess';
+import IconCropper from 'src/components/WizardForm/Steps/GenInformation/IconCropper/IconCropper';
 
 const options = [{ label: 'Afforestation & reforestation', value: 'Afforestation & reforestation' }, { label: 'Conservation', value: 'Conservation' }, { label: 'Improved forest management', value: 'Improved forest management' }];
 
@@ -138,6 +139,11 @@ const EditPage = () => {
   const [infoChart, setInfoChart] = useState([]);
   const [firstStagePrice, setFirstStagePrice] = useState();
   const [totalProjectCost, setTotalProjectCost] = useState();
+  const [openCropper, setOpenCropper] = useState(false);
+  const [iconType, setIconType] = useState('');
+  const [detailIcon, setDetailIcon] = useState({});
+  const [detailIconFile, setDetailIconFile] = useState([]);
+  const [previewDetailImg, setPreviewDetailImg] = useState('');
 
   const countSumOfParts = (funders, part) => {
     const parts = funders.map((item) => +Object.values(item)[Object.values(item).length - 1]);
@@ -250,13 +256,20 @@ const EditPage = () => {
   useEffect(async () => {
     if (!loadingData) {
       const ipfs = await initIPFS();
+      if (initState.iconDetailCidDir) {
+        const res = await getFilesFromDirWithContent(ipfs, initState.iconDetailCidDir);
+        if (res && res[0].content) {
+          const blobImage = new Blob(res[0].content);
+          const imageSrc = URL.createObjectURL(blobImage);
+          setPreviewDetailImg(imageSrc);
+        }
+      }
       if (initState.iconCidDir) {
-        let count = 0;
-        for await (const file of ipfs.get(initState.iconCidDir)) {
-          if (count === 1) {
-            setPreviewImg(`${ipfsURL}/ipfs/${file.path}`);
-          }
-          count++;
+        const res = await getFilesFromDirWithContent(ipfs, initState.iconCidDir);
+        if (res && res[0].content) {
+          const blobImage = new Blob(res[0].content);
+          const imageSrc = URL.createObjectURL(blobImage);
+          setPreviewImg(imageSrc);
         }
       }
     }
@@ -268,12 +281,13 @@ const EditPage = () => {
 
     if (typeof path === 'string') {
       const oneMillion = 1e6;
+      const tenThousands = 1e4;
       const deposit = parseNearAmount('1');
       const contract = getContract(account, contractMethods, 0);
       const stake = (dataProject.budget * 1e2).toString();
       const startNanoSec = dataProject.startTimeProject * oneMillion;
       const endNanoSec = dataProject.finishTimeProject * oneMillion;
-      const area = (dataProject.square * oneMillion).toString();
+      const area = (dataProject.square * tenThousands).toFixed(0); // hectares to square meters
 
       // const tokenMetadata = {
       //   media: `/ipfs/${path}`,
@@ -307,7 +321,7 @@ const EditPage = () => {
     const updAmountTrees = copyData.amountTrees.replace(/\D/g, '');
     const updDataTrees = { amountTrees: updAmountTrees };
     const privateFiles = { privateFiles: noDublicateElements(filesSave, newFilesSave, 'path') };
-    const newInitState = { ...initState, ...updData, ...updDataTrees, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles, ...fromDate, ...toDate, ...details, ...fileIcon };
+    const newInitState = { ...initState, ...updData, ...updDataTrees, ...additional, ...benefits, ...files, ...avgTrees, ...privateFiles, ...fromDate, ...toDate, ...details, ...fileIcon, ...detailIcon };
     setInitState({ ...newInitState });
     if (!isFiles) handleMintUpdate(newInitState);
   };
@@ -350,6 +364,8 @@ const EditPage = () => {
 
   return (
     <div className="preview">
+      {iconType === 'iconCidDir' && myFile[0] && openCropper && <IconCropper imageFile={myFile[0]} change={setFileIcon} setOpenCropper={setOpenCropper} setPreviewImg={setPreviewImg} iconType={iconType} />}
+      {iconType === 'iconDetailCidDir' && detailIconFile[0] && openCropper && <IconCropper imageFile={detailIconFile[0]} change={setDetailIcon} setOpenCropper={setOpenCropper} setPreviewImg={setPreviewDetailImg} iconType={iconType} />}
       {nftTxHash && <PopupSuccess close={togglePopup} hash={nftTxHash} />}
       {loadingData ? <div className="dashboard__loader"><Loader /></div>
         : (
@@ -482,13 +498,18 @@ const EditPage = () => {
                 <div className="preview__icon-file">
                   <span className="preview__label">{intl.formatMessage(step1Input6)}</span>
                   <div className="wizard__icon-file noscroll">
-                    <DropzoneInput classCutom="" change={setFileIcon} state={initState} myFiles={myFile} setMyFiles={setMyFile} previewImg={previewImg} setPreviewImg={setPreviewImg} setResolutionWarning={setResolutionWarning} />
+                    <DropzoneInput classCutom="" change={setFileIcon} state={initState} myFiles={myFile} setMyFiles={setMyFile} previewImg={previewImg} setPreviewImg={setPreviewImg} setResolutionWarning={setResolutionWarning} iconType="iconCidDir" setIconType={setIconType} openCropper={openCropper} setOpenCropper={setOpenCropper} />
                     {resolutionWarning && <span className="wizard__icon-file-warning">{resolutionWarning}</span>}
                   </div>
                 </div>
                 <div className="preview__wrapper-element textarea">
                   <label className="input__label ">{intl.formatMessage(step1Input7)}</label>
                   <textarea name="GenInfo" placeholder={intl.formatMessage(step1Input2Place)} defaultValue={initState.details} value={details.details} onChange={(ev) => setDetails({ details: ev.target.value })} />
+                </div>
+                <div className="wizard__icon-detail noscroll">
+                  <span className="input__label">Project Detail Photo</span>
+                  <DropzoneInput classCustom="dropzone__icon-detail" change={setDetailIcon} state={initState} myFiles={detailIconFile} setMyFiles={setDetailIconFile} previewImg={previewDetailImg} setPreviewImg={setPreviewDetailImg} setResolutionWarning={setResolutionWarning} iconType="iconDetailCidDir" setIconType={setIconType} openCropper={openCropper} setOpenCropper={setOpenCropper} />
+                  {resolutionWarning && <span className="wizard__icon-file-warning">{resolutionWarning}</span>}
                 </div>
               </div>
             </div>
@@ -531,7 +552,7 @@ const EditPage = () => {
                   </div> */}
                   <UpdatedFiles state={initState} loadingData={loadingData} privateFiles={filesSave} setPrivateFiles={setFilesSave} setUpdatedFiles={setUpdatedFiles} updatedFiles={updatedFiles} />
                   <div className="wizard__icon-file preview__wrapper-element">
-                    <div className="wizard__wrapper-tooltip">
+                    <div className="wizard__wrapper-tooltip wizard__wrapper-tooltip-fixed">
                       {' '}
                       <div className="wizard__tooltip-point" data-tip data-for="step3-tooltip-files">
                         <ReactSVG src={buble} />
@@ -559,17 +580,17 @@ const EditPage = () => {
                 </div>
               </div>
             </div>
-            <div className="preview__btn-wrapper center">
+            {/* <div className="preview__btn-wrapper center">
               <CustomBtn label={intl.formatMessage(editLabelBtn)} handleClick={() => recalculateDataCost()} customClass="btn" />
-            </div>
-            <div className="preview__block">
+            </div> */}
+            {/* <div className="preview__block">
               <div className="preview__block">
                 <h3 className="preview__title">
                   {intl.formatMessage(editTitleCost)}
                 </h3>
                 <div className="preview__block-wrapper ">
                   <div className="wizard__cost-list">
-                    {/* <div className="wizard__cost-item">
+                    <div className="wizard__cost-item">
                       <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-1">
                         <ReactSVG src={buble} />
                       </div>
@@ -592,7 +613,7 @@ const EditPage = () => {
                       <span className="bold">
                         <NumberFormat value={dataCost.costs[1]} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                       </span>
-                    </div> */}
+                    </div>
                     <div className="wizard__cost-item">
                       <div className="wizard__tooltip-point" data-tip data-for="step4-tooltip-3">
                         <ReactSVG src={buble} />
@@ -602,7 +623,6 @@ const EditPage = () => {
                       </ReactTooltip>
                       <span>{intl.formatMessage(step4Coast3)}</span>
                       <span className="bold">
-                        {/* value={dataCost.costs[2]} */}
                         <NumberFormat value={firstStagePrice} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                       </span>
                     </div>
@@ -612,11 +632,9 @@ const EditPage = () => {
                       <h3 className="wizard__cost-title">{intl.formatMessage(step4TitleTime)}</h3>
                     </div>
                     <div className="wizard__wrapper-chart">
-                      {/* <Chart data={dataCost.dataChart} width={dataCost.widthChart} /> */}
                       <Chart data={infoChart} />
                       <div className="wizard__point-words">
                         <span className="green">{intl.formatMessage(step4PointDai)}</span>
-                        {/* <span className="blue">{intl.formatMessage(step4PointSlope)}</span> */}
                       </div>
                     </div>
                   </div>
@@ -630,14 +648,13 @@ const EditPage = () => {
                       </ReactTooltip>
                       <span>{intl.formatMessage(step4Coast4)}</span>
                       <span className="bold">
-                        {/* value={dataCost.costs[3]} */}
                         <NumberFormat value={totalProjectCost} displayType="text" thousandSeparator decimalScale={2} fixedDecimalScale suffix=" USD" />
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="preview__btn-wrapper">
               <CustomBtn label={intl.formatMessage(btnLabel)} handleClick={() => history.push({ pathname: `/project/${nameId}`, state: initState })} type="button" customClass="btn__cancel" />
               <CustomBtn disabled={isDisabledBtn} label={intl.formatMessage(editBtnUpdt)} type="submit" handleClick={() => { }} customClass={`btn__next ${isDisabledBtn ? 'btn__next-disabled' : ''}`} />

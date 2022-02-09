@@ -1,6 +1,7 @@
 .scaler{
   width: 100%;
-  margin-top: 20px;
+  margin-top: 30px;
+  // margin-top: 20px;
 
   &.active{
     .scaler__popup{
@@ -43,7 +44,7 @@
       width: 100%;
       z-index: 5;
       height: 100%;
-      opacity: 0.5;
+      opacity: 0.1;
       position: absolute;
       top: 0;
       left:0;

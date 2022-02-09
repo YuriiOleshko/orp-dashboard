@@ -1,0 +1,103 @@
+.greenLine{
+  border: 2px solid #7BE495;
+  background-color: #7BE495;
+  height: 40px;
+  margin-bottom: 80px;
+};
+
+.cont{
+  margin-left: 270px;
+  margin-bottom: 250px;
+  margin-right: 270px;
+
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+
+  color: rgb(34, 29, 29);
+}
+
+.logo-block{
+  margin-bottom: 80px;
+}
+
+.logo{
+  margin-right: 10px;
+}
+
+.logo_FP{
+  margin-right: 20px;
+}
+
+.block_text{
+  margin-bottom: 60px;
+}
+
+.second_order_heading{
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+  letter-spacing: 0em;
+  text-align: left;
+
+  color: #1C505D;
+
+  margin-bottom: 20px;
+}
+
+.title {
+font-size: 21px;
+font-style: normal;
+font-weight: 700;
+line-height: 32px;
+letter-spacing: 0em;
+text-align: left;
+
+margin-top: 60px;
+margin-bottom: 40px;
+color: rgb(0, 0, 0);
+}
+
+.text{
+  margin-bottom: 20px;
+}
+
+.blue-text{
+  color: #0f6f86;
+}
+
+.list-style {
+  list-style-type: disc;
+  margin-left: 15px;
+}
+
+.list-number {
+  list-style-type: number;
+  // margin-left: 15px;
+  cursor: pointer;
+}
+
+.list-number:hover {
+  color: blue;
+}
+
+.copyright{
+  margin-top: 120px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.inputRef {
+  width: 0px;
+  height: 0px;
+  border: none;
+}

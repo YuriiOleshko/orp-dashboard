@@ -16,6 +16,7 @@ import {
   step1Input3, step1Input4, step1Input4Place, step1Input6,
   step1Input7, step1Creator, wizardBtnNext,
 } from '../../LangWizardForm';
+import IconCropper from './IconCropper';
 import CustomInput from '../../../../generic/CustomInput';
 import FunderInfo from '../../../FunderInfo/FunderInfo';
 import CustomBtn from '../../../../generic/CustomBtn';
@@ -38,6 +39,11 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   const [dateWarning, setDateWarning] = useState(false);
   const [isDisabledBtn, setIsDisabledBtn] = useState(false);
   const [resolutionWarning, setResolutionWarning] = useState('');
+  const [openCropper, setOpenCropper] = useState(false);
+  const [detailIcon, setDetailIcon] = useState({});
+  const [detailIconFile, setDetailIconFile] = useState([]);
+  const [previewDetailImg, setPreviewDetailImg] = useState('');
+  const [iconType, setIconType] = useState('');
 
   // const twoYears = new Date(1972, 0, 0, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
   const threeDays = new Date(1970, 0, 3, 0, 0, 0, 0) - new Date(1970, 0, 0, 0, 0, 0, 0);
@@ -104,7 +110,7 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
     const projectDuration = toDate.finishTimeProject - fromDate.startTimeProject;
     if (projectDuration >= threeDays && projectDuration <= thrirtyDays) {
       setDateWarning(false);
-      setState({ ...state, ...updData, ...fromDate, ...toDate, ...details, ...fileIcon });
+      setState({ ...state, ...updData, ...fromDate, ...toDate, ...details, ...fileIcon, ...detailIcon });
       nextPage();
     } else {
       setDateWarning(true);
@@ -116,6 +122,8 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
   }
   return (
     <div className="wizard__wrapper-form">
+      {iconType === 'iconCidDir' && myFiles[0] && openCropper && <IconCropper imageFile={myFiles[0]} change={setFileIcon} setOpenCropper={setOpenCropper} setPreviewImg={setPreviewImg} iconType={iconType} />}
+      {iconType === 'iconDetailCidDir' && detailIconFile[0] && openCropper && <IconCropper imageFile={detailIconFile[0]} change={setDetailIcon} setOpenCropper={setOpenCropper} setPreviewImg={setPreviewDetailImg} iconType={iconType} />}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="wizard__step1-wrapper">
           <CustomInput
@@ -271,7 +279,12 @@ const GenInformation = ({ step, nextPage, state, setState }) => {
         </div>
         <div className="wizard__icon-file noscroll">
           <span className="input__label">{intl.formatMessage(step1Input6)}</span>
-          <DropzoneInput classCutom="" change={setFileIcon} state={state} myFiles={myFiles} setMyFiles={setMyFiles} previewImg={previewImg} setPreviewImg={setPreviewImg} setResolutionWarning={setResolutionWarning} />
+          <DropzoneInput classCutom="" change={setFileIcon} state={state} myFiles={myFiles} setMyFiles={setMyFiles} previewImg={previewImg} setPreviewImg={setPreviewImg} setResolutionWarning={setResolutionWarning} iconType="iconCidDir" setIconType={setIconType} openCropper={openCropper} setOpenCropper={setOpenCropper} />
+          {resolutionWarning && <span className="wizard__icon-file-warning">{resolutionWarning}</span>}
+        </div>
+        <div className="wizard__icon-detail noscroll">
+          <span className="input__label">Project Detail Photo</span>
+          <DropzoneInput classCustom="dropzone__icon-detail" change={setDetailIcon} state={state} myFiles={detailIconFile} setMyFiles={setDetailIconFile} previewImg={previewDetailImg} setPreviewImg={setPreviewDetailImg} setResolutionWarning={setResolutionWarning} iconType="iconDetailCidDir" setIconType={setIconType} openCropper={openCropper} setOpenCropper={setOpenCropper} />
           {resolutionWarning && <span className="wizard__icon-file-warning">{resolutionWarning}</span>}
         </div>
         <div className="wizard__wrapper-btn-next">

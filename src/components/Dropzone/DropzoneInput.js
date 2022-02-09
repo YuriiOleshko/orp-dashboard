@@ -31,6 +31,9 @@ const DropzoneInput = ({ classCustom,
   setConvertFiles,
   acceptedFileTypes,
   setResolutionWarning,
+  setOpenCropper,
+  iconType,
+  setIconType,
   showFileStatus = true }) => {
   // const [previewImg, setPreviewImg] = useState('');
   const { update } = useContext(appStore);
@@ -50,16 +53,18 @@ const DropzoneInput = ({ classCustom,
       let count = 0;
       update('loading', true);
       const resultArray = [];
-      for await (const result of ipfs.addAll(newArray, addOptions)) {
-        if (!result.path) {
-          if (multi) change({ filesCidDir: `/ipfs/${result.cid.string}` });
-          else change({ iconCidDir: `/ipfs/${result.cid.string}` });
-        } else resultArray.push({ private: false, path: result.path });
-        // eslint-disable-next-line no-unused-vars
-        count++;
+      if (multi) {
+        for await (const result of ipfs.addAll(newArray, addOptions)) {
+          if (!result.path) {
+            change({ filesCidDir: `/ipfs/${result.cid.string}` });
+            // if (multi) change({ filesCidDir: `/ipfs/${result.cid.string}` });
+            // else change({ iconCidDir: `/ipfs/${result.cid.string}` });
+          } else resultArray.push({ private: false, path: result.path });
+          // eslint-disable-next-line no-unused-vars
+          count++;
+        }
+        setFilesSave([...filesSave, ...resultArray]);
       }
-      if (multi) setFilesSave([...filesSave, ...resultArray]);
-
       update('loading', false);
     } else if (edit) {
       if (multi) {
@@ -89,9 +94,13 @@ const DropzoneInput = ({ classCustom,
             if (this.height >= MIN_HEIGHT_RES && this.width >= MIN_WIDTH_RES) {
               setResolutionWarning('');
               // eslint-disable-next-line no-use-before-define
-              convertToBuffer(reader, index, arr, el.path);
+              // convertToBuffer(reader, index, arr, el.path);
+              setIconType(iconType);
+              setOpenCropper(true);
             } else {
               setResolutionWarning(`Photo resolution must be more than ${MIN_WIDTH_RES}x${MIN_HEIGHT_RES}`);
+              setIconType('');
+              setOpenCropper(false);
             }
           };
         } else {
@@ -106,7 +115,7 @@ const DropzoneInput = ({ classCustom,
           image.onload = function () {
             if (this.height >= MIN_HEIGHT_RES && this.width >= MIN_WIDTH_RES) {
               setResolutionWarning('');
-              setPreviewImg(event.target.result);
+              // setPreviewImg(event.target.result);
             } else {
               setResolutionWarning(`Photo resolution must be more than ${MIN_WIDTH_RES}x${MIN_HEIGHT_RES}`);
             }
@@ -114,7 +123,6 @@ const DropzoneInput = ({ classCustom,
         };
       }
     });
-
     if (multi) setMyFiles([...currentlyFiles]);
     else setMyFiles([...acceptedFiles]);
   }, [myFiles]);
@@ -144,7 +152,7 @@ const DropzoneInput = ({ classCustom,
     }
     if (!multi) {
       setPreviewImg('');
-      change({ iconCidDir: '' });
+      change({ [iconType]: '' });
     } else {
       const newSave = [...filesSave];
       newSave.splice(indexItem, 1);
@@ -159,11 +167,11 @@ const DropzoneInput = ({ classCustom,
         // eslint-disable-next-line no-use-before-define
         convertToBuffer(reader, index, arr, el.path);
       };
-      if (!multi) {
-        readerUrl.onloadend = (event) => {
-          setPreviewImg(event.target.result);
-        };
-      }
+      // if (!multi) {
+      //   readerUrl.onloadend = (event) => {
+      //     setPreviewImg(event.target.result);
+      //   };
+      // }
     });
   };
 
@@ -256,7 +264,7 @@ const DropzoneInput = ({ classCustom,
           <div {...getRootProps({ className: customClass })}>
             <input {...getInputProps()} />
             <i className="icon-iconfile" />
-            {previewImg && <div className="wizard__drop-icone"><img src={previewImg} alt="alt" /></div>}
+            {previewImg && <div className={iconType === 'iconCidDir' ? 'wizard__drop-icon' : 'wizard__drop-detail-icon'}><img src={previewImg} alt="alt" /></div>}
             {/* eslint-disable-next-line react/no-unescaped-entities */}
           </div>
         ) : null}

@@ -66,7 +66,7 @@
   "wizard.step2.input1" : "Map Coordinates",
   "wizard.step2.input1.place1" : "Longitude",
   "wizard.step2.input1.place2" : "Latitude",
-  "wizard.step2.input2" : "Region",
+  "wizard.step2.input2" : "Location",
   "wizard.step2.geo" : "GEOjson File Upload",
   "wizard.step2.prev.title" : "Let’s set up your forest zone!",
   "wizard.step2.prev.desc" : "Outline your area with precision, by either drawing it manually on the map or uploading the GEO data file. Make sure to check the location and borders of your zone once it’s outlined on the map. This will help avoid your project overlapping with other projects.",
@@ -76,9 +76,9 @@
   "wizard.step2.geo.reset": "Reset",
   "wizard.step2.list.dwn" : "Download full coordinates list",
   "wizard.step2.code-plus" : "Google Plus Code",
-  "wizard.step3.input1" : "Surface Area, Sq.Km",
+  "wizard.step3.input1" : "Surface Area, Hectares",
   "wizard.step3.input2" : "Estimated Number Of Trees",
-  "wizard.step3.input3" : "Avg Tree Density, Per Sq.Km",
+  "wizard.step3.input3" : "Avg Tree Density, Per Hectare",
   "wizard.step3.input3.place" : "Tree density",
   "wizard.step3.input4" : "Tree density",
   "wizard.step3.option1" : "Coniferous",
@@ -93,7 +93,7 @@
   "wizard.step3.area" : "Additional Project Information:",
   "wizard.step3.area.place" : "Project information",
   "wizard.step3.tooltip.textarea" : "The more details you provide about your project, the better it is introduced to the community. Include tree species, suppliers, information about yourself and your team, etc.",
-  "wizard.step3.tooltip.files": "Helpful documents to include can be: Land tenure claims/deeds, forest maps or ground surveys, project goals, or any other information that helps describe your project.",
+  "wizard.step3.tooltip.files": "Helpful documents to include can be: Land tenure claims/deeds, forest maps or ground surveys, project goals, or any other information that helps describe your project. Private means your document will be stored in blockchain but not shown to OFP users. Public means your document will be both stored in blockchain and made visible to OFP users.",
   "wizard.step4.title-coast" : "Project Costs",
   "wizard.step4.title-time" : "Project Upload Timeline",
   "wizard.step4.coast1" : " Project Creation Cost:",
@@ -129,7 +129,7 @@
   "existing.filter.status": "Status",
   "existing.filter.name": "Name",
   "existing.filter.location": "Location",
-  "existing.filter.area": "Area, sq.km",
+  "existing.filter.area": "Area, Hectares",
   "existing.filter.duration": "Duration",
   "existing.noProjects": "No projects yet",
   "existing.ipfsError": "Some error with IPFS, try later",
@@ -147,7 +147,7 @@
 
 
   "projectPage.info.size": "Project Size",
-  "projectPage.info.sqkm": "Sq.Km.",
+  "projectPage.info.sqkm": "Hectares",
   "projectPage.info.trees": "trees",
   "projectPage.info.totalDuration": "Total project duration",
   "projectPage.info.months": "months",
@@ -166,5 +166,13 @@
   "projectPage.location": "Project Location",
 
   "uploadWizard.sampleData": "Field Data",
-  "uploadWizard.documents": "Documents"
+  "uploadWizard.documents": "Documents",
+
+  
+  "filter.project.placeholder": "Name of project",
+  "filter.project.label": "Filter by project",
+  "filter.location.placeholder": "Location area",
+  "filter.location.label": "Location",
+  "filter.stage.placeholder": "Stage upload",
+  "filter.stage.label": "Stage Upload"
 }

@@ -20,6 +20,7 @@ const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
 const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPreview, firstStagePrice, totalProjectCost }) => {
   const intl = useIntl();
   const [iconHash, setIconHash] = useState('');
+  const [detailIconHash, setDetailIconHash] = useState('');
   const [screenHash, setScreenHash] = useState('');
   const [filesNames, setFilesNames] = useState([]);
   useEffect(async () => {
@@ -46,6 +47,12 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
         //   count++;
         // }
       }
+      if (state.iconDetailCidDir) {
+        const icon = await getFilesFromDirWithContent(ipfs, state.iconDetailCidDir);
+        const blobIcon = new Blob(icon[0].content);
+        const iconUrl = URL.createObjectURL(blobIcon);
+        setDetailIconHash(iconUrl);
+      }
     }
   }, [showPreview]);
 
@@ -58,18 +65,18 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
     setShowPreview(false);
     prevPage();
   };
-  if (step !== 4) {
+  if (step !== 3) {
     return null;
   }
   return (
     <div className="preview">
       <div className="preview__gen">
-        <div className="preview__block">
+        {/* <div className="preview__block">
           <h3 className="preview__title">
             {intl.formatMessage(step4TitleCoast)}
           </h3>
           <div className="preview__block-wrapper">
-            {/* <div className="preview__wrapper-element cost">
+            <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
                   {intl.formatMessage(step4Coast1)}
@@ -91,7 +98,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 </span>
 
               </p>
-            </div> */}
+            </div>
             <div className="preview__wrapper-element cost">
               <p className="preview__field center">
                 <span>
@@ -117,7 +124,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="preview__block">
           <h3 className="preview__title">
@@ -152,7 +159,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                     { new Date(state.startTimeProject).toLocaleDateString('en-US') || ''}
                   </p>
                 </div>
-                <div className="preview__wrapper-element">
+                <div className="preview__wrapper-element finish">
                   <p className="preview__field">
                     {new Date(state.finishTimeProject).toLocaleDateString('en-US') || ''}
                   </p>
@@ -188,13 +195,13 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 </div>
               </div>
             ))} */}
-            <div className="preview__wrapper-element">
+            <div className="preview__wrapper-element details">
               <span className="preview__label">{intl.formatMessage(step1Input7)}</span>
               <p className="preview__field textarea ">
                 {state.details || ''}
               </p>
             </div>
-            <div className="preview__icon-file">
+            <div className="preview__icon-file noscroll">
               <span className="preview__label">{intl.formatMessage(step1Input6)}</span>
               {!iconHash ? (
                 <div className="preview__icon">
@@ -204,6 +211,19 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                 : (
                   <div className="preview__icon">
                     <img src={iconHash} alt="img" />
+                  </div>
+                )}
+            </div>
+            <div className="preview__detail-file noscroll">
+              <span className="preview__label">{intl.formatMessage(step1Input6)}</span>
+              {!detailIconHash ? (
+                <div className="preview__icon">
+                  <i className="icon-iconfile" />
+                </div>
+              )
+                : (
+                  <div className="preview__detail-icon">
+                    <img src={detailIconHash} alt="img" />
                   </div>
                 )}
             </div>
@@ -220,7 +240,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
               </div>
             )}
             <div className="preview__wrapper-element">
-              <span className="preview__label">Country</span>
+              <span className="preview__label">Location</span>
               <p className="preview__field  small">
                 {state.region || ''}
               </p>
@@ -295,12 +315,12 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
                     {<NumberFormat value={state.amountTrees} displayType="text" thousandSeparator /> || ''}
                   </p>
                 </div>
-                {/* <div className="preview__wrapper-element">
-                  <span className="preview__label">{intl.formatMessage(step3Input3)}</span>
+                <div className="preview__wrapper-element">
+                  <span className="preview__label">Approx. tree density (trees/ha)</span>
                   <p className="preview__field  ">
-                    {<NumberFormat value={state.avgTrees} displayType="text" thousandSeparator /> || ''}
+                    <NumberFormat value={state.avgTrees || ''} displayType="text" thousandSeparator />
                   </p>
-                </div> */}
+                </div>
               </div>
               {/* {state.benefits && (
               <div className="wizard__benefits preview__benefits ">
@@ -362,7 +382,7 @@ const Preview = ({ state, prevPage, handleMint, step, showPreview, setShowPrevie
         </div>
         <div className="preview__btn-wrapper">
           <CustomBtn label={intl.formatMessage(backPreview)} handleClick={() => backTo()} type="button" customClass="btn__cancel" />
-          <CustomBtn label={intl.formatMessage(ste4Create)} type="submit" handleClick={handleMint} customClass="btn__next" />
+          <CustomBtn label={intl.formatMessage(ste4Create)} type="submit" handleClick={() => handleMint(state)} customClass="btn__next" />
         </div>
       </div>
     </div>

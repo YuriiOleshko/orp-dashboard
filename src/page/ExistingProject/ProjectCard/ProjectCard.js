@@ -4,22 +4,43 @@ import React, {
   useRef,
   useState,
   useEffect,
+  useContext,
 } from 'react';
 import NumberFormat from 'react-number-format';
 import { useHistory } from 'react-router';
-import { formattedDate } from '../../../utils/convert-utils';
+import { appStore } from 'src/state/app';
+import { contractMethods, getContract } from 'src/utils/near-utils';
+import { timerCountdown, formattedDate } from '../../../utils/convert-utils';
 
-const ProjectCard = ({ data, currentStage, menuArr, setMenuArr, index }) => {
-  const history = useHistory();
+const ProjectCard = ({ data, menuArr, setMenuArr, index, allFa }) => {
+  const { state } = useContext(appStore);
+  const { account, app } = state;
+
   const { id, item } = data;
-  const { name, region, square, startTimeProject, finishTimeProject } = item;
-  const noData = '---';
-  const [openSettings, setSettings] = useState(true);
+  const { name, region, square, startTimeProject, finishTimeProject, currentStage, deadline } = item;
+
+  const [stageTimeleft, setStageTimeleft] = useState(deadline / 1e6);
+  const history = useHistory();
   const ref = useRef();
 
+  const noData = '---';
+  const [openSettings, setSettings] = useState(true);
+
+  let faExist = true;
   let location = noData;
   const subZoneExist = item.subZonesPolygon?.find((i) => i?.stage === currentStage);
   const finished = item.subZonesPolygon?.find((i) => i?.stage === currentStage && i?.finished);
+
+  allFa.forEach((i) => {
+    const projectIds = Object.keys(i.projects);
+    const projectSamples = Object.values(i.projects);
+    projectIds.forEach((proj) => {
+      projectSamples[0].forEach((sample) => {
+        if (proj === id && currentStage === sample.stageId) faExist = true;
+        else faExist = false;
+      });
+    });
+  });
 
   if (region) {
     location = region.split(', ');
@@ -28,7 +49,9 @@ const ProjectCard = ({ data, currentStage, menuArr, setMenuArr, index }) => {
 
   const handleClick = (type) => {
     if (type === 'monitoring' && !subZoneExist) history.push({ pathname: `/data-upload/${id}`, state: data });
-    if (type === 'report' && subZoneExist && !finished) history.push({ pathname: `/data-upload/${id}`, state: data });
+    if (type === 'fa' && subZoneExist && !finished) history.push({ pathname: '/field-agents', state: data });
+    if (type === 'report' && subZoneExist && faExist && !finished) history.push({ pathname: `/data-upload/${id}`, state: data });
+    if (type === 'edit' && subZoneExist && !finished) history.push({ pathname: `/data-upload/${id}`, state: data });
   };
 
   useEffect(() => {
@@ -42,28 +65,46 @@ const ProjectCard = ({ data, currentStage, menuArr, setMenuArr, index }) => {
     }
   }, [menuArr]);
 
+  useEffect(async () => {
+    const timer = setTimeout(() => {
+      if (stageTimeleft <= 0) {
+        setStageTimeleft(0);
+      } else {
+        setStageTimeleft(stageTimeleft - 1000);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [stageTimeleft]);
+
   return (
     <div className="dashboard__list__wrap">
       <div className="dashboard__info__window" ref={ref}>
         <div className="dashboard__info__wrap">
+          <span
+            className={`dashboard__info ${subZoneExist && !finished ? 'active' : 'not-active'}`}
+            onClick={() => handleClick('edit')}
+          >
+            View Monitoring Zones
+          </span>
           <span
             className="dashboard__info active"
             onClick={() => history.push({ pathname: `/project/${id}`, state: item })}
           >
             View Project
           </span>
-          {/* <span
-            className={`dashboard__info ${subZoneExist ? 'not-active' : 'active'}`}
-            onClick={() => handleClick('monitoring')}
-          >
-            Setup Monitoring Zones
-          </span>
           <span
             className={`dashboard__info ${subZoneExist && !finished ? 'active' : 'not-active'}`}
+            onClick={() => handleClick('fa')}
+          >
+            Assign Field Agents
+          </span>
+          <span
+            className={`dashboard__info ${subZoneExist && faExist && !finished ? 'active' : 'not-active'}`}
             onClick={() => handleClick('report')}
           >
-            Upload Stage Report
-          </span> */}
+            Prepare Stage Report
+          </span>
         </div>
       </div>
       <div className="dashboard__item" key={`${id}Project`}>
@@ -78,8 +119,11 @@ const ProjectCard = ({ data, currentStage, menuArr, setMenuArr, index }) => {
                 <div className={`dashboard__calling__allert ${(subZoneExist ? 'hiden' : 'null')}`} onClick={() => handleClick('monitoring')}>
                   <span className="dashboard__calling__allert-text">Setup Monitoring Zones</span>
                 </div>
-                <div className={`dashboard__calling__allert ${((subZoneExist && !finished) ? 'null' : 'hiden')}`} onClick={() => handleClick('report')}>
-                  <span className="dashboard__calling__allert-text dashboard__calling__allert-text-blue">Upload Stage Report</span>
+                <div className={`dashboard__calling__allert ${(subZoneExist && !faExist && !finished ? 'null' : 'hiden')}`} onClick={() => handleClick('fa')}>
+                  <span className="dashboard__calling__allert-text dashboard__calling__allert-text-blue">Assign Field Agents</span>
+                </div>
+                <div className={`dashboard__calling__allert ${((subZoneExist && faExist && !finished) ? 'null' : 'hiden')}`} onClick={() => handleClick('report')}>
+                  <span className="dashboard__calling__allert-text dashboard__calling__allert-text-blue">Prepare Stage Report</span>
                 </div>
               </>
             )}
@@ -95,9 +139,7 @@ const ProjectCard = ({ data, currentStage, menuArr, setMenuArr, index }) => {
             </div>
             <div className="dashboard__log">
               <i className="icon-clock" />
-              <span className="dashboard__log-start">{startTimeProject ? formattedDate(startTimeProject, '.') : noData}</span>
-              /
-              <span className="dashboard__log-end">{finishTimeProject ? formattedDate(finishTimeProject, '.') : noData}</span>
+              {timerCountdown(stageTimeleft)}
             </div>
             <div
               className="dashboard__setting"

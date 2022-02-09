@@ -1,10 +1,35 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { ReactSVG } from 'react-svg';
 import ReactTooltip from 'react-tooltip';
 import bubble from 'src/assets/image/wizard/buble.svg';
+
+// const CustomSelect = forwardRef((props, ref) => {
+//   if (props.allowSelectAll) {
+//     return (
+//       <Select
+//         {...props}
+//         ref={ref}
+//         options={[props.allOption, ...props.options]}
+//         onChange={selected => {
+//           if (
+//             selected !== null &&
+//             selected.length > 0 &&
+//             selected[selected.length - 1].value === props.allOption.value
+//           ) {
+//             return props.onChange(props.options);
+//           }
+//           return props.onChange(selected);
+//         }}
+//       />
+//     );
+//   }
+
+//   return <Select {...props} />;
+// });
 
 const FieldAgentProject = ({ fieldAgentData,
   setFieldAgentData,
@@ -15,6 +40,7 @@ const FieldAgentProject = ({ fieldAgentData,
   errorsSample,
   projectOptions,
   setValue,
+  getValues,
   targetProjects,
   addFieldAgentProject,
   edit,
@@ -123,7 +149,21 @@ const FieldAgentProject = ({ fieldAgentData,
         setValue(name, target, { shouldValidate: true });
         selectRef.select.clearValue();
       } else {
-        setValue(name, target.length ? target : '', { shouldValidate: !!target.length });
+        if (target && target.find((i) => i.value === '*')) {
+          const allOptions = [...sampleOptions];
+          allOptions.splice(0, 1);
+          setSampleOptions(allOptions);
+          setValue(name, target.length ? allOptions : '', { shouldValidate: !!target.length });
+        } else {
+          setSampleOptions((prev) => {
+            const option = prev.find((i) => i.value === '*');
+            if (option) {
+              return [...prev];
+            }
+            return [{value: '*', label: "Select All"}, ...prev];
+          })
+          setValue(name, target.length ? target : '', { shouldValidate: !!target.length });
+        }
       }
     } else {
       if (type === 'project') {
@@ -140,7 +180,7 @@ const FieldAgentProject = ({ fieldAgentData,
       if (targetProject) {
         const { item } = targetProject;
         const samOption = item.subZonesPolygon[item.subZonesPolygon.length - 1].sampleZones.map((sample) => ({ value: `${sample.sampleName}`, label: `${sample.sampleName}`, sId: sample.id, sName: `${sample.sampleName}` }));
-        setSampleOptions(samOption);
+        setSampleOptions([{value: '*', label: "Select All"}, ...samOption]);
       }
     }
   }, [targetProjects]);
@@ -183,7 +223,7 @@ const FieldAgentProject = ({ fieldAgentData,
           name={`projects.${id}.sampleZones`}
           control={control}
           rules={rules}
-          defaultValue={projectItem.sampleZones.length ? projectItem.sampleZones : ''}
+          defaultValue={defaultValueSample.length ? defaultValueSample : ''}
           render={() => (
             <Select
               ref={(ref) => {
@@ -197,6 +237,7 @@ const FieldAgentProject = ({ fieldAgentData,
               options={sampleOptions}
               styles={sampleStyles}
               onChange={(e) => selectOnChange(e, `projects.${id}.sampleZones`, 'zones')}
+              value={getValues(`projects.${id}.sampleZones`)}
             />
           )}
         />

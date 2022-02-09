@@ -22,6 +22,30 @@ export const convertDateToMonths = (timestamp, yearsText) => {
   return `${restYears} ${yearsText}`;
 };
 
+export const convertDateToRest = (timestamp, monthsText, daysText) => {
+  const date = new Date();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  const totalDays = Math.ceil(timestamp / (1000 * 60 * 60 * 24));
+  const restMonthsDec = totalDays / daysInMonth;
+  const restMonths = Math.trunc(restMonthsDec);
+  const restDays = Math.ceil((restMonthsDec - restMonths) * daysInMonth);
+  return `${restMonths} ${monthsText} ${restDays} ${daysText}`;
+};
+
+export const timerCountdown = (timeleft) => {
+  if (timeleft >= 0) {
+    const days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+  return '0d 0h 0m 0s';
+};
+
 export const randomHexColor = () => {
   let color = '';
   const type = ['char', 'digit'];

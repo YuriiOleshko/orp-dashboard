@@ -120,6 +120,12 @@
     &.cost{
       flex-basis: 49%;
     }
+    &.details{
+      flex-basis: 66%;
+    }
+    &.finish {
+      margin-bottom: 0;
+    }
 
 
 
@@ -137,7 +143,8 @@
       flex-direction: column;
       position: relative;
       & label {
-        margin-bottom: 8px;
+        // margin-bottom: 8px;
+        margin-bottom: 6px;
         font-weight: 700;
       }
 
@@ -230,7 +237,7 @@
       flex-basis: 32%!important;
     }
     .square, .amountTrees {
-      flex-basis: 47% !important;
+      // flex-basis: 47% !important;
     }
   }
 
@@ -245,7 +252,12 @@
     //margin-bottom: 20px;
 
   }
-  &__icon{
+
+  &__detail-file {
+    flex-basis: 66%;
+  }
+
+  &__icon, &__detail-icon{
 
     margin-top: 8px;
     width: 140px;
@@ -275,6 +287,10 @@
       left: -2px;
       object-fit: cover;
     }
+  }
+
+  &__detail-icon {
+    width: 249px;
   }
 
   .noscroll {

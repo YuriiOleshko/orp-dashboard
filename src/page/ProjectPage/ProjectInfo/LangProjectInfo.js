@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 const sizeText = { id: 'projectPage.info.size', defaultMessage: 'Project Size' };
-const sqkmText = { id: 'projectPage.info.sqkm', defaultMessage: 'Sq.Km.' };
+const sqkmText = { id: 'projectPage.info.sqkm', defaultMessage: 'Hectares' };
 const treesText = { id: 'projectPage.info.trees', defaultMessage: 'trees' };
 const totalDurationText = { id: 'projectPage.info.totalDuration', defaultMessage: 'Total project duration' };
 const monthsText = { id: 'projectPage.info.months', defaultMessage: 'months' };

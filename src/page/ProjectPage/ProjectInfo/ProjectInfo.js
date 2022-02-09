@@ -18,7 +18,7 @@ import {
 } from './LangProjectInfo';
 
 const ProjectInfo = ({ data }) => {
-  const { square, amountTrees, startTimeProject, finishTimeProject, remainingUploads = 4, type } = data;
+  const { square, amountTrees, startTimeProject, finishTimeProject, remainingUploads, type, developer } = data;
   const noData = '---';
   const intl = useIntl();
   const currentDate = Date.now();
@@ -65,14 +65,14 @@ const ProjectInfo = ({ data }) => {
       </div>
 
       <div className="col col-2">
-        {/* <div className="info-item">
+        <div className="info-item">
           <span className="info-uploads">
-            {intl.formatMessage(uploadsText)}:{' '}
+            Project Developer:{' '}
             <span className="info-value">
-              {remainingUploads}
+              {developer}
             </span>
           </span>
-        </div> */}
+        </div>
         <div className="info-item">
           <span className="info-uploads">
             Project Type:{' '}

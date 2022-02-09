@@ -8,12 +8,11 @@ const initialState = {
     profile: null,
     profileProject: {},
     nftTokens: [],
-    currentProjectStage: [],
+    allFa: [],
   },
   near: {
     initialized: false,
   },
-  firstLoad: true,
 };
 
 export const { appStore, AppProvider } = StateUtils(initialState, 'app');
