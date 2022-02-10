@@ -170,7 +170,7 @@ const ExistingProject = () => {
       </div>
       {err ? (<div className="dashboard__error">{intl.formatMessage(ipfsError)}</div>)
         : loading ? <div className="dashboard__loader"><Loader /></div>
-          : app.nftTokens.length && app.allFa.length ? (
+          : app.nftTokens.length && app.allFa ? (
             <div className="dashboard__list">
               {app.nftTokens.map((data, index) => (
                 /* eslint-disable-next-line react/no-array-index-key */

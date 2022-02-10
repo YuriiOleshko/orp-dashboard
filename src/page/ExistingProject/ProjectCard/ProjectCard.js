@@ -26,7 +26,7 @@ const ProjectCard = ({ data, menuArr, setMenuArr, index, allFa }) => {
   const noData = '---';
   const [openSettings, setSettings] = useState(true);
 
-  let faExist = true;
+  let faExist = false;
   let location = noData;
   const subZoneExist = item.subZonesPolygon?.find((i) => i?.stage === currentStage);
   const finished = item.subZonesPolygon?.find((i) => i?.stage === currentStage && i?.finished);
