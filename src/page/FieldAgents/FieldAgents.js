@@ -35,7 +35,7 @@ const FieldAgents = () => {
         body: JSON.stringify({ ...body, from: fromIndex }),
       }).then((data) => data.json());
 
-      if (projects.hits.hits.length === 0) {
+      if (projects.hits.total.value === 0) {
         update('loading', false);
         return;
       }
