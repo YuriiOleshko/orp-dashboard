@@ -88,7 +88,7 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage,
             });
             return { ...item, sampleTrees: parsedTreeJSON };
           }
-          return item;
+          return { ...item, sampleTrees: [] };
         }),
       );
       setCurrentSubZone(currSubZone);
