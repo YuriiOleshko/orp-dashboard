@@ -72,21 +72,24 @@ const SampleData = ({ totalData, setTotalData, nextPage, prevPage, currentStage,
 
           if (result.length) {
             const cid = Object.values(result[0].projects)[0][0].cid;
-            const treesJSON = await getJSONFileFromIpfs(ipfs, cid) || [];
-            const parsedTreeJSON = treesJSON.map((tree, id) => {
-              const treeName = Object.keys(tree)[0];
-              const treeInfo = Object.values(tree)[0];
-              return {
-                id: Date.now() + id,
-                treeName,
-                status: treeInfo.select.toLowerCase(),
-                height: treeInfo.height,
-                diameter: treeInfo.diametr,
-                treePhoto: treeInfo.treeImage,
-                labelPhoto: treeInfo.treeLabel,
-              };
-            });
-            return { ...item, sampleTrees: parsedTreeJSON };
+            if (cid) {
+              const treesJSON = await getJSONFileFromIpfs(ipfs, cid) || [];
+              const parsedTreeJSON = treesJSON.map((tree, id) => {
+                const treeName = Object.keys(tree)[0];
+                const treeInfo = Object.values(tree)[0];
+                return {
+                  id: Date.now() + id,
+                  treeName,
+                  status: treeInfo.select.toLowerCase(),
+                  height: treeInfo.height,
+                  diameter: treeInfo.diametr,
+                  treePhoto: treeInfo.treeImage,
+                  labelPhoto: treeInfo.treeLabel,
+                };
+              });
+              return { ...item, sampleTrees: parsedTreeJSON };
+            }
+            return { ...item, sampleTrees: [] };
           }
           return { ...item, sampleTrees: [] };
         }),

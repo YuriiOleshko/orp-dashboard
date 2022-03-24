@@ -47,7 +47,7 @@ const UploadImage = ({
     if (extension[1].toLowerCase() === 'jpg') extension[1] = 'jpeg';
     const mimeType = `image/${extension[1].toLowerCase()}`;
 
-    const dataToSend = { path, mime: mimeType, data: url };
+    const dataToSend = JSON.stringify({ path, mime: mimeType, data: url });
 
     const ipfs = await initIPFS();
     const result = await ipfs.add(JSON.stringify(dataToSend));

@@ -35,30 +35,31 @@ const FieldAgents = () => {
         body: JSON.stringify({ ...body, from: fromIndex }),
       }).then((data) => data.json());
 
-      if (projects.hits.total.value === 0) {
+      if (projects?.hits?.hits) {
+        const parsedProjects = projects.hits.hits.map((item) => {
+          const runtimeFields = {};
+          for (const prop in item.fields) {
+            runtimeFields[prop] = item.fields[prop][0];
+          }
+          return { id: item._id, item: { ...item._source, ...runtimeFields } };
+        });
+  
+        // const result = await fetch(`${AGENT_API}/list`, {
+        //   headers: {
+        //     // "Accept": '*/*',
+        //     Authorization: `Bearer ${account.accountId}`,
+        //   },
+        // }).then((res) => res.json());
+  
+  
+        update('app.nftTokens', parsedProjects);
+        // update('app.allFa', result);
+        update('loading', false);
+      } else {
+        update('app.nftTokens', []);
         update('loading', false);
         return;
       }
-
-      const parsedProjects = projects.hits.hits.map((item) => {
-        const runtimeFields = {};
-        for (const prop in item.fields) {
-          runtimeFields[prop] = item.fields[prop][0];
-        }
-        return { id: item._id, item: { ...item._source, ...runtimeFields } };
-      });
-
-      // const result = await fetch(`${AGENT_API}/list`, {
-      //   headers: {
-      //     // "Accept": '*/*',
-      //     Authorization: `Bearer ${account.accountId}`,
-      //   },
-      // }).then((res) => res.json());
-
-
-      update('app.nftTokens', parsedProjects);
-      // update('app.allFa', result);
-      update('loading', false);
     } catch (e) {
       setErr(true);
     }

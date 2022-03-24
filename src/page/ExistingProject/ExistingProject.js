@@ -51,7 +51,7 @@ const ExistingProject = () => {
         body: JSON.stringify({ ...body, from: fromIndex }),
       }).then((data) => data.json());
 
-      if (projects.hits.hits) {
+      if (projects?.hits?.hits) {
         const parsedProjects = projects.hits.hits.map((item) => {
           const runtimeFields = {};
           for (const prop in item.fields) {

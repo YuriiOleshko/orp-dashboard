@@ -39,7 +39,11 @@ const LaunchCreate = () => {
         body: JSON.stringify(filterParams),
       }).then((data) => data.json());
 
-      setTokenLength(projects.hits.total.value);
+      if (projects?.hits?.total.value) {
+        setTokenLength(projects.hits.total.value);
+      } else {
+        setTokenLength(0);
+      }
       setLoading(false);
     } catch (e) {
       console.log(e);

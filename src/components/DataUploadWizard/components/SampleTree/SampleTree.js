@@ -54,8 +54,8 @@ const SampleTree = ({ sampleName, sampleTree, sampleTreeIndex, sampleTreeId, sam
       <div className="tree-status">
         <CustomSelect
           name={`${sampleName}.${sampleTreeId}.status`}
-          // register={register({ required: true })}
-          // required
+          register={register({ required: true })}
+          required
           showErrorMessage={false}
           error={errors[sampleName] && errors[sampleName][sampleTreeId] && errors[sampleName][sampleTreeId].status}
           value={status}
@@ -69,8 +69,8 @@ const SampleTree = ({ sampleName, sampleTree, sampleTreeIndex, sampleTreeId, sam
           type="text"
           placeholder="cm"
           name={`${sampleName}.${sampleTreeId}.height`}
-          // register={register({ required: true })}
-          // required
+          register={register({ required: true })}
+          required
           showErrorMessage={false}
           error={errors[sampleName] && errors[sampleName][sampleTreeId] && errors[sampleName][sampleTreeId].height}
           customClass="tree-height-input"
@@ -85,8 +85,8 @@ const SampleTree = ({ sampleName, sampleTree, sampleTreeIndex, sampleTreeId, sam
           type="text"
           placeholder="cm"
           name={`${sampleName}.${sampleTreeId}.diameter`}
-          // register={register({ required: true })}
-          // required
+          register={register({ required: true })}
+          required
           showErrorMessage={false}
           error={errors[sampleName] && errors[sampleName][sampleTreeId] && errors[sampleName][sampleTreeId].diameter}
           customClass="tree-diameter-input"
@@ -105,7 +105,7 @@ const SampleTree = ({ sampleName, sampleTree, sampleTreeIndex, sampleTreeId, sam
           setValue={setValue}
           getValues={getValues}
           error={errors[sampleName] && errors[sampleName][sampleTreeId] && errors[sampleName][sampleTreeId].treePhoto}
-          // rules={{ required: true }}
+          rules={{ required: true }}
           // change={handleChange}
         />
       </div>
@@ -118,7 +118,7 @@ const SampleTree = ({ sampleName, sampleTree, sampleTreeIndex, sampleTreeId, sam
           setValue={setValue}
           getValues={getValues}
           error={errors[sampleName] && errors[sampleName][sampleTreeId] && errors[sampleName][sampleTreeId].labelPhoto}
-          // rules={{ required: true }}
+          rules={{ required: true }}
           // change={handleChange}
         />
       </div>
