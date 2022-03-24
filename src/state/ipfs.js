@@ -35,7 +35,7 @@ export const initIPFS = async () => {
 
 export const getJSONFileFromIpfsNew = async (cid) => {
   const config = {
-    method: 'get',
+    method: 'post',
     url: `https://1x589Wf0bGYEc1dhSmPCbTlumFQ:cacb603095351699082f9e83396ea0bb@ipfs.infura.io:5001/api/v0/cat?arg=${cid}`,
     headers: { },
   };

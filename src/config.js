@@ -1,7 +1,7 @@
 const contractName = process.env.REACT_APP_CONTRACT_NAME || [
-  'c2.ofp.testnet',
+  'ofp_v1.testnet',
   'dt1.ofp.testnet',
-  'ot1.ofp.testnet',
+  'opn_v1.testnet',
 ];
 // const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://gateway.ipfs.io';
 const IPFS_URL = process.env.REACT_APP_IPFS_URL || 'https://ipfs.infura.io';
