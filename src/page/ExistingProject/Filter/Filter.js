@@ -155,34 +155,32 @@ const Filter = ({ setFilterParams, sortType }) => {
     const sortArr = [];
 
     paramsArr.forEach((key) => {
-      if (paramsObj[key]) {
-        if (key === 'signer_id') {
-          queryObj.bool.must.push({
-            match: {
-              [key]: paramsObj[key],
+      if (paramsObj[key] && key === 'signer_id') {
+        queryObj.bool.must.push({
+          match: {
+            [key]: paramsObj[key],
+          },
+        });
+      }
+      if (paramsObj[key] && (key === 'name' || key === 'region')) {
+        queryObj.bool.must.push({
+          wildcard: {
+            [key]: {
+              value: `${paramsObj[key]}*`,
+              case_insensitive: true,
             },
-          });
-        }
-        if (key === 'name' || key === 'region') {
-          queryObj.bool.must.push({
-            wildcard: {
-              [key]: {
-                value: `${paramsObj[key]}*`,
-                case_insensitive: true,
-              },
-            },
-          });
-        }
-        if (key === 'currentStage') {
-          queryObj.bool.must.push({
-            match: {
-              [key]: paramsObj[key],
-            },
-          });
-        }
-        if (key === 'parsedSquare' || key === 'deadline') {
-          sortArr.push({ [key]: paramsObj[key] });
-        }
+          },
+        });
+      }
+      if (typeof paramsObj[key] === 'number' && key === 'currentStage') {
+        queryObj.bool.must.push({
+          match: {
+            [key]: paramsObj[key],
+          },
+        });
+      }
+      if (paramsObj[key] && (key === 'parsedSquare' || key === 'deadline')) {
+        sortArr.push({ [key]: paramsObj[key] });
       }
     });
 
