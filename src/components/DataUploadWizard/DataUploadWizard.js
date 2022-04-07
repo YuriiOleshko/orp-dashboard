@@ -70,7 +70,7 @@ const DataUploadWizard = () => {
       const stake = (dataProject.budget * 1e2).toString();
       const startNanoSec = dataProject.startTimeProject * oneMillion;
       const endNanoSec = dataProject.finishTimeProject * oneMillion;
-      const area = (dataProject.square * tenThousands).toString();
+      const area = (dataProject.square * tenThousands).toFixed(0);
 
       await contract.update_project_info({
         project_id: nameId,
